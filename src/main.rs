@@ -1,6 +1,7 @@
 use anyhow::Result;
 
-fn main() -> Result<()> {
+#[async_std::main]
+async fn main() -> Result<()> {
     println!("Hello, world!");
     Ok(())
 }
