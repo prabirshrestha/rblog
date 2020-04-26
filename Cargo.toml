@@ -9,4 +9,5 @@ edition = "2018"
 [dependencies]
 anyhow = "1.0.28"
 async-std = { version = "1.5.0", features = ["attributes"] }
+dotenv = "0.15.0"
 tide = "0.8.0"
