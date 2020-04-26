@@ -1,5 +1,6 @@
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
+use slug::slugify;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
@@ -30,6 +31,7 @@ pub struct Post {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PostMetadata {
     title: String,
+    slug: Option<String>,
 }
 
 impl AppState {
@@ -91,7 +93,7 @@ impl Post {
             let metadata = fs::metadata(&path)?;
             if metadata.is_file() {
                 let post = Post::new_from_file(&path)?;
-                let key = path.as_os_str().to_str().unwrap();
+                let key = post.metadata.slug.as_ref().unwrap();
                 if map.contains_key(key) {
                     bail!("Post {:?} already exists", &path);
                 } else {
@@ -112,7 +114,11 @@ impl Post {
             bail!("{:?} not valid", &path);
         }
 
-        let metadata = serde_yaml::from_str(&splits[1])?;
+        let mut metadata: PostMetadata = serde_yaml::from_str(&splits[1])?;
+
+        if let None = &metadata.slug {
+            metadata.slug = Some(slugify(&metadata.title));
+        }
 
         let post = Post {
             metadata,
