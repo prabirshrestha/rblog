@@ -28,6 +28,7 @@ impl AppState {
         } else {
             Path::new("./blog.conf")
         };
+
         let conf = BlogConf::new_from_file(&conf_path)?;
 
         let port = env::var("PORT")
