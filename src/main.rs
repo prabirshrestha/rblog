@@ -1,5 +1,6 @@
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::path::Path;
@@ -9,6 +10,7 @@ use tide::{Response, StatusCode};
 pub struct AppState {
     addr: String,
     conf: BlogConf,
+    posts: HashMap<String, Post>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -49,7 +51,9 @@ impl AppState {
 
         let addr = format!("0.0.0.0:{}", port);
 
-        Ok(Self { addr, conf })
+        let posts = Post::read_all_from_dir(Path::new(conf.posts_dir.as_ref().unwrap()))?;
+
+        Ok(Self { addr, conf, posts })
     }
 }
 
@@ -74,6 +78,48 @@ impl BlogConf {
         }
 
         Ok(conf)
+    }
+}
+
+impl Post {
+    pub fn read_all_from_dir(path: &Path) -> Result<HashMap<String, Post>> {
+        let mut map = HashMap::new();
+
+        let paths = fs::read_dir(path)?;
+        for path in paths {
+            let path = path?.path();
+            let metadata = fs::metadata(&path)?;
+            if metadata.is_file() {
+                let post = Post::new_from_file(&path)?;
+                let key = path.as_os_str().to_str().unwrap();
+                if map.contains_key(key) {
+                    bail!("Post {:?} already exists", &path);
+                } else {
+                    map.insert(String::from(key), post);
+                }
+            }
+        }
+
+        Ok(map)
+    }
+
+    pub fn new_from_file(path: &Path) -> Result<Post> {
+        let contents = fs::read_to_string(path)?;
+
+        let splits: Vec<&str> = contents.split("---").collect();
+
+        if splits.len() != 3 {
+            bail!("{:?} not valid", &path);
+        }
+
+        let metadata = serde_yaml::from_str(&splits[1])?;
+
+        let post = Post {
+            metadata,
+            content: String::from(splits[2].trim()),
+        };
+
+        Ok(post)
     }
 }
 
