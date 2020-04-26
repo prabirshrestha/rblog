@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::path::Path;
-use tide::{Response, StatusCode};
+use tide::{Request, Response, StatusCode};
 
 #[derive(Debug)]
 pub struct AppState {
@@ -143,8 +143,19 @@ async fn main() -> Result<()> {
 
 fn register_routes(mut app: tide::Server<AppState>) -> tide::Server<AppState> {
     app.at("/").get(|_| async { Ok("Hello world") });
+    app.at("/posts/:slug").get(handle_get_post);
     app.at("*").all(|_| async {
         Ok(Response::new(StatusCode::NotFound).body_string(String::from("not found")))
     });
     app
+}
+
+async fn handle_get_post(ctx: Request<AppState>) -> tide::Result {
+    let slug = ctx.param::<String>("slug")?;
+
+    if let Some(post) = ctx.state().posts.get(&slug) {
+        return Ok(Response::new(StatusCode::Ok).body_string(post.content.clone()));
+    }
+
+    Ok(Response::new(StatusCode::NotFound).body_string("not found".to_string()))
 }
