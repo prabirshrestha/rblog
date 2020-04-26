@@ -116,9 +116,10 @@ impl Post {
 
         let mut metadata: PostMetadata = serde_yaml::from_str(&splits[1])?;
 
-        if let None = &metadata.slug {
-            metadata.slug = Some(slugify(&metadata.title));
-        }
+        metadata.slug = match &metadata.slug {
+            Some(slug) => Some(slug.trim().to_lowercase()),
+            None => Some(slugify(&metadata.title)),
+        };
 
         let post = Post {
             metadata,
