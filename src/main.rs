@@ -2,6 +2,7 @@ use anyhow::{bail, Result};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use slug::slugify;
+use std::cmp::Ord;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
@@ -13,6 +14,7 @@ pub struct AppState {
     addr: String,
     conf: BlogConf,
     posts: HashMap<String, Post>,
+    ordered_posts: Vec<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -56,8 +58,33 @@ impl AppState {
         let addr = format!("0.0.0.0:{}", port);
 
         let posts = Post::read_all_from_dir(Path::new(conf.posts_dir.as_ref().unwrap()))?;
+        let mut values: Vec<&Post> = posts
+            .values()
+            .filter(|p| p.metadata.date.is_some())
+            .collect();
 
-        Ok(Self { addr, conf, posts })
+        values.sort_by(|a, b| {
+            a.metadata
+                .date
+                .as_ref()
+                .unwrap()
+                .cmp(b.metadata.date.as_ref().unwrap())
+        });
+
+        let ordered_posts: Vec<String> = values
+            .into_iter()
+            .map(|p| {
+                let slug = &p.metadata.slug.as_ref().unwrap();
+                slug.to_string()
+            })
+            .collect();
+
+        Ok(Self {
+            addr,
+            conf,
+            posts,
+            ordered_posts,
+        })
     }
 }
 
@@ -176,6 +203,25 @@ async fn handle_get_post(ctx: Request<AppState>) -> tide::Result {
     Ok(Response::new(StatusCode::NotFound).body_string("not found".to_owned()))
 }
 
-async fn handle_get_archives(_ctx: Request<AppState>) -> tide::Result {
-    Ok(Response::new(StatusCode::Found).body_string("archives".to_owned()))
+async fn handle_get_archives(ctx: Request<AppState>) -> tide::Result {
+    let state = &ctx.state();
+
+    let ordered_posts = &state.ordered_posts;
+    let postmap = &state.posts;
+
+    let posts: Vec<&Post> = ordered_posts
+        .into_iter()
+        .map(|key| postmap.get(key).unwrap())
+        .collect();
+
+    let mut body = String::from("");
+    for post in posts {
+        body.push_str(format!("{}<br/>", &post.metadata.title).as_str());
+    }
+
+    let res = Response::new(StatusCode::Ok)
+        .body_string(body)
+        .set_header("content-type".parse().unwrap(), "text/html;charset=utf-8");
+
+    Ok(res)
 }
