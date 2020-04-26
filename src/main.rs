@@ -1,4 +1,5 @@
 use anyhow::Result;
+use serde::{Deserialize, Serialize};
 use std::env;
 use tide::{Response, StatusCode};
 
@@ -7,7 +8,7 @@ pub struct AppState {
     addr: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct BlogConf {
     title: String,
     page_size: Option<u16>,
