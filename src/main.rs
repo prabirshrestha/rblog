@@ -146,7 +146,7 @@ fn register_routes(mut app: tide::Server<AppState>) -> tide::Server<AppState> {
     app.at("/").get(|_| async { Ok("Hello world") });
     app.at("/posts/:slug").get(handle_get_post);
     app.at("*").all(|_| async {
-        Ok(Response::new(StatusCode::NotFound).body_string(String::from("not found")))
+        Ok(Response::new(StatusCode::NotFound).body_string("not found".to_string()))
     });
     app
 }
