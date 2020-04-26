@@ -1,4 +1,5 @@
 use anyhow::{bail, Result};
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use slug::slugify;
 use std::collections::HashMap;
@@ -32,6 +33,7 @@ pub struct Post {
 pub struct PostMetadata {
     title: String,
     slug: Option<String>,
+    date: Option<DateTime<Utc>>,
 }
 
 impl AppState {
