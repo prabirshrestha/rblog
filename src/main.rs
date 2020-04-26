@@ -1,5 +1,6 @@
 use anyhow::Result;
 use std::env;
+use tide::{Response, StatusCode};
 
 #[async_std::main]
 async fn main() -> Result<()> {
@@ -13,6 +14,9 @@ async fn main() -> Result<()> {
 
     let mut app = tide::new();
     app.at("/").get(|_| async { Ok("Hello world") });
+    app.at("*").all(|_| async {
+        Ok(Response::new(StatusCode::NotFound).body_string(String::from("not found")))
+    });
     app.listen(addr).await?;
 
     Ok(())
