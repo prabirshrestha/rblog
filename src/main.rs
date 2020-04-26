@@ -28,20 +28,28 @@ impl AppState {
         } else {
             Path::new("./blog.conf")
         };
-
-        if !conf_path.exists() {
-            bail!("File not found - {:?}", conf_path);
-        }
-
-        let conf_contents = fs::read_to_string(conf_path)?;
-        let conf: BlogConf = serde_yaml::from_str(&conf_contents)?;
+        let conf = BlogConf::new_from_file(&conf_path)?;
 
         let port = env::var("PORT")
             .unwrap_or_else(|_| String::from("3000"))
             .parse::<u16>()?;
+
         let addr = format!("0.0.0.0:{}", port);
 
         Ok(Self { addr, conf })
+    }
+}
+
+impl BlogConf {
+    pub fn new_from_file(path: &Path) -> Result<Self> {
+        if !path.exists() {
+            bail!("File not found - {:?}", &path);
+        }
+
+        let conf_contents = fs::read_to_string(&path)?;
+        let conf: BlogConf = serde_yaml::from_str(&conf_contents)?;
+
+        Ok(conf)
     }
 }
 
