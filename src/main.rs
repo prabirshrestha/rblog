@@ -107,18 +107,16 @@ impl Post {
         Ok(map)
     }
 
-    pub fn new_from_file(path: &Path) -> Result<Post> {
-        let raw = fs::read_to_string(path)?;
-
+    pub fn new_from_str(raw: &str) -> Result<Post> {
         let header_start = raw.find("---");
         if header_start.is_none() {
-            bail!("--- header not found for {:?}", &path);
+            bail!("--- header not found");
         }
         let header_start = header_start.unwrap();
 
         let content_start = &raw[header_start + 3..].find("---");
         if content_start.is_none() {
-            bail!("--- content not found for {:?}", &path);
+            bail!("--- content not found");
         }
         let content_start = content_start.unwrap();
 
@@ -138,6 +136,11 @@ impl Post {
         };
 
         Ok(post)
+    }
+
+    pub fn new_from_file(path: &Path) -> Result<Post> {
+        let raw = fs::read_to_string(path)?;
+        Post::new_from_str(&raw)
     }
 }
 
