@@ -106,15 +106,24 @@ impl Post {
     }
 
     pub fn new_from_file(path: &Path) -> Result<Post> {
-        let contents = fs::read_to_string(path)?;
+        let raw = fs::read_to_string(path)?;
 
-        let splits: Vec<&str> = contents.split("---").collect();
-
-        if splits.len() != 3 {
-            bail!("{:?} not valid", &path);
+        let header_start = raw.find("---");
+        if header_start.is_none() {
+            bail!("--- header not found for {:?}", &path);
         }
+        let header_start = header_start.unwrap();
 
-        let mut metadata: PostMetadata = serde_yaml::from_str(&splits[1])?;
+        let content_start = &raw[header_start + 3..].find("---");
+        if content_start.is_none() {
+            bail!("--- content not found for {:?}", &path);
+        }
+        let content_start = content_start.unwrap();
+
+        let header = &raw[header_start..content_start + 3];
+        let content = &raw[header.len() + 3..];
+
+        let mut metadata: PostMetadata = serde_yaml::from_str(header)?;
 
         metadata.slug = match &metadata.slug {
             Some(slug) => Some(slug.trim().to_lowercase()),
@@ -123,7 +132,7 @@ impl Post {
 
         let post = Post {
             metadata,
-            content: String::from(splits[2].trim()),
+            content: String::from(content.trim()),
         };
 
         Ok(post)
