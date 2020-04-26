@@ -7,6 +7,13 @@ pub struct AppState {
     addr: String,
 }
 
+#[derive(Debug)]
+pub struct BlogConf {
+    title: String,
+    page_size: Option<u16>,
+    enable_drafts: Option<bool>,
+}
+
 impl AppState {
     pub fn new_from_env() -> Result<Self> {
         dotenv::dotenv().ok();
