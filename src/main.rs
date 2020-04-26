@@ -16,6 +16,7 @@ pub struct BlogConf {
     title: String,
     page_size: Option<u16>,
     enable_drafts: Option<bool>,
+    posts_dir: Option<String>,
 }
 
 impl AppState {
@@ -48,7 +49,18 @@ impl BlogConf {
         }
 
         let conf_contents = fs::read_to_string(&path)?;
-        let conf: BlogConf = serde_yaml::from_str(&conf_contents)?;
+        let mut conf: BlogConf = serde_yaml::from_str(&conf_contents)?;
+
+        if let None = &conf.posts_dir {
+            conf.posts_dir = Some(String::from("./posts"));
+        }
+
+        if !Path::new(&conf.posts_dir.as_ref().unwrap()).exists() {
+            bail!(
+                "Directory not found - {:?}",
+                conf.posts_dir.as_ref().unwrap()
+            );
+        }
 
         Ok(conf)
     }
