@@ -19,6 +19,17 @@ pub struct BlogConf {
     posts_dir: Option<String>,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Post {
+    metadata: PostMetadata,
+    content: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct PostMetadata {
+    title: String,
+}
+
 impl AppState {
     pub fn new_from_env() -> Result<Self> {
         dotenv::dotenv().ok();
