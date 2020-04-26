@@ -24,13 +24,18 @@ impl AppState {
 async fn main() -> Result<()> {
     let state = AppState::new_from_env()?;
     let addr = state.addr.clone();
-    let mut app = tide::with_state(state);
 
+    let mut app = tide::with_state(state);
+    app = register_routes(app);
+    app.listen(addr).await?;
+
+    Ok(())
+}
+
+fn register_routes(mut app: tide::Server<AppState>) -> tide::Server<AppState> {
     app.at("/").get(|_| async { Ok("Hello world") });
     app.at("*").all(|_| async {
         Ok(Response::new(StatusCode::NotFound).body_string(String::from("not found")))
     });
-    app.listen(addr).await?;
-
-    Ok(())
+    app
 }
