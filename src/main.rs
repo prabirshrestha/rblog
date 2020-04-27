@@ -4,7 +4,6 @@ mod routes;
 
 use crate::appstate::AppState;
 use anyhow::Result;
-use tide::{Response, StatusCode};
 
 #[async_std::main]
 async fn main() -> Result<()> {
@@ -22,7 +21,5 @@ fn register_routes(app: &mut tide::Server<AppState>) {
     app.at("/").get(|_| async { Ok("Hello world") });
     app.at("/posts/:slug").get(routes::posts::get_post);
     app.at("/archives").get(routes::archives::get_archives);
-    app.at("*").all(|_| async {
-        Ok(Response::new(StatusCode::NotFound).body_string("not found".to_owned()))
-    });
+    app.at("*").all(routes::not_found);
 }
