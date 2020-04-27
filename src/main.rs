@@ -12,6 +12,11 @@ use tide::{Request, Response, StatusCode};
 #[derive(Debug)]
 pub struct AppState {
     addr: String,
+    blog: Blog,
+}
+
+#[derive(Debug)]
+pub struct Blog {
     conf: BlogConf,
     posts: HashMap<String, Post>,
     ordered_posts: Vec<String>,
@@ -81,9 +86,11 @@ impl AppState {
 
         Ok(Self {
             addr,
-            conf,
-            posts,
-            ordered_posts,
+            blog: Blog {
+                conf,
+                posts,
+                ordered_posts,
+            },
         })
     }
 }
@@ -196,7 +203,7 @@ fn register_routes(mut app: tide::Server<AppState>) -> tide::Server<AppState> {
 async fn handle_get_post(ctx: Request<AppState>) -> tide::Result {
     let slug = ctx.param::<String>("slug")?;
 
-    if let Some(post) = ctx.state().posts.get(&slug) {
+    if let Some(post) = ctx.state().blog.posts.get(&slug) {
         return Ok(Response::new(StatusCode::Ok).body_string(post.content.clone()));
     }
 
@@ -206,8 +213,8 @@ async fn handle_get_post(ctx: Request<AppState>) -> tide::Result {
 async fn handle_get_archives(ctx: Request<AppState>) -> tide::Result {
     let state = &ctx.state();
 
-    let ordered_posts = &state.ordered_posts;
-    let postmap = &state.posts;
+    let ordered_posts = &state.blog.ordered_posts;
+    let postmap = &state.blog.posts;
 
     let posts: Vec<&Post> = ordered_posts
         .into_iter()
