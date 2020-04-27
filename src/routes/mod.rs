@@ -1,5 +1,6 @@
 pub mod archives;
 pub mod posts;
+pub mod rss;
 
 use crate::appstate::AppState;
 use tide::{Request, Response, StatusCode};
