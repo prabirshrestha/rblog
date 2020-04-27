@@ -1,6 +1,7 @@
 use crate::blog::{Blog, BlogConf};
 use anyhow::Result;
 use std::env;
+use std::net::SocketAddr;
 use std::path::Path;
 
 #[derive(Debug)]
@@ -38,7 +39,8 @@ impl AppState {
         &self.blog
     }
 
-    pub fn get_addr(&self) -> &str {
-        &self.addr
+    pub fn get_addr(&self) -> Result<SocketAddr> {
+        let addr: SocketAddr = self.addr.parse()?;
+        Ok(addr)
     }
 }
