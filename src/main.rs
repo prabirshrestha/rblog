@@ -18,7 +18,8 @@ async fn main() -> Result<()> {
 }
 
 fn register_routes(app: &mut tide::Server<AppState>) {
-    app.at("/").get(|_| async { Ok("Hello world") });
+    app.at("/").get(routes::posts::get_posts);
+    app.at("/page/:page").get(routes::posts::get_posts);
     app.at("/posts/:slug").get(routes::posts::get_post);
     app.at("/archives").get(routes::archives::get_archives);
     app.at("*").all(routes::not_found);
