@@ -12,20 +12,19 @@ async fn main() -> Result<()> {
     let addr = state.get_addr().to_string();
 
     let mut app = tide::with_state(state);
-    app = register_routes(app);
+    register_routes(&mut app);
     app.listen(addr).await?;
 
     Ok(())
 }
 
-fn register_routes(mut app: tide::Server<AppState>) -> tide::Server<AppState> {
+fn register_routes(app: &mut tide::Server<AppState>) {
     app.at("/").get(|_| async { Ok("Hello world") });
     app.at("/posts/:slug").get(handle_get_post);
     app.at("/archives").get(routes::archives::get_archives);
     app.at("*").all(|_| async {
         Ok(Response::new(StatusCode::NotFound).body_string("not found".to_owned()))
     });
-    app
 }
 
 async fn handle_get_post(ctx: Request<AppState>) -> tide::Result {
