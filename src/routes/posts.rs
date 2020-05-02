@@ -1,8 +1,30 @@
 use crate::appstate::AppState;
+use itertools::Itertools;
 use tide::{Request, Response, StatusCode};
 
-pub async fn get_posts(_ctx: Request<AppState>) -> tide::Result {
-    return Ok(Response::new(StatusCode::Ok).body_string("hello world".to_owned()));
+pub async fn get_posts(ctx: Request<AppState>) -> tide::Result {
+    let state = &ctx.state();
+
+    let page = 1;
+
+    let body = state
+        .get_blog()
+        .get_paged_posts(page)
+        .map(|key| state.get_blog().get_post(key).unwrap())
+        .map(|post| {
+            String::from(format!(
+                "<article><h2>{}</h2>{}</article>",
+                post.get_metadata().get_title(),
+                post.get_content()
+            ))
+        })
+        .join("");
+
+    let res = Response::new(StatusCode::Ok)
+        .body_string(body)
+        .set_header("content-type".parse().unwrap(), "text/html;charset=utf-8");
+
+    Ok(res)
 }
 
 pub async fn get_post(ctx: Request<AppState>) -> tide::Result {

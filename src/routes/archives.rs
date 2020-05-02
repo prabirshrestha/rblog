@@ -5,10 +5,9 @@ use tide::{Request, Response, StatusCode};
 pub async fn get_archives(ctx: Request<AppState>) -> tide::Result {
     let state = &ctx.state();
 
-    let ordered_posts = &state.get_blog().get_all_posts();
-
-    let posts: Vec<&Post> = ordered_posts
-        .into_iter()
+    let posts: Vec<&Post> = state
+        .get_blog()
+        .get_all_posts()
         .map(|key| state.get_blog().get_post(key).unwrap())
         .collect();
 

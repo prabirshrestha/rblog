@@ -17,7 +17,7 @@ pub struct Blog {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BlogConf {
     title: String,
-    page_size: Option<u16>,
+    page_size: Option<usize>,
     enable_drafts: Option<bool>,
     posts_dir: Option<String>,
 }
@@ -66,8 +66,15 @@ impl Blog {
         })
     }
 
-    pub fn get_all_posts(&self) -> &[String] {
-        &self.ordered_posts
+    pub fn get_paged_posts(&self, page: usize) -> impl Iterator<Item = &str> {
+        let page_size = self.conf.get_page_size();
+        self.get_all_posts()
+            .skip((page - 1) * page_size)
+            .take(page_size)
+    }
+
+    pub fn get_all_posts(&self) -> impl Iterator<Item = &str> {
+        self.ordered_posts.iter().map(|s| s.as_ref())
     }
 
     pub fn get_post(&self, key: &str) -> Option<&Post> {
@@ -100,6 +107,10 @@ impl BlogConf {
 
     pub fn get_post_dir(&self) -> &Option<String> {
         &self.posts_dir
+    }
+
+    pub fn get_page_size(&self) -> usize {
+        self.page_size.unwrap_or(5)
     }
 }
 
