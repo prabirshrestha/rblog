@@ -179,6 +179,14 @@ impl Post {
     pub fn get_metadata(&self) -> &PostMetadata {
         &self.metadata
     }
+
+    pub fn get_url(&self) -> String {
+        format!(
+            "/posts/{}",
+            &self.get_metadata().get_slug().as_ref().unwrap()
+        )
+        .to_owned()
+    }
 }
 
 impl PostMetadata {

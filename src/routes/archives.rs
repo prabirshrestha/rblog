@@ -1,20 +1,22 @@
 use crate::appstate::AppState;
-use crate::blog::Post;
+use itertools::Itertools;
 use tide::{Request, Response, StatusCode};
 
 pub async fn get_archives(ctx: Request<AppState>) -> tide::Result {
     let state = &ctx.state();
 
-    let posts: Vec<&Post> = state
+    let body = state
         .get_blog()
         .get_all_posts()
         .map(|key| state.get_blog().get_post(key).unwrap())
-        .collect();
-
-    let mut body = String::from("");
-    for post in posts {
-        body.push_str(format!("{}<br/>", post.get_metadata().get_title()).as_str());
-    }
+        .map(|post| {
+            String::from(format!(
+                r#"<a href="{href}"><h2>{title}</h2></a>"#,
+                href = post.get_url(),
+                title = post.get_metadata().get_title()
+            ))
+        })
+        .join("");
 
     let res = Response::new(StatusCode::Ok)
         .body_string(body)

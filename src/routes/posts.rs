@@ -13,9 +13,10 @@ pub async fn get_posts(ctx: Request<AppState>) -> tide::Result {
         .map(|key| state.get_blog().get_post(key).unwrap())
         .map(|post| {
             String::from(format!(
-                "<article><h2>{}</h2>{}</article>",
-                post.get_metadata().get_title(),
-                post.get_content()
+                r#"<article><a href="{post_url}"><h2>{title}</h2></a>{content}</article>"#,
+                post_url = post.get_url(),
+                title = post.get_metadata().get_title(),
+                content = post.get_content()
             ))
         })
         .join("");
