@@ -20,7 +20,7 @@ pub async fn get_archives(ctx: Request<AppState>) -> tide::Result {
 
     let res = Response::new(StatusCode::Ok)
         .body_string(body)
-        .set_header("content-type".parse().unwrap(), "text/html;charset=utf-8");
+        .set_mime(mime::TEXT_HTML_UTF_8);
 
     Ok(res)
 }
