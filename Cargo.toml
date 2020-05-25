@@ -4,6 +4,7 @@ version = "0.2.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
 edition = "2018"
 license = "MIT"
+description = "Blog app"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
