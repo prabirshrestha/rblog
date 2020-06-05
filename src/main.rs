@@ -2,6 +2,8 @@ mod appstate;
 mod blog;
 mod routes;
 
+include!(concat!(env!("OUT_DIR"), "/templates.rs"));
+
 use crate::appstate::AppState;
 use anyhow::Result;
 

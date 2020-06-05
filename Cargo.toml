@@ -6,6 +6,11 @@ edition = "2018"
 license = "MIT"
 description = "Blog app"
 
+build = "src/build.rs"
+
+[build-dependencies]
+ructe = "0.11.4"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
