@@ -1,11 +1,12 @@
 mod appstate;
 mod blog;
+mod renderer;
 mod routes;
-
-include!(concat!(env!("OUT_DIR"), "/templates.rs"));
 
 use crate::appstate::AppState;
 use anyhow::Result;
+
+include!(concat!(env!("OUT_DIR"), "/templates.rs"));
 
 #[async_std::main]
 async fn main() -> Result<()> {
