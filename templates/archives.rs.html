@@ -1,6 +1,8 @@
 @use crate::blog::Post;
 @(posts: Vec<&Post>)
 
+<a href="/">Home</a><br/>
+
 <h1>Archives</h1>
 @for post in posts {
     <a href="@post.get_url()">@post.get_metadata().get_title()</a><br/>

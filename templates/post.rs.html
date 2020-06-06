@@ -1,5 +1,7 @@
 @use crate::blog::Post;
 @(post: &Post)
 
+<a href="/">Home</a><br/>
+
 <h1><a href="@post.get_url()">@post.get_metadata().get_title()</a></h1>
 @post.get_content()
