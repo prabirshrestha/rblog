@@ -1,13 +1,13 @@
 use crate::appstate::AppState;
 use itertools::Itertools;
-use tide::{Request, Response, StatusCode};
+use tide::{http::mime, Request, Response, StatusCode};
 
 pub async fn get_posts(ctx: Request<AppState>) -> tide::Result {
     let state = &ctx.state();
 
     let page = 1;
 
-    let body = state
+    let html = state
         .get_blog()
         .get_paged_posts(page)
         .map(|key| state.get_blog().get_post(key).unwrap())
@@ -21,9 +21,9 @@ pub async fn get_posts(ctx: Request<AppState>) -> tide::Result {
         })
         .join("");
 
-    let res = Response::new(StatusCode::Ok)
-        .body_string(body)
-        .set_mime(mime::TEXT_HTML_UTF_8);
+    let mut res = Response::new(StatusCode::Ok);
+    res.set_body(html);
+    res.set_content_type(mime::HTML);
 
     Ok(res)
 }
@@ -32,8 +32,14 @@ pub async fn get_post(ctx: Request<AppState>) -> tide::Result {
     let slug = ctx.param::<String>("slug")?;
 
     if let Some(post) = ctx.state().get_blog().get_post(&slug) {
-        return Ok(Response::new(StatusCode::Ok).body_string(post.get_content().to_owned()));
+        let mut res = Response::new(StatusCode::Ok);
+        res.set_body(post.get_content());
+        res.set_content_type(mime::HTML);
+        return Ok(res);
     }
 
-    Ok(Response::new(StatusCode::NotFound).body_string("not found".to_owned()))
+    let mut res = Response::new(StatusCode::NotFound);
+    res.set_body("not found");
+    res.set_content_type(mime::HTML);
+    Ok(res)
 }

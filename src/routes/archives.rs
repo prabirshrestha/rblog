@@ -1,11 +1,11 @@
 use crate::appstate::AppState;
 use itertools::Itertools;
-use tide::{Request, Response, StatusCode};
+use tide::{http::mime, Request, Response, StatusCode};
 
-pub async fn get_archives(ctx: Request<AppState>) -> tide::Result {
-    let state = &ctx.state();
+pub async fn get_archives(req: Request<AppState>) -> tide::Result {
+    let state = &req.state();
 
-    let body = state
+    let html = state
         .get_blog()
         .get_all_posts()
         .map(|key| state.get_blog().get_post(key).unwrap())
@@ -18,9 +18,9 @@ pub async fn get_archives(ctx: Request<AppState>) -> tide::Result {
         })
         .join("");
 
-    let res = Response::new(StatusCode::Ok)
-        .body_string(body)
-        .set_mime(mime::TEXT_HTML_UTF_8);
+    let mut res = Response::new(StatusCode::Ok);
+    res.set_body(html);
+    res.set_content_type(mime::HTML);
 
     Ok(res)
 }

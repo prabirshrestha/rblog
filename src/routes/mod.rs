@@ -3,13 +3,14 @@ pub mod posts;
 pub mod rss;
 
 use crate::{appstate::AppState, templates};
-use tide::{Body, Request, Response, StatusCode};
+use tide::{http::mime, Request, Response, StatusCode};
 
 pub async fn not_found(_ctx: Request<AppState>) -> tide::Result {
     let mut buf = Vec::new();
     templates::statuscode404(&mut buf)?;
 
-    Ok(Response::new(StatusCode::NotFound)
-        .body(Body::from(buf))
-        .set_mime(mime::TEXT_HTML_UTF_8))
+    let mut res = Response::new(StatusCode::NotFound);
+    res.set_body(buf);
+    res.set_content_type(mime::HTML);
+    Ok(res)
 }
