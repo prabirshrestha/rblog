@@ -1,4 +1,4 @@
-use crate::appstate::AppState;
+use crate::{appstate::AppState, renderer::Render, templates};
 use itertools::Itertools;
 use tide::{http::mime, Request, Response, StatusCode};
 
@@ -33,13 +33,13 @@ pub async fn get_post(ctx: Request<AppState>) -> tide::Result {
 
     if let Some(post) = ctx.state().get_blog().get_post(&slug) {
         let mut res = Response::new(StatusCode::Ok);
-        res.set_body(post.get_content());
+        res.render_html(|o| Ok(templates::post(o, post)?))?;
         res.set_content_type(mime::HTML);
         return Ok(res);
     }
 
     let mut res = Response::new(StatusCode::NotFound);
-    res.set_body("not found");
+    res.render_html(|o| Ok(templates::notfound(o)?))?;
     res.set_content_type(mime::HTML);
     Ok(res)
 }
