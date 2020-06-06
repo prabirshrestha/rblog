@@ -3,11 +3,10 @@ pub mod posts;
 pub mod rss;
 
 use crate::{appstate::AppState, renderer::Render, templates};
-use tide::{http::mime, Request, Response, StatusCode};
+use tide::{Request, Response, StatusCode};
 
-pub async fn not_found(_ctx: Request<AppState>) -> tide::Result {
+pub async fn not_found(_req: Request<AppState>) -> tide::Result {
     let mut res = Response::new(StatusCode::NotFound);
-    res.render(|o| Ok(templates::notfound(o)?))?;
-    res.set_content_type(mime::HTML);
+    res.render_html(|o| Ok(templates::notfound(o)?))?;
     Ok(res)
 }
