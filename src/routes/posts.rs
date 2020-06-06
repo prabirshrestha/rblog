@@ -1,5 +1,4 @@
 use crate::{appstate::AppState, renderer::Render, templates};
-use itertools::Itertools;
 use tide::{http::mime, Request, Response, StatusCode};
 
 pub async fn get_posts(req: Request<AppState>) -> tide::Result {
@@ -7,22 +6,14 @@ pub async fn get_posts(req: Request<AppState>) -> tide::Result {
 
     let page = 1;
 
-    let html = state
+    let posts = state
         .get_blog()
         .get_paged_posts(page)
         .map(|key| state.get_blog().get_post(key).unwrap())
-        .map(|post| {
-            String::from(format!(
-                r#"<article><a href="{post_url}"><h2>{title}</h2></a>{content}</article>"#,
-                post_url = post.get_url(),
-                title = post.get_metadata().get_title(),
-                content = post.get_content()
-            ))
-        })
-        .join("");
+        .collect();
 
     let mut res = Response::new(StatusCode::Ok);
-    res.set_body(html);
+    res.render_html(|o| Ok(templates::posts(o, posts)?))?;
     res.set_content_type(mime::HTML);
 
     Ok(res)

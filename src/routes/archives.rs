@@ -1,10 +1,10 @@
-use crate::{appstate::AppState, blog::Post, renderer::Render, templates};
+use crate::{appstate::AppState, renderer::Render, templates};
 use tide::{Request, Response, StatusCode};
 
 pub async fn get_archives(req: Request<AppState>) -> tide::Result {
     let state = &req.state();
 
-    let posts: Vec<&Post> = state
+    let posts = state
         .get_blog()
         .get_all_posts()
         .map(|key| state.get_blog().get_post(key).unwrap())
