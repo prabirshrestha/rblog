@@ -2,8 +2,8 @@ use crate::appstate::AppState;
 use itertools::Itertools;
 use tide::{http::mime, Request, Response, StatusCode};
 
-pub async fn get_posts(ctx: Request<AppState>) -> tide::Result {
-    let state = &ctx.state();
+pub async fn get_posts(req: Request<AppState>) -> tide::Result {
+    let state = &req.state();
 
     let page = 1;
 
