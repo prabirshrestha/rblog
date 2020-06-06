@@ -2,3 +2,4 @@
 @(post: &Post)
 
 <h1><a href="@post.get_url()">@post.get_metadata().get_title()</a></h1>
+@post.get_content()
