@@ -7,7 +7,7 @@ use tide::{http::mime, Request, Response, StatusCode};
 
 pub async fn not_found(_ctx: Request<AppState>) -> tide::Result {
     let mut buf = Vec::new();
-    templates::statuscode404(&mut buf)?;
+    templates::notfound(&mut buf)?;
 
     let mut res = Response::new(StatusCode::NotFound);
     res.set_body(buf);
