@@ -5,16 +5,20 @@ mod routes;
 
 use crate::appstate::AppState;
 use anyhow::Result;
+use tide::log;
 
 include!(concat!(env!("OUT_DIR"), "/templates.rs"));
 
 #[async_std::main]
 async fn main() -> Result<()> {
+    log::start();
+
     let state = AppState::new_from_env()?;
     let addr = state.get_addr()?;
 
     let mut app = tide::with_state(state);
     register_routes(&mut app);
+
     app.listen(addr).await?;
 
     Ok(())
