@@ -13,7 +13,7 @@ impl Render for tide::Response {
     where
         Call: FnOnce(&mut dyn std::io::Write) -> std::io::Result<()>,
     {
-        let mut buf = vec![];
+        let mut buf = Vec::new();
         call(&mut buf)?;
         self.set_body(buf);
         Ok(())
