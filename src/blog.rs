@@ -80,6 +80,10 @@ impl Blog {
     pub fn get_post(&self, key: &str) -> Option<&Post> {
         self.posts.get(key)
     }
+
+    pub fn get_blog_conf(&self) -> &BlogConf {
+        &self.conf
+    }
 }
 
 impl BlogConf {
@@ -111,6 +115,10 @@ impl BlogConf {
 
     pub fn get_page_size(&self) -> usize {
         self.page_size.unwrap_or(5)
+    }
+
+    pub fn get_title(&self) -> &str {
+        &self.title
     }
 }
 
