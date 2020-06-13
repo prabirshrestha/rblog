@@ -1,14 +1,18 @@
+@use super::base_html;
 @use super::statics::*;
 @use crate::blog::Post;
 @(posts: Vec<&Post>)
 
-<link rel="stylesheet" type="text/css" href="/static/@style_css.name"/>
+@:base_html("rblog", {
+    <link rel="stylesheet" type="text/css" href="/static/@style_css.name"/>
 
-<a href="/">Home</a><br/>
-<a href="/archives">Archives</a><br/>
-<a href="/rss">RSS</a><br/>
+    <a href="/">Home</a><br/>
+    <a href="/archives">Archives</a><br/>
+    <a href="/rss">RSS</a><br/>
 
-<h1>Posts</h1>
-@for post in posts {
-    <a href="@post.get_url()">@post.get_metadata().get_title()</a><br/>
-}
+    <h1>Posts</h1>
+    @for post in posts {
+        <a href="@post.get_url()">@post.get_metadata().get_title()</a><br/>
+    }
+})
+
