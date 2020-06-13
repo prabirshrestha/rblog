@@ -1,5 +1,8 @@
+@use super::statics::*;
 @use crate::blog::Post;
 @(posts: Vec<&Post>)
+
+<link rel="stylesheet" type="text/css" href="/static/@style_css.name"/>
 
 <a href="/">Home</a><br/>
 <a href="/archives">Archives</a><br/>

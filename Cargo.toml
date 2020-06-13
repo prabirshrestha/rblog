@@ -10,7 +10,7 @@ repository = "https://github.com/prabirshrestha/rblog"
 build = "src/build.rs"
 
 [build-dependencies]
-ructe = "0.11.4"
+ructe = { version = "0.11.4", features = ["sass", "mime03"] }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -23,3 +23,4 @@ serde = { version = "1.0.111", features = ["derive"] }
 serde_yaml = "0.8.13"
 slug = "0.1.4"
 tide = "0.11.0"
+mime = "0.3.16"

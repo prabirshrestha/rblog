@@ -30,5 +30,6 @@ fn register_routes(app: &mut tide::Server<AppState>) {
     app.at("/posts/:slug").get(routes::posts::get_post);
     app.at("/archives").get(routes::archives::get_archives);
     app.at("/rss").get(routes::rss::get_rss_feed);
+    app.at("/static/*name").get(routes::get_static_file);
     app.at("*").all(routes::not_found);
 }

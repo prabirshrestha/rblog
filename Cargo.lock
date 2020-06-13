@@ -666,6 +666,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "mime"
+version = "0.3.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a60c7ce501c71e03a9c9c0d35b861413ae925bd979cc7a4e30d060069aaac8d"
+
+[[package]]
 name = "nom"
 version = "5.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -683,6 +689,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8d59457e662d541ba17869cf51cf177c0b5f0cbf476c66bdc90bf1edac4f875b"
 dependencies = [
  "autocfg",
+ "num-traits",
+]
+
+[[package]]
+name = "num-rational"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5c000134b5dbf44adc5cb772486d335293351644b801551abe8f75c84cfa4aef"
+dependencies = [
+ "autocfg",
+ "num-integer",
  "num-traits",
 ]
 
@@ -856,6 +873,7 @@ dependencies = [
  "async-std",
  "chrono",
  "dotenv",
+ "mime",
  "ructe",
  "serde",
  "serde_yaml",
@@ -876,6 +894,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ea509065eb0b3c446acdd0102f0d46567dc30902dc0be91d6552035d92b0f4f8"
 
 [[package]]
+name = "rsass"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c78e9b85b8816881cad9aa1142eec337020cfd79c6983e338811f5c521a80463"
+dependencies = [
+ "bytecount",
+ "lazy_static",
+ "nom",
+ "num-rational",
+ "num-traits",
+ "rand",
+]
+
+[[package]]
 name = "ructe"
 version = "0.11.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -885,7 +917,9 @@ dependencies = [
  "bytecount",
  "itertools",
  "md5",
+ "mime",
  "nom",
+ "rsass",
 ]
 
 [[package]]
