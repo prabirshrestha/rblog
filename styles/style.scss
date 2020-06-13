@@ -118,6 +118,50 @@ a.home-link {
 	color: var(--theme-ui-colors-primary,#db4d86);
 }
 
+main header {
+	box-sizing: border-box;
+	margin: 0px 0px 3.5rem;
+	min-width: 0px;
+	background-color: var(--theme-ui-colors-mastheadBackground,#2c2f33);
+	color: var(--theme-ui-colors-mastheadText,#f1f1f3);
+	padding: 2.5rem;
+	text-align: center;
+}
+
+main header h1 {
+	font-size: 5vw;
+	font-weight: 900;
+	line-height: 1;
+	margin-bottom: 1.5rem;
+	max-width: 16ch;
+	margin-left: auto;
+	margin-right: auto;
+	color: var(--theme-ui-colors-mastheadText,#f1f1f3);
+	text-align: center;
+}
+
+main header h2 {
+	font-size: 1.5rem;
+	font-weight: 400;
+	font-style: italic;
+	margin-bottom: 1rem;
+	max-width: 50ch;
+	margin-left: auto;
+	margin-right: auto;
+	line-height: 1.25;
+	opacity: 0.8;
+}
+
+main header .info {
+	box-sizing: border-box;
+	margin: 0;
+	min-width: 0;
+	font-weight: 400;
+	font-size: 0.875rem;
+	text-transform: uppercase;
+	opacity: 0.6;
+}
+
 footer {
 	min-width: 0;
 	padding: 1.5rem;
