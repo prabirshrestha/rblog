@@ -1,6 +1,32 @@
 @import 'reset';
 
 body {
+	--theme-ui-colors-white: var(--theme-ui-colors-white,#f1f1f3);
+	--theme-ui-colors-light: var(--theme-ui-colors-light,#f1f1f3);
+	--theme-ui-colors-dark: var(--theme-ui-colors-dark,#15181C);
+	--theme-ui-colors-pink: var(--theme-ui-colors-pink,#db4d86);
+	--theme-ui-colors-text: var(--theme-ui-colors-text,#f1f1f3);
+	--theme-ui-colors-articleListItemHoverText: var(--theme-ui-colors-articleListItemHoverText,text);
+	--theme-ui-colors-background: var(--theme-ui-colors-background,#15181C);
+	--theme-ui-colors-primary: var(--theme-ui-colors-primary,#db4d86);
+	--theme-ui-colors-muted: var(--theme-ui-colors-muted,hsl(210,5%,40%));
+	--theme-ui-colors-codeBackground: var(--theme-ui-colors-codeBackground,#2d2a2e);
+	--theme-ui-colors-mastheadBackground: var(--theme-ui-colors-mastheadBackground,#2c2f33);
+	--theme-ui-colors-mastheadText: var(--theme-ui-colors-mastheadText,#f1f1f3);
+	--theme-ui-colors-scrollbar: var(--theme-ui-colors-scrollbar,hsl(210,5%,40%));
+	--theme-ui-colors-scrollbarBg: var(--theme-ui-colors-scrollbarBg,hsl(285,5%,12%));
+	--theme-ui-colors-code1: var(--theme-ui-colors-code1,hsl(345,100%,69%));
+	--theme-ui-colors-code2: var(--theme-ui-colors-code2,#fc9867);
+	--theme-ui-colors-code3: var(--theme-ui-colors-code3,#ffd866);
+	--theme-ui-colors-code4: var(--theme-ui-colors-code4,#a9dc76);
+	--theme-ui-colors-code5: var(--theme-ui-colors-code5,#78dce8);
+	--theme-ui-colors-code6: var(--theme-ui-colors-code6,#ab9df2);
+	--theme-ui-colors-code7: var(--theme-ui-colors-code7,#999988);
+	--theme-ui-colors-codeCopyButtonBg: var(--theme-ui-colors-codeCopyButtonBg,rgba(0,0,0,0.6));
+	--theme-ui-colors-codeCopyButtonBgHover: var(--theme-ui-colors-codeCopyButtonBgHover,rgba(0,0,0,0.8));
+	--theme-ui-colors-codeCopyButtonBorder: var(--theme-ui-colors-codeCopyButtonBorder,rgba(0,0,0,1));
+	color: var(--theme-ui-colors-text,#f1f1f3);
+	background-color: var(--theme-ui-colors-background,#15181C);
 	font-family: "IBM Plex Mono", "JetBrains Mono", "Fira Code", "Input Mono", Menlo, Monaco, Consolas, "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Courier New", monospace;
 	font-weight: 400;
 	font-size: 1rem;
