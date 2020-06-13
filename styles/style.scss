@@ -117,3 +117,27 @@ a.home-link {
 .main-header button:hover {
 	color: var(--theme-ui-colors-primary,#db4d86);
 }
+
+footer {
+	min-width: 0;
+	padding: 1.5rem;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	margin-top: 3.5rem;
+}
+
+footer a {
+	box-sizing: border-box;
+	margin: 0;
+	min-width: 0;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	padding-top: 0.25rem;
+	padding-bottom: 0.25rem;
+	text-transform: uppercase;
+	display: block;
+	font-weight: 400;
+	font-size: 1rem;
+}
