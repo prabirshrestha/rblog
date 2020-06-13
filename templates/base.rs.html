@@ -1,3 +1,4 @@
+@use super::statics::*;
 @(title: &str, content: Content)
 <!DOCTYPE html>
 <html lang="en">
@@ -7,8 +8,13 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <title>@title</title>
+        <link rel="stylesheet" type="text/css" href="/static/@style_css.name"/>
     </head>
     <body>
+        <a href="/">Home</a><br/>
+        <a href="/archives">Archives</a><br/>
+        <a href="/rss">RSS</a><br/>
+
         @:content()
     </body>
 </html>
