@@ -243,6 +243,31 @@ article {
 		width: 100%;
 		height: 100%;
 	}
+
+	code {
+		background-color: var(--theme-ui-colors-codeBackground,#2d2a2e);
+		font-size: 0.875rem;
+		color: var(--theme-ui-colors-text,#f1f1f3);
+	}
+
+	p code {
+		margin: 0px;
+		padding: 0.5rem;
+	}
+
+	pre {
+		overflow:auto;
+		width: 100%;
+		padding: 1rem;
+		background-color: var(--theme-ui-colors-codeBackground,#2d2a2e);
+		color: var(--theme-ui-colors-text,#f1f1f3);
+	}
+
+	pre code {
+		margin: 0px;
+		font-size: 0.95rem;
+		border-radius: 0.5rem;
+	}
 }
 
 
