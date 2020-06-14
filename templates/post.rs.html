@@ -3,7 +3,7 @@
 @(post: &Post)
 
 @:base_html("rblog", {
-    <header>
+    <header class="article">
         <h1><a href="@post.get_url()">@post.get_metadata().get_title()</a></h1>
         <h2>The first post</h2>
         <div class="post-info">

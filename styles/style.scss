@@ -140,7 +140,42 @@ main header h1 {
 	text-align: center;
 }
 
-main header h2 {
+main section.posts {
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+
+		.date {
+			font-weight: 400;
+			font-size: 0.875rem;
+			text-transform: uppercase;
+			opacity: 0.6;
+		}
+
+		.title {
+			font-weight: 900;
+			line-height: 1.25;
+			font-size: 1.875rem;
+		}
+
+		.subtitle {
+			font-weight: 400;
+			font-size: 1rem;
+			opacity: 0.8;
+		}
+	}
+
+	box-sizing: border-box;
+	margin: 0;
+	min-width: 0;
+	max-width: 70ch;
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+}
+
+main header.article h2 {
 	font-size: 1.5rem;
 	font-weight: 400;
 	font-style: italic;
@@ -152,7 +187,7 @@ main header h2 {
 	opacity: 0.8;
 }
 
-main header .info {
+main header.article .info {
 	box-sizing: border-box;
 	margin: 0;
 	min-width: 0;
