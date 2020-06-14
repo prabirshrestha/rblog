@@ -49,11 +49,11 @@ impl Blog {
             .collect();
 
         values.sort_by(|a, b| {
-            a.get_metadata()
+            b.get_metadata()
                 .get_date()
                 .as_ref()
                 .unwrap()
-                .cmp(b.get_metadata().get_date().as_ref().unwrap())
+                .cmp(a.get_metadata().get_date().as_ref().unwrap())
         });
 
         let ordered_posts: Vec<String> = values
