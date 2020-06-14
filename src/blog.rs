@@ -114,8 +114,8 @@ impl BlogConf {
         Ok(conf)
     }
 
-    pub fn get_post_dir(&self) -> &Option<String> {
-        &self.posts_dir
+    pub fn get_post_dir(&self) -> Option<&str> {
+        self.posts_dir.as_deref()
     }
 
     pub fn get_page_size(&self) -> usize {
