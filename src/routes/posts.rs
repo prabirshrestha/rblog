@@ -4,11 +4,9 @@ use tide::{http::mime, Request, Response, StatusCode};
 pub async fn get_posts(req: Request<AppState>) -> tide::Result {
     let state = &req.state();
 
-    let page = 1;
-
     let posts = state
         .get_blog()
-        .get_paged_posts(page)
+        .get_all_posts()
         .map(|key| state.get_blog().get_post(key).unwrap())
         .collect();
 

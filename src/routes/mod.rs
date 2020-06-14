@@ -1,4 +1,3 @@
-pub mod archives;
 pub mod posts;
 pub mod rss;
 
