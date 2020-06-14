@@ -187,6 +187,7 @@ impl Post {
         options.ext_table = true;
         options.ext_autolink = true;
         options.ext_superscript = true;
+        options.ext_strikethrough = true;
 
         let html = markdown_to_html(raw_content, &options);
 
