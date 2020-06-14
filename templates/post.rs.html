@@ -9,7 +9,9 @@
             <h2>@subtitle</h2>
         }
         <div class="post-info">
-            <time datetime="2020-06-20T00:00:00.000Z">20th June 2020</time>
+			@if let Some(date) = post.get_metadata().get_friendly_date().as_ref() {
+				<time datetime="@date">@date</time>
+			}
         </div>
     </header>
 

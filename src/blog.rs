@@ -231,4 +231,12 @@ impl PostMetadata {
     pub fn get_date(&self) -> &Option<DateTime<Utc>> {
         &self.date
     }
+
+    pub fn get_friendly_date(&self) -> Option<String> {
+        if let Some(date) = self.get_date() {
+            Some(date.format("%v").to_string())
+        } else {
+            None
+        }
+    }
 }
