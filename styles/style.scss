@@ -154,7 +154,6 @@ main section.posts {
 		margin: 0;
 		padding: 0;
 
-
 		.date {
 			font-weight: 400;
 			font-size: 0.875rem;
@@ -168,6 +167,10 @@ main section.posts {
 			font-size: 1.875rem;
 		}
 	}
+
+    li {
+        padding: 0.85rem;
+    }
 
 	box-sizing: border-box;
 	margin: 0;
