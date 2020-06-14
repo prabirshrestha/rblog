@@ -1,5 +1,6 @@
 use anyhow::{bail, Result};
 use chrono::{DateTime, Utc};
+use comrak::{markdown_to_html, ComrakOptions};
 use serde::{Deserialize, Serialize};
 use slug::slugify;
 use std::cmp::Ord;
@@ -26,6 +27,7 @@ pub struct BlogConf {
 pub struct Post {
     metadata: PostMetadata,
     content: String,
+    html_content: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -167,9 +169,20 @@ impl Post {
             None => Some(slugify(&metadata.title)),
         };
 
+        let raw_content = content.trim();
+        let mut options = ComrakOptions::default();
+        options.smart = true;
+        options.github_pre_lang = true;
+        options.ext_table = true;
+        options.ext_autolink = true;
+        options.ext_superscript = true;
+
+        let html = markdown_to_html(raw_content, &options);
+
         let post = Post {
             metadata,
-            content: String::from(content.trim()),
+            content: raw_content.into(),
+            html_content: html,
         };
 
         Ok(post)
@@ -182,6 +195,10 @@ impl Post {
 
     pub fn get_content(&self) -> &str {
         &self.content
+    }
+
+    pub fn get_html_content(&self) -> &str {
+        &self.html_content
     }
 
     pub fn get_metadata(&self) -> &PostMetadata {
