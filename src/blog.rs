@@ -230,12 +230,12 @@ impl PostMetadata {
         &self.title
     }
 
-    pub fn get_subtitle(&self) -> &Option<String> {
-        &self.subtitle
+    pub fn get_subtitle(&self) -> Option<&str> {
+        self.subtitle.as_deref()
     }
 
-    pub fn get_slug(&self) -> &Option<String> {
-        &self.slug
+    pub fn get_slug(&self) -> Option<&str> {
+        self.slug.as_deref()
     }
 
     pub fn get_date(&self) -> &Option<DateTime<Utc>> {

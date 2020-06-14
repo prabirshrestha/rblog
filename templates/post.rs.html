@@ -2,7 +2,7 @@
 @use crate::blog::{Blog, Post};
 @(blog: &Blog, post: &Post)
 
-@:base_html(post.get_metadata().get_title(), blog, {
+@:base_html(format!("{} - {}", post.get_metadata().get_title(), blog.get_blog_conf().get_title()).as_str(), blog, {
     <header class="article">
         <h1><a href="@post.get_url()">@post.get_metadata().get_title()</a></h1>
         @if let Some(subtitle) = post.get_metadata().get_subtitle().as_ref() {
