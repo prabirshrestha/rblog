@@ -5,7 +5,9 @@
 @:base_html("rblog", {
     <header class="article">
         <h1><a href="@post.get_url()">@post.get_metadata().get_title()</a></h1>
-        <h2>The first post</h2>
+        @if let Some(subtitle) = post.get_metadata().get_subtitle().as_ref() {
+            <h2>@subtitle</h2>
+        }
         <div class="post-info">
             <time datetime="2020-06-20T00:00:00.000Z">20th June 2020</time>
         </div>

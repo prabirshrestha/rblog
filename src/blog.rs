@@ -33,6 +33,7 @@ pub struct Post {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PostMetadata {
     title: String,
+    subtitle: Option<String>,
     slug: Option<String>,
     date: Option<DateTime<Utc>>,
 }
@@ -217,6 +218,10 @@ impl Post {
 impl PostMetadata {
     pub fn get_title(&self) -> &str {
         &self.title
+    }
+
+    pub fn get_subtitle(&self) -> &Option<String> {
+        &self.subtitle
     }
 
     pub fn get_slug(&self) -> &Option<String> {
