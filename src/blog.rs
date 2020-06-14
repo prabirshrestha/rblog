@@ -22,6 +22,7 @@ pub struct BlogConf {
     enable_drafts: Option<bool>,
     posts_dir: Option<String>,
     github: Option<String>,
+    twitter: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -127,6 +128,10 @@ impl BlogConf {
 
     pub fn get_github(&self) -> Option<&str> {
         self.github.as_deref()
+    }
+
+    pub fn get_twitter(&self) -> Option<&str> {
+        self.twitter.as_deref()
     }
 }
 
