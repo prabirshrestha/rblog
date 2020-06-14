@@ -162,6 +162,22 @@ main header .info {
 	opacity: 0.6;
 }
 
+article {
+	box-sizing: border-box;
+	margin: 0;
+	min-width: 0;
+	max-width: 70ch;
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+}
+
+article p {
+	line-height: 1.625;
+	font-weight: 400;
+	margin-bottom: 1.25rem;
+}
+
 footer {
 	min-width: 0;
 	padding: 1.5rem;
