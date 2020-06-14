@@ -1,5 +1,6 @@
 @use super::statics::*;
-@(title: &str, content: Content)
+@use crate::blog::Blog;
+@(title: &str, blog: &Blog, content: Content)
 <!DOCTYPE html>
 <html lang="en">
 <html>
@@ -20,7 +21,9 @@
                     <a href="/projects">Projects</a>
                 </div>
                 <div class="nav-row">
-                    <a href="#">Github</a>
+					@if let Some(github) = blog.get_blog_conf().get_github() {
+						<a href="https://github.com/@github">Github</a>
+					}
                     <a href="#">Twitter</a>
                     <button aria-label="Cycle color modes">
                     dark

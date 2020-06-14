@@ -1,8 +1,8 @@
 @use super::base_html;
-@use crate::blog::Post;
-@(post: &Post)
+@use crate::blog::{Blog, Post};
+@(blog: &Blog, post: &Post)
 
-@:base_html("rblog", {
+@:base_html("rblog", blog, {
     <header class="article">
         <h1><a href="@post.get_url()">@post.get_metadata().get_title()</a></h1>
         @if let Some(subtitle) = post.get_metadata().get_subtitle().as_ref() {

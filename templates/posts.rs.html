@@ -1,8 +1,8 @@
 @use super::base_html;
-@use crate::blog::Post;
-@(posts: Vec<&Post>)
+@use crate::blog::{Blog, Post};
+@(blog: &Blog, posts: Vec<&Post>)
 
-@:base_html("rblog", {
+@:base_html("rblog", blog, {
     <header class="posts">
         <h1>rblog</h1>
     </header>

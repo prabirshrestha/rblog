@@ -21,6 +21,7 @@ pub struct BlogConf {
     page_size: Option<usize>,
     enable_drafts: Option<bool>,
     posts_dir: Option<String>,
+    github: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -122,6 +123,10 @@ impl BlogConf {
 
     pub fn get_title(&self) -> &str {
         &self.title
+    }
+
+    pub fn get_github(&self) -> Option<&str> {
+        self.github.as_deref()
     }
 }
 
