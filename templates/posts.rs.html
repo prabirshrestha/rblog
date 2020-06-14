@@ -2,9 +2,9 @@
 @use crate::blog::{Blog, Post};
 @(blog: &Blog, posts: Vec<&Post>)
 
-@:base_html("rblog", blog, {
+@:base_html(blog.get_blog_conf().get_title(), blog, {
     <header class="posts">
-        <h1>rblog</h1>
+        <h1>@blog.get_blog_conf().get_title()</h1>
     </header>
     <section class="posts">
         <ul>
