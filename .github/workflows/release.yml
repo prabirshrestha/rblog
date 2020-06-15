@@ -29,12 +29,18 @@ jobs:
           - build: linux
             os: ubuntu-latest
             rust: stable
+            artifact_name: ${{ env.RELEASE_BIN }}-linux-x86_64.tar.gz
+            asset_content_type: application/gzip
           - build: macos
             os: macos-latest
             rust: stable
+            artifact_name: ${{ env.RELEASE_BIN }}-mac-x86_64.tar.gz
+            asset_content_type: application/gzip
           - build: windows
             os: windows-latest
             rust: stable
+            artifact_name: ${{ env.RELEASE_BIN }}-windows-x86_64.zip 
+            asset_content_type: application/zip
 
     steps:
     - uses: actions/checkout@v1
@@ -53,7 +59,7 @@ jobs:
       if: matrix.os == 'macos-latest'
 
     - name: Build
-      run: cargo build --verbose --release
+      run: cargo build --verbose --release --locked
 
     - name: Create artifact directory
       run: mkdir artifacts
@@ -78,7 +84,28 @@ jobs:
     # This will double-zip
     # See - https://github.com/actions/upload-artifact/issues/39
     - uses: actions/upload-artifact@v1
-      name: Upload archive
+      name: Upload archive to actions
       with:
-        name: ${{ runner.os }}
+        name: ${{ matrix.artifact_name }}
         path: artifacts/
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    
+    - name: Upload binaries to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_name: ${{ matrix.artifact_name }}
+        asset_path: ./artifacts/${{ matrix.artifact_name }}
+        asset_content_type: ${{ matrix.asset_content_type }}
