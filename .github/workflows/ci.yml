@@ -42,17 +42,10 @@ jobs:
       with:
         path: target
         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
-    - name: Install Rust (rustup)
-      run: rustup update ${{ matrix.rust }} --no-self-update && rustup default ${{ matrix.rust }}
-      if: matrix.os != 'macos-latest'
-      shell: bash
-    - name: Install Rust (macos)
-      # As of 7.12.2019 rust is not installed on MacOS
-      # https://help.github.com/en/actions/automating-your-workflow-with-github-actions/software-installed-on-github-hosted-runners#macos-1015
+    - name: Install Rust
       run: |
-        curl https://sh.rustup.rs | sh -s -- -y
-        echo "##[add-path]$HOME/.cargo/bin"
-      if: matrix.os == 'macos-latest'
+        rustup update ${{ matrix.rust }} --no-self-update
+        rustup default ${{ matrix.rust }}
     - name: Build
       run: cargo build --verbose
     - name: Run tests
@@ -64,7 +57,10 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Install Rust
-      run: rustup update stable && rustup default stable && rustup component add rustfmt
+      run: |
+        rustup update stable
+        rustup default stable
+        rustup component add rustfmt
     - run: cargo fmt -- --check
 
   clippy_check:
