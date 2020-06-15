@@ -20,6 +20,13 @@ pub async fn get_posts(req: Request<AppState>) -> tide::Result {
 
 pub async fn get_post(req: Request<AppState>) -> tide::Result {
     let slug = req.param::<String>("slug")?;
+    let normalized_slug = slug.to_lowercase();
+
+    if slug != normalized_slug {
+        let mut res = Response::new(StatusCode::PermanentRedirect);
+        res.insert_header("location", format!("/posts/{}", normalized_slug));
+        return Ok(res);
+    }
 
     let state = &req.state();
     let blog = state.get_blog();
