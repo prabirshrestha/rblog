@@ -29,17 +29,17 @@ jobs:
           - build: linux
             os: ubuntu-latest
             rust: stable
-            artifact_name: ${{ env.RELEASE_BIN }}-linux-x86_64.tar.gz
+            artifact_name: rblog-linux-x86_64.tar.gz
             asset_content_type: application/gzip
           - build: macos
             os: macos-latest
             rust: stable
-            artifact_name: ${{ env.RELEASE_BIN }}-mac-x86_64.tar.gz
+            artifact_name: rblog-mac-x86_64.tar.gz
             asset_content_type: application/gzip
           - build: windows
             os: windows-latest
             rust: stable
-            artifact_name: ${{ env.RELEASE_BIN }}-windows-x86_64.zip 
+            artifact_name: rblog-windows-x86_64.zip 
             asset_content_type: application/zip
 
     steps:
