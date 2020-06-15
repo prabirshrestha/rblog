@@ -83,11 +83,11 @@ jobs:
 
     # This will double-zip
     # See - https://github.com/actions/upload-artifact/issues/39
-    - uses: actions/upload-artifact@v1
-      name: Upload archive to actions
-      with:
-        name: ${{ matrix.artifact_name }}
-        path: artifacts/
+    # - uses: actions/upload-artifact@v1
+    #   name: Upload archive to actions
+    #   with:
+    #     name: ${{ matrix.artifact_name }}
+    #     path: artifacts/
 
     - name: Create Release
       id: create_release
@@ -107,5 +107,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_name: ${{ matrix.artifact_name }}
-        asset_path: artifacts/${{ matrix.artifact_name }}
+        asset_path: ./artifacts/${{ matrix.artifact_name }}
         asset_content_type: ${{ matrix.asset_content_type }}
