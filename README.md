@@ -1,6 +1,6 @@
 # rblog
 
-Blog engine written in rustlang.
+Blog engine written in rust.
 
 ## License
 
