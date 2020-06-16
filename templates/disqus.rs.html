@@ -1,0 +1,14 @@
+@use crate::blog::Blog;
+@(blog: &Blog)
+
+@if let Some(disqus) = blog.get_blog_conf().get_disqus() {
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_shortname = '@disqus';
+		(function() @{
+		   var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		   dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+		   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+		@})();
+    </script>
+}

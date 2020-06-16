@@ -23,6 +23,7 @@ pub struct BlogConf {
     posts_dir: Option<String>,
     github: Option<String>,
     twitter: Option<String>,
+    disqus: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -132,6 +133,10 @@ impl BlogConf {
 
     pub fn get_twitter(&self) -> Option<&str> {
         self.twitter.as_deref()
+    }
+
+    pub fn get_disqus(&self) -> Option<&str> {
+        self.disqus.as_deref()
     }
 }
 

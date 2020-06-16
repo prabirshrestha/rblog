@@ -1,4 +1,4 @@
-@use super::base_html;
+@use super::{base_html, disqus_html};
 @use crate::blog::{Blog, Post};
 @(blog: &Blog, post: &Post)
 
@@ -17,5 +17,6 @@
 
     <article>
         @Html(post.get_html_content())
+        @:disqus_html(&blog)
     </article>
 })
