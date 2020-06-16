@@ -132,6 +132,19 @@ jobs:
         command: build
         args: --release --verbose --locked --all --target ${{ matrix.target }}
 
+    - name: Strip release binary (linux and macos)
+      if: matrix.build == 'linux' || matrix.build == 'macos'
+      run: strip "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}"
+
+    - name: Strip release binary (arm)
+      if: matrix.build == 'linux-arm'
+      run: |
+        docker run --rm -v \
+          "$PWD/target:/target:Z" \
+          rustembedded/cross:${{ matrix.target }} \
+          arm-linux-gnueabihf-strip \
+          /target/${{ matrix.target }}/release/${{ env.PKG_NAME }}
+
     - name: Build archive
       shell: bash
       run: |
