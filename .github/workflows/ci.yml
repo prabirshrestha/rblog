@@ -14,10 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        build:
-        - linux
-        - macos
-        - windows
+        build: [linux, linux-arm, macos, winmsvc]
         include:
           - build: linux
             os: ubuntu-latest
@@ -27,14 +24,14 @@ jobs:
           - build: linux-arm
             os: ubuntu-latest
             rust: stable
-            target: armv7-unknown-linux-musleabihf
+            target: arm-unknown-linux-musleabihf
             usecross: true
           - build: macos
             os: macos-latest
             rust: stable
             target: x86_64-apple-darwin
             usecross: false
-          - build: windows
+          - build: winmsvc
             os: windows-latest
             rust: stable
             target: x86_64-pc-windows-msvc
