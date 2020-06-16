@@ -136,7 +136,7 @@ jobs:
       if: matrix.build == 'linux' || matrix.build == 'macos'
       run: strip "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}"
 
-    - name: Strip release binary (arm)
+    - name: Strip release binary (linux-arm)
       if: matrix.build == 'linux-arm'
       run: |
         docker run --rm -v \
