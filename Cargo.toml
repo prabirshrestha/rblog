@@ -1,6 +1,6 @@
 [package]
 name = "rblog"
-version = "0.23.0"
+version = "0.24.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
 edition = "2018"
 license = "MIT"
