@@ -188,6 +188,10 @@ jobs:
     name: publish-crate
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
