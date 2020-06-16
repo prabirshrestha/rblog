@@ -100,7 +100,7 @@ impl BlogConf {
         let conf_contents = fs::read_to_string(&path)?;
         let mut conf: BlogConf = serde_yaml::from_str(&conf_contents)?;
 
-        if let None = &conf.posts_dir {
+        if conf.posts_dir.is_none() {
             conf.posts_dir = Some(String::from("./posts"));
         }
 
@@ -222,7 +222,6 @@ impl Post {
             "/posts/{}",
             &self.get_metadata().get_slug().as_ref().unwrap()
         )
-        .to_owned()
     }
 }
 
