@@ -130,7 +130,7 @@ jobs:
       with:
         use-cross: ${{ matrix.usecross }}
         command: build
-        args: --verbose --locked --all --target ${{ matrix.target }}
+        args: --release --verbose --locked --all --target ${{ matrix.target }}
 
     - name: Build archive
       shell: bash
