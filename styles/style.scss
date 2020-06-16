@@ -214,6 +214,8 @@ article {
 	margin-right: auto;
 	width: 90%;
 	font-size: 1rem;
+    overflow-wrap: break-word;
+    word-wrap:  break-word;
 
 	@media (min-width: $breakpoint-mobile) {
 		font-size: 1.3rem;
