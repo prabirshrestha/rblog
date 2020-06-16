@@ -63,6 +63,32 @@ jobs:
           name: artifacts
           path: artifacts
 
+  publish-crate:
+    name: publish-crate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      - name: Login to crates.io
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.usecross }}
+          command: login
+          args: ${{ secrets.CRATES_TOKEN }}
+      - name: Publish to crates.io
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.usecross }}
+          command: publish
+
   build-release:
     name: build-release
     needs: ['create-release']
@@ -175,7 +201,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload release archive
-      uses: actions/upload-release-asset@v1.0.1
+      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -183,29 +209,3 @@ jobs:
         asset_path: ${{ env.ASSET }}
         asset_name: ${{ env.ASSET }}
         asset_content_type: application/octet-stream
-
-  publish-crate:
-    name: publish-crate
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          override: true
-      - name: Login to crates.io
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: ${{ matrix.usecross }}
-          command: login
-          args: ${{ secrets.CRATES_TOKEN }}
-      - name: Publish to crates.io
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: ${{ matrix.usecross }}
-          command: publish
