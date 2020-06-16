@@ -19,12 +19,14 @@ on:
     # - ag/release
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+env:
+  PKG_NAME: rblog
+
 jobs:
   create-release:
     name: create-release
     runs-on: ubuntu-latest
-    env:
-      PKG_NAME: rblog
+    # env:
       # Set to force version number, e.g., when no tag exists.
       # PKG_VERSION: TEST-0.0.0
     steps:
