@@ -23,7 +23,8 @@ jobs:
   create-release:
     name: create-release
     runs-on: ubuntu-latest
-    # env:
+    env:
+      PKG_NAME: rblog
       # Set to force version number, e.g., when no tag exists.
       # PKG_VERSION: TEST-0.0.0
     steps:
