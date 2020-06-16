@@ -83,6 +83,7 @@ jobs:
             os: ubuntu-latest
             rust: stable
             target: arm-unknown-linux-musleabihf
+            strip: arm-linux-musleabihf-strip
             usecross: true
           - build: macos
             os: macos-latest
@@ -142,7 +143,7 @@ jobs:
         docker run --rm -v \
           "$PWD/target:/target:Z" \
           rustembedded/cross:${{ matrix.target }} \
-          ${{ matrix.target }}-strip \
+          ${{ matrix.strip }} \
           /target/${{ matrix.target }}/release/${{ env.PKG_NAME }}
 
     - name: Build archive
@@ -160,6 +161,16 @@ jobs:
         else
           cp "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}" "$staging/"
           tar czf "$staging.tar.gz" "$staging"
+
+    - name: Upload release archive
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ env.RELEASE_UPLOAD_URL }}
+        asset_path: ${{ env.ASSET }}
+        asset_name: ${{ env.ASSET }}
+        asset_content_type: application/octet-stream
           echo "::set-env name=ASSET::$staging.tar.gz"
         fi
 
@@ -172,3 +183,16 @@ jobs:
         asset_path: ${{ env.ASSET }}
         asset_name: ${{ env.ASSET }}
         asset_content_type: application/octet-stream
+
+    - name: Login to crates.io
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: ${{ matrix.usecross }}
+        command: login
+        args: ${{ secrets.CRATES_TOKEN }}
+
+    - name: Publish to crates.io
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: ${{ matrix.usecross }}
+        command: publish
