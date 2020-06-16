@@ -16,7 +16,7 @@ pub async fn get_static_file(req: Request<AppState>) -> tide::Result {
     if let Some(data) = StaticFile::get(&name) {
         let mut res = Response::new(StatusCode::Ok);
         res.set_content_type(Mime::from_str(data.mime.as_ref())?);
-        res.insert_header("cache-control", "max-age: 31536000"); // 1 year as second
+        res.insert_header("cache-control", "max-age=31536000"); // 1 year as second
         res.set_body(data.content);
         Ok(res)
     } else {
