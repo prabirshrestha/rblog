@@ -23,18 +23,22 @@ jobs:
             os: ubuntu-latest
             rust: stable
             target: x86_64-unknown-linux-musl
+            usecross: false
           - build: linux-arm
             os: ubuntu-latest
             rust: stable
             target: armv7-unknown-linux-musleabihf
+            usecross: true
           - build: macos
             os: macos-latest
             rust: stable
             target: x86_64-apple-darwin
+            usecross: false
           - build: windows
             os: windows-latest
             rust: stable
             target: x86_64-pc-windows-msvc
+            usecross: false
 
     steps:
     - name: Checkout repository
@@ -51,12 +55,14 @@ jobs:
     - name: Build
       uses: actions-rs/cargo@v1
       with:
+        use-cross: ${{ matrix.usecross }}
         command: build
         args: --verbose --all --target ${{ matrix.target }}
 
     - name: Test
       uses: actions-rs/cargo@v1
       with:
+        use-cross: ${{ matrix.usecross }}
         command: test
         args: --verbose --all --target ${{ matrix.target }}
 
