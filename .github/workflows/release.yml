@@ -10,7 +10,7 @@
 #
 # The key here is that we create the release only once.
 
-name: release
+name: Release
 
 on:
   push:
@@ -184,15 +184,24 @@ jobs:
         asset_name: ${{ env.ASSET }}
         asset_content_type: application/octet-stream
 
-    - name: Login to crates.io
-      uses: actions-rs/cargo@v1
-      with:
-        use-cross: ${{ matrix.usecross }}
-        command: login
-        args: ${{ secrets.CRATES_TOKEN }}
-
-    - name: Publish to crates.io
-      uses: actions-rs/cargo@v1
-      with:
-        use-cross: ${{ matrix.usecross }}
-        command: publish
+  publish-crate:
+    name: publish-crate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      - name: Login to crates.io
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.usecross }}
+          command: login
+          args: ${{ secrets.CRATES_TOKEN }}
+      - name: Publish to crates.io
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.usecross }}
+          command: publish
