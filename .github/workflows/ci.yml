@@ -54,7 +54,7 @@ jobs:
       with:
         use-cross: ${{ matrix.usecross }}
         command: build
-        args: --verbose --all --target ${{ matrix.target }}
+        args: --verbose --locked --all --target ${{ matrix.target }}
 
     - name: Test
       uses: actions-rs/cargo@v1
