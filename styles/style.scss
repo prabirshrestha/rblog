@@ -245,7 +245,9 @@ article {
 		display: 'block';
 		padding: 1rem;
 		margin: 0 auto;
-		height: 100%;
+		height: auto;
+        width: auto;
+        max-width: 100%;
 	}
 
 	code {
