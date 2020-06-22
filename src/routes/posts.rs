@@ -63,6 +63,7 @@ pub async fn get_attachment(req: Request<AppState>) -> tide::Result {
         println!("{}", attachement_name);
         if let Some(attachment) = post.get_attachment(&attachement_name) {
             let mut res = Response::new(StatusCode::Ok);
+            res.insert_header("cache-control", "max-age=31536000"); // 1 year as second
             res.set_body(Body::from_file(&attachment.get_path()).await?);
             return Ok(res);
         }
