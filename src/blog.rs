@@ -5,8 +5,9 @@ use serde::{Deserialize, Serialize};
 use slug::slugify;
 use std::cmp::Ord;
 use std::collections::HashMap;
+use std::ffi::OsStr;
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 #[derive(Debug)]
 pub struct Blog {
@@ -31,6 +32,7 @@ pub struct Post {
     metadata: PostMetadata,
     content: String,
     html_content: String,
+    attachments: HashMap<String, Attachment>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -39,6 +41,11 @@ pub struct PostMetadata {
     subtitle: Option<String>,
     slug: Option<String>,
     date: Option<DateTime<Utc>>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Attachment {
+    path: PathBuf,
 }
 
 impl Blog {
@@ -144,18 +151,23 @@ impl Post {
     pub fn read_all_from_dir(path: &Path) -> Result<HashMap<String, Post>> {
         let mut map = HashMap::new();
 
-        let paths = fs::read_dir(path)?;
-        for path in paths {
+        for path in fs::read_dir(path)? {
             let path = path?.path();
             let metadata = fs::metadata(&path)?;
-            if metadata.is_file() {
-                let post = Post::new_from_file(&path)?;
-                let key = post.metadata.slug.as_ref().unwrap();
-                if map.contains_key(key) {
-                    bail!("Post {:?} already exists", &path);
-                } else {
-                    map.insert(String::from(key), post);
+            let post = if metadata.is_file() {
+                if path.extension().and_then(OsStr::to_str).unwrap() != "md" {
+                    continue;
                 }
+                Post::new_from_file(&path)?
+            } else {
+                Post::new_from_dir(&path)?
+            };
+
+            let key = post.metadata.slug.as_ref().unwrap();
+            if map.contains_key(key) {
+                bail!("Post {:?} already exists", &path);
+            } else {
+                map.insert(String::from(key), post);
             }
         }
 
@@ -193,6 +205,8 @@ impl Post {
         options.ext_autolink = true;
         options.ext_superscript = true;
         options.ext_strikethrough = true;
+        options.ext_tasklist = true;
+        options.ext_header_ids = Some("--".to_string());
 
         let html = markdown_to_html(raw_content, &options);
 
@@ -200,6 +214,7 @@ impl Post {
             metadata,
             content: raw_content.into(),
             html_content: html,
+            attachments: HashMap::new(),
         };
 
         Ok(post)
@@ -208,6 +223,45 @@ impl Post {
     pub fn new_from_file(path: &Path) -> Result<Post> {
         let raw = fs::read_to_string(path)?;
         Post::new_from_str(&raw)
+    }
+
+    pub fn new_from_dir(path: &Path) -> Result<Post> {
+        // find the first *.md., rest of the files becomes attachments
+        let mut all_md_files: Vec<fs::DirEntry> = fs::read_dir(path)?
+            .filter_map(Result::ok)
+            .filter_map(|d| {
+                if d.path().extension()? == "md" {
+                    Some(d)
+                } else {
+                    None
+                }
+            })
+            .collect();
+        all_md_files.sort_by_key(|p| p.path());
+        let post_file = &all_md_files.first().unwrap();
+        let mut post = Post::new_from_file(&post_file.path())?;
+
+        for path in fs::read_dir(path)? {
+            let path = path?.path();
+            let metadata = fs::metadata(&path)?;
+            if metadata.is_file() {
+                if path.to_str() != post_file.path().to_str() {
+                    let attachement = Attachment {
+                        path: PathBuf::from(&path),
+                    };
+                    post.attachments.insert(
+                        path.file_name()
+                            .unwrap()
+                            .to_os_string()
+                            .into_string()
+                            .unwrap(),
+                        attachement,
+                    );
+                }
+            }
+        }
+
+        Ok(post)
     }
 
     pub fn get_content(&self) -> &str {
@@ -224,9 +278,13 @@ impl Post {
 
     pub fn get_url(&self) -> String {
         format!(
-            "/posts/{}",
+            "/posts/{}/",
             &self.get_metadata().get_slug().as_ref().unwrap()
         )
+    }
+
+    pub fn get_attachment(&self, name: &str) -> Option<&Attachment> {
+        self.attachments.get(name)
     }
 }
 
@@ -253,5 +311,11 @@ impl PostMetadata {
         } else {
             None
         }
+    }
+}
+
+impl Attachment {
+    pub fn get_path(&self) -> &Path {
+        &self.path
     }
 }

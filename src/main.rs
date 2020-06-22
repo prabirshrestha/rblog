@@ -26,7 +26,11 @@ async fn main() -> Result<()> {
 
 fn register_routes(app: &mut tide::Server<AppState>) {
     app.at("/").get(routes::posts::get_posts);
-    app.at("/posts/:slug").get(routes::posts::get_post);
+    app.at("/posts/:slug")
+        .get(routes::posts::redirect_trailing_slash);
+    app.at("/posts/:slug/").get(routes::posts::get_post);
+    app.at("/posts/:slug/:attachment")
+        .get(routes::posts::get_attachment);
     app.at("/rss").get(routes::rss::get_rss_feed);
     app.at("/static/*name").get(routes::get_static_file);
     app.at("*").all(routes::not_found);
