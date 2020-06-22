@@ -244,20 +244,18 @@ impl Post {
         for path in fs::read_dir(path)? {
             let path = path?.path();
             let metadata = fs::metadata(&path)?;
-            if metadata.is_file() {
-                if path.to_str() != post_file.path().to_str() {
-                    let attachement = Attachment {
-                        path: PathBuf::from(&path),
-                    };
-                    post.attachments.insert(
-                        path.file_name()
-                            .unwrap()
-                            .to_os_string()
-                            .into_string()
-                            .unwrap(),
-                        attachement,
-                    );
-                }
+            if metadata.is_file() && path.to_str() != post_file.path().to_str() {
+                let attachement = Attachment {
+                    path: PathBuf::from(&path),
+                };
+                post.attachments.insert(
+                    path.file_name()
+                        .unwrap()
+                        .to_os_string()
+                        .into_string()
+                        .unwrap(),
+                    attachement,
+                );
             }
         }
 
