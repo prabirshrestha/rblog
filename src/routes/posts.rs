@@ -1,5 +1,5 @@
-use crate::{appstate::AppState, renderer::Render, templates};
-use tide::{http::mime, Body, Redirect, Request, Response, StatusCode};
+use crate::{appstate::AppState, renderer::RenderBuilder, templates};
+use tide::{Body, Redirect, Request, Response, StatusCode};
 
 pub async fn get_posts(req: Request<AppState>) -> tide::Result {
     let state = &req.state();
@@ -11,9 +11,9 @@ pub async fn get_posts(req: Request<AppState>) -> tide::Result {
         .map(|key| state.get_blog().get_post(key).unwrap())
         .collect();
 
-    let mut res = Response::new(StatusCode::Ok);
-    res.render_html(|o| Ok(templates::posts(o, blog, posts)?))?;
-    res.set_content_type(mime::HTML);
+    let res = Response::builder(StatusCode::Ok)
+        .render_html(|o| Ok(templates::posts(o, blog, posts)?))?
+        .build();
 
     Ok(res)
 }
@@ -30,15 +30,15 @@ pub async fn get_post(req: Request<AppState>) -> tide::Result {
     let blog = state.get_blog();
 
     if let Some(post) = blog.get_post(&slug) {
-        let mut res = Response::new(StatusCode::Ok);
-        res.render_html(|o| Ok(templates::post(o, blog, post)?))?;
-        res.set_content_type(mime::HTML);
+        let res = Response::builder(StatusCode::Ok)
+            .render_html(|o| Ok(templates::post(o, blog, post)?))?
+            .build();
         return Ok(res);
     }
 
-    let mut res = Response::new(StatusCode::NotFound);
-    res.render_html(|o| Ok(templates::notfound(o)?))?;
-    res.set_content_type(mime::HTML);
+    let res = Response::builder(StatusCode::NotFound)
+        .render_html(|o| Ok(templates::notfound(o)?))?
+        .build();
     Ok(res)
 }
 
@@ -62,15 +62,16 @@ pub async fn get_attachment(req: Request<AppState>) -> tide::Result {
         let attachement_name = req.param::<String>("attachment")?;
         println!("{}", attachement_name);
         if let Some(attachment) = post.get_attachment(&attachement_name) {
-            let mut res = Response::new(StatusCode::Ok);
-            res.insert_header("cache-control", "max-age=31536000"); // 1 year as second
-            res.set_body(Body::from_file(&attachment.get_path()).await?);
+            let res = Response::builder(StatusCode::Ok)
+                .header("cache-control", "max-age=31536000") // 1 year as second
+                .body(Body::from_file(&attachment.get_path()).await?)
+                .build();
             return Ok(res);
         }
     }
 
-    let mut res = Response::new(StatusCode::NotFound);
-    res.render_html(|o| Ok(templates::notfound(o)?))?;
-    res.set_content_type(mime::HTML);
+    let res = Response::builder(StatusCode::NotFound)
+        .render_html(|o| Ok(templates::notfound(o)?))?
+        .build();
     Ok(res)
 }

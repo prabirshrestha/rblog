@@ -1,4 +1,4 @@
-use crate::{appstate::AppState, renderer::Render, templates};
+use crate::{appstate::AppState, renderer::RenderBuilder, templates};
 use std::str::FromStr;
 use tide::{http::Mime, Request, Response, StatusCode};
 
@@ -12,8 +12,9 @@ pub async fn get_rss_feed(req: Request<AppState>) -> tide::Result {
         .map(|key| state.get_blog().get_post(key).unwrap())
         .collect();
 
-    let mut res = Response::new(StatusCode::Ok);
-    res.render_html(|o| Ok(templates::rss(o, blog, posts)?))?;
-    res.set_content_type(Mime::from_str("application/rss+xml; charset=utf-8")?);
+    let res = Response::builder(StatusCode::Ok)
+        .content_type(Mime::from_str("application/rss+xml; charset=utf-8")?)
+        .render(|o| Ok(templates::rss(o, blog, posts)?))?
+        .build();
     Ok(res)
 }

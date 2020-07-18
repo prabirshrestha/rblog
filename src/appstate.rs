@@ -3,11 +3,12 @@ use anyhow::Result;
 use std::env;
 use std::net::SocketAddr;
 use std::path::Path;
+use std::sync::Arc;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct AppState {
     addr: String,
-    blog: Blog,
+    blog: Arc<Blog>,
 }
 
 impl AppState {
@@ -31,7 +32,7 @@ impl AppState {
 
         Ok(Self {
             addr,
-            blog: Blog::from_conf(conf)?,
+            blog: Arc::new(Blog::from_conf(conf)?),
         })
     }
 

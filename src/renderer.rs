@@ -28,3 +28,31 @@ impl Render for tide::Response {
         Ok(())
     }
 }
+
+pub trait RenderBuilder {
+    fn render<Call>(self, call: Call) -> std::io::Result<tide::ResponseBuilder>
+    where
+        Call: FnOnce(&mut dyn std::io::Write) -> std::io::Result<()>;
+
+    fn render_html<Call>(self, call: Call) -> std::io::Result<tide::ResponseBuilder>
+    where
+        Call: FnOnce(&mut dyn std::io::Write) -> std::io::Result<()>;
+}
+
+impl RenderBuilder for tide::ResponseBuilder {
+    fn render<Call>(self, call: Call) -> std::io::Result<tide::ResponseBuilder>
+    where
+        Call: FnOnce(&mut dyn std::io::Write) -> std::io::Result<()>,
+    {
+        let mut buf = Vec::new();
+        call(&mut buf)?;
+        Ok(self.body(buf))
+    }
+
+    fn render_html<Call>(self, call: Call) -> std::io::Result<tide::ResponseBuilder>
+    where
+        Call: FnOnce(&mut dyn std::io::Write) -> std::io::Result<()>,
+    {
+        Ok(self.render(call)?.content_type(tide::http::mime::HTML))
+    }
+}
