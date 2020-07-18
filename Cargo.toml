@@ -1,6 +1,6 @@
 [package]
 name = "rblog"
-version = "0.39.0"
+version = "0.40.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
 edition = "2018"
 license = "MIT"
@@ -18,10 +18,10 @@ ructe = { version = "0.11.4", features = ["sass", "mime03"] }
 anyhow = "1.0.31"
 async-std = { version = "1.6.2", features = ["attributes"] }
 chrono = { version = "0.4.13", features = ["serde"] }
+comrak = "0.7.0"
 dotenv = "0.15.0"
+mime = "0.3.16"
 serde = { version = "1.0.111", features = ["derive"] }
 serde_yaml = "0.8.13"
 slug = "0.1.4"
 tide = "0.12.0"
-mime = "0.3.16"
-comrak = "0.7.0"
