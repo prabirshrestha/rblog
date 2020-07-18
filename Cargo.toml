@@ -16,7 +16,7 @@ ructe = { version = "0.11.4", features = ["sass", "mime03"] }
 
 [dependencies]
 anyhow = "1.0.31"
-async-std = { version = "1.6.1", features = ["attributes"] }
+async-std = { version = "1.6.2", features = ["attributes"] }
 chrono = { version = "0.4.11", features = ["serde"] }
 dotenv = "0.15.0"
 serde = { version = "1.0.111", features = ["derive"] }
