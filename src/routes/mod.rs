@@ -14,10 +14,11 @@ pub async fn not_found(_req: Request<AppState>) -> tide::Result {
 pub async fn get_static_file(req: Request<AppState>) -> tide::Result {
     let name = req.param::<String>("name")?;
     if let Some(data) = StaticFile::get(&name) {
-        let mut res = Response::new(StatusCode::Ok);
-        res.set_content_type(Mime::from_str(data.mime.as_ref())?);
-        res.insert_header("cache-control", "max-age=31536000"); // 1 year as second
-        res.set_body(data.content);
+        let res = Response::builder(StatusCode::Ok)
+            .content_type(Mime::from_str(data.mime.as_ref())?)
+            .header("cache-control", "max-age=31536000") // 1 year as second
+            .body(data.content)
+            .build();
         Ok(res)
     } else {
         let res = Response::new(StatusCode::NotFound);
