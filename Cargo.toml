@@ -21,7 +21,7 @@ chrono = { version = "0.4.13", features = ["serde"] }
 comrak = "0.7.0"
 dotenv = "0.15.0"
 mime = "0.3.16"
-serde = { version = "1.0.111", features = ["derive"] }
+serde = { version = "1.0.114", features = ["derive"] }
 serde_yaml = "0.8.13"
 slug = "0.1.4"
 tide = "0.13.0"
