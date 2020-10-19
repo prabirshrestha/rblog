@@ -1258,7 +1258,7 @@ dependencies = [
 
 [[package]]
 name = "rblog"
-version = "0.43.0"
+version = "0.45.0"
 dependencies = [
  "anyhow",
  "async-std",
