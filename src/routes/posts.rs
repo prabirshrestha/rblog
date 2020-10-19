@@ -19,7 +19,7 @@ pub async fn get_posts(req: Request<AppState>) -> tide::Result {
 }
 
 pub async fn get_post(req: Request<AppState>) -> tide::Result {
-    let slug = req.param::<String>("slug")?;
+    let slug = req.param("slug")?;
     let normalized_slug = slug.to_lowercase();
 
     if slug != normalized_slug {
@@ -43,12 +43,12 @@ pub async fn get_post(req: Request<AppState>) -> tide::Result {
 }
 
 pub async fn redirect_trailing_slash(req: Request<AppState>) -> tide::Result {
-    let slug = req.param::<String>("slug")?;
+    let slug = req.param("slug")?;
     Ok(Redirect::permanent(format!("/posts/{}/", &slug)).into())
 }
 
 pub async fn get_attachment(req: Request<AppState>) -> tide::Result {
-    let slug = req.param::<String>("slug")?;
+    let slug = req.param("slug")?;
     let normalized_slug = slug.to_lowercase();
 
     if slug != normalized_slug {
@@ -59,7 +59,7 @@ pub async fn get_attachment(req: Request<AppState>) -> tide::Result {
     let blog = state.get_blog();
 
     if let Some(post) = blog.get_post(&slug) {
-        let attachement_name = req.param::<String>("attachment")?;
+        let attachement_name = req.param("attachment")?;
         println!("{}", attachement_name);
         if let Some(attachment) = post.get_attachment(&attachement_name) {
             let res = Response::builder(StatusCode::Ok)

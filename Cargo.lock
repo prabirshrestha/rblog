@@ -818,6 +818,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "http-client"
+version = "6.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9cc054d9c24096dde2dc73c0d37fa3f9269443dbf4a7ba47598ec9cffe71220e"
+dependencies = [
+ "async-trait",
+ "http-types",
+ "log",
+]
+
+[[package]]
 name = "http-types"
 version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1255,7 +1266,8 @@ dependencies = [
  "comrak",
  "dotenv",
  "mime",
- "ructe",
+ "ructe 0.11.4",
+ "ructe 0.12.0",
  "serde",
  "serde_yaml",
  "slug",
@@ -1313,6 +1325,19 @@ dependencies = [
  "mime",
  "nom",
  "rsass",
+]
+
+[[package]]
+name = "ructe"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1b8ffc645837eab09b6cbb6772d18897c6309753254592e149b40ff7fb113c01"
+dependencies = [
+ "base64",
+ "bytecount",
+ "itertools",
+ "md5",
+ "nom",
 ]
 
 [[package]]
@@ -1591,9 +1616,9 @@ dependencies = [
 
 [[package]]
 name = "tide"
-version = "0.13.0"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7c4c4e35f5a89ed08cbb59b6e4e1d648e563d6f8daa804002f3557d11d3c8f9"
+checksum = "457aa92965e7219a7444b2891ba970136cdf07217cea5591c15f981635800336"
 dependencies = [
  "async-h1",
  "async-session",
@@ -1602,8 +1627,10 @@ dependencies = [
  "async-trait",
  "femme",
  "futures-util",
+ "http-client",
  "http-types",
  "kv-log-macro",
+ "log",
  "pin-project-lite",
  "route-recognizer",
  "serde",

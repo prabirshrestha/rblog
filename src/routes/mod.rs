@@ -15,7 +15,7 @@ pub async fn not_found(_req: Request<AppState>) -> tide::Result {
 }
 
 pub async fn get_static_file(req: Request<AppState>) -> tide::Result {
-    let name = req.param::<String>("name")?;
+    let name = req.param("name")?;
     if let Some(data) = StaticFile::get(&name) {
         let res = Response::builder(StatusCode::Ok)
             .content_type(Mime::from_str(data.mime.as_ref())?)
