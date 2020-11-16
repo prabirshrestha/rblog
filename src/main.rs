@@ -6,6 +6,7 @@ mod routes;
 use crate::appstate::AppState;
 use anyhow::Result;
 use tide::log;
+use tide::prelude::*;
 
 include!(concat!(env!("OUT_DIR"), "/templates.rs"));
 
@@ -19,7 +20,12 @@ async fn main() -> Result<()> {
     let mut app = tide::with_state(state);
     register_routes(&mut app);
 
-    app.listen(addr).await?;
+    let mut listener = app.bind(addr).await?;
+    for info in listener.info().iter() {
+        println!("Server listening on {}", info);
+    }
+
+    listener.accept().await?;
 
     Ok(())
 }
