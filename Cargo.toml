@@ -22,7 +22,7 @@ comrak = "0.9.0"
 dotenv = "0.15.0"
 mime = "0.3.16"
 serde = { version = "1.0.117", features = ["derive"] }
-serde_yaml = "0.8.13"
+serde_yaml = "0.8.14"
 slug = "0.1.4"
 tide = "0.15.0"
 ructe = { version = "0.13.0", features = ["tide015"] }
