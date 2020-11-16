@@ -199,14 +199,14 @@ impl Post {
 
         let raw_content = content.trim();
         let mut options = ComrakOptions::default();
-        options.smart = true;
-        options.github_pre_lang = true;
-        options.ext_table = true;
-        options.ext_autolink = true;
-        options.ext_superscript = true;
-        options.ext_strikethrough = true;
-        options.ext_tasklist = true;
-        options.ext_header_ids = Some("--".to_string());
+        options.parse.smart = true;
+        options.render.github_pre_lang = true;
+        options.extension.table = true;
+        options.extension.autolink = true;
+        options.extension.superscript = true;
+        options.extension.strikethrough = true;
+        options.extension.tasklist = true;
+        options.extension.header_ids = Some("--".to_string());
 
         let html = markdown_to_html(raw_content, &options);
 
