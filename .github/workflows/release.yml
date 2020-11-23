@@ -35,6 +35,8 @@ jobs:
 
       - name: Get the release version from the tag
         if: env.PKG_VERSION == ''
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         run: |
           # Apparently, this is the right way to get a tag name. Really?
           #
