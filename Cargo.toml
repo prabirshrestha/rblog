@@ -10,7 +10,7 @@ repository = "https://github.com/prabirshrestha/rblog"
 build = "src/build.rs"
 
 [build-dependencies]
-ructe = { version = "0.11.4", features = ["sass", "mime03"] }
+ructe = { version = "0.13.0", features = ["sass", "tide015"] }
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
