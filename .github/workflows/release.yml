@@ -35,13 +35,8 @@ jobs:
 
       - name: Get the release version from the tag
         if: env.PKG_VERSION == ''
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         run: |
-          # Apparently, this is the right way to get a tag name. Really?
-          #
-          # See: https://github.community/t5/GitHub-Actions/How-to-get-just-the-tag-name/m-p/32167/highlight/true#M1027
-          echo "::set-env name=PKG_VERSION::${GITHUB_REF#refs/tags/}"
+          echo "PKG_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
           echo "version is: ${{ env.PKG_VERSION }}"
 
       - name: Create GitHub release
