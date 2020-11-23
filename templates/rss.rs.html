@@ -5,16 +5,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>@blog.get_blog_conf().get_title()</title>
-		<link>TODO</link>
-		<description><![CDATA[TODO]]></description>
-		<atom:link href="/rss" rel="self" type="application/rss+xml"></atom:link>
+		<link>@blog.get_blog_conf().get_root()</link>
+		<description><![CDATA[Blog]]></description>
+		<atom:link href="@blog.get_blog_conf().get_root()/rss" rel="self" type="application/rss+xml"></atom:link>
         @for post in posts {
             <item>
                 <title>@post.get_metadata().get_title()</title>
-                <link>TODO</link>
+                <link>@(blog.get_blog_conf().get_root())/@(post.get_metadata().get_slug().as_ref().unwrap())</link>
 				<description><![CDATA[@post.get_content()]]></description>
-				<pubDate>TODO</pubDate>
-				<guid>@post.get_url()</guid>
+				<pubDate>@post.get_metadata().get_iso8601_datetime().as_ref().unwrap()</pubDate>
+                <guid>@(blog.get_blog_conf().get_root())/@(post.get_metadata().get_slug().as_ref().unwrap())</guid>
             </item>
         }
 	</channel>

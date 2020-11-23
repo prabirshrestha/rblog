@@ -19,6 +19,7 @@ pub struct Blog {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BlogConf {
     title: String,
+    root: String,
     page_size: Option<usize>,
     enable_drafts: Option<bool>,
     posts_dir: Option<String>,
@@ -132,6 +133,10 @@ impl BlogConf {
 
     pub fn get_title(&self) -> &str {
         &self.title
+    }
+
+    pub fn get_root(&self) -> &str {
+        &self.root
     }
 
     pub fn get_github(&self) -> Option<&str> {
@@ -301,6 +306,14 @@ impl PostMetadata {
 
     pub fn get_date(&self) -> &Option<DateTime<Utc>> {
         &self.date
+    }
+
+    pub fn get_iso8601_datetime(&self) -> Option<String> {
+        if let Some(date) = self.get_date() {
+            Some(date.to_rfc3339())
+        } else {
+            None
+        }
     }
 
     pub fn get_friendly_date(&self) -> Option<String> {
