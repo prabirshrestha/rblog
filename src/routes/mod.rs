@@ -6,6 +6,11 @@ use crate::{
 };
 use tide::{Request, Response, StatusCode};
 
+pub async fn health_check(_req: Request<AppState>) -> tide::Result {
+    let res = Response::builder(StatusCode::Ok).build();
+    Ok(res)
+}
+
 pub async fn not_found(_req: Request<AppState>) -> tide::Result {
     let res = Response::builder(StatusCode::NotFound)
         .render_html(|o| Ok(templates::notfound(o)?))?

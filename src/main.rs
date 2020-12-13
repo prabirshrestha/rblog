@@ -32,6 +32,7 @@ async fn main() -> Result<()> {
 
 fn register_routes(app: &mut tide::Server<AppState>) {
     app.at("/").get(routes::posts::get_posts);
+    app.at("/healthcheck").get(routes::health_check);
     app.at("/posts/:slug")
         .get(routes::posts::redirect_trailing_slash);
     app.at("/posts/:slug/").get(routes::posts::get_post);
