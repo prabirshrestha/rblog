@@ -15,14 +15,14 @@ ructe = { version = "0.13.0", features = ["sass", "tide015"] }
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.34"
-async-std = { version = "1.8.0", features = ["attributes"] }
-chrono = { version = "0.4.13", features = ["serde"] }
-comrak = "0.9.0"
+anyhow = "1.0.38"
+async-std = { version = "1.9.0", features = ["attributes"] }
+chrono = { version = "0.4.19", features = ["serde"] }
+comrak = "0.9.1"
 dotenv = "0.15.0"
 mime = "0.3.16"
-serde = { version = "1.0.117", features = ["derive"] }
-serde_yaml = "0.8.14"
+serde = { version = "1.0.123", features = ["derive"] }
+serde_yaml = "0.8.17"
 slug = "0.1.4"
-tide = "0.15.0"
+tide = "0.16.0"
 ructe = { version = "0.13.0", features = ["tide015"] }
