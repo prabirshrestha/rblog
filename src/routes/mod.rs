@@ -1,34 +1,26 @@
 pub mod posts;
 pub mod rss;
 
-use crate::{
-    appstate::AppState, renderer::RenderBuilder, templates, templates::statics::StaticFile,
-};
-use tide::{Request, Response, StatusCode};
+use crate::templates::{self, statics::StaticFile};
+use trillium::{conn_unwrap, Conn, KnownHeaderName, Status};
+use trillium_router::RouterConnExt;
+use trillium_ructe::RucteConnExt;
 
-pub async fn health_check(_req: Request<AppState>) -> tide::Result {
-    let res = Response::builder(StatusCode::Ok).build();
-    Ok(res)
+pub async fn health_check(conn: Conn) -> Conn {
+    conn.with_status(Status::Ok).halt()
 }
 
-pub async fn not_found(_req: Request<AppState>) -> tide::Result {
-    let res = Response::builder(StatusCode::NotFound)
-        .render_html(|o| Ok(templates::notfound(o)?))?
-        .build();
-    Ok(res)
+pub async fn not_found(conn: Conn) -> Conn {
+    conn.render_html(|o| templates::notfound(o))
+        .with_status(Status::NotFound)
 }
 
-pub async fn get_static_file(req: Request<AppState>) -> tide::Result {
-    let name = req.param("name")?;
-    if let Some(data) = StaticFile::get(&name) {
-        let res = Response::builder(StatusCode::Ok)
-            .content_type(data.mime.clone())
-            .header("cache-control", "max-age=31536000") // 1 year as second
-            .body(data.content)
-            .build();
-        Ok(res)
-    } else {
-        let res = Response::new(StatusCode::NotFound);
-        Ok(res)
-    }
+pub async fn get_static_file(conn: Conn) -> Conn {
+    let name = conn_unwrap!(conn.param("name"), conn);
+    let data = conn_unwrap!(StaticFile::get(&name), conn);
+    conn.with_status(Status::Ok)
+        .with_header(KnownHeaderName::ContentType, data.mime.to_string())
+        .with_header(KnownHeaderName::CacheControl, "max-age=31536000") // 1 year as second
+        .with_body(data.content)
+        .halt()
 }
