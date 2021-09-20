@@ -1,5 +1,6 @@
 use crate::{appstate::AppState, handlers, routes};
 use trillium::{Handler, Init, State};
+use trillium_conn_id::ConnId;
 use trillium_logger::{apache_combined, Logger};
 use trillium_router::Router;
 
@@ -10,6 +11,7 @@ pub fn app() -> impl Handler {
             State::new(state)
         }),
         Logger::new().with_formatter(apache_combined("-", "-")),
+        ConnId::new(),
         Router::new()
             .get("/", routes::posts::get_posts)
             .get(
