@@ -404,6 +404,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f7531096570974c3a9dcf9e4b8e1cede1ec26cf5046219fb3b9d897503b9be59"
 
 [[package]]
+name = "extension-trait"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "280f7cac6cd3be2272eed5312293687e574dcc21b57c1c3cf5372805e3ead611"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "fake-simd"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -928,6 +939,7 @@ dependencies = [
  "serde_yaml",
  "slug",
  "trillium",
+ "trillium-conn-id",
  "trillium-logger",
  "trillium-router",
  "trillium-ructe",
@@ -1260,6 +1272,17 @@ dependencies = [
  "futures-lite",
  "log",
  "trillium-http",
+]
+
+[[package]]
+name = "trillium-conn-id"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5b66a10ce8b62416ab8ff6228a16527b18a6ad8ee113d19dd9262a61fc2997a4"
+dependencies = [
+ "extension-trait",
+ "fastrand",
+ "trillium",
 ]
 
 [[package]]
