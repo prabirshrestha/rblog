@@ -1,5 +1,4 @@
-use crate::{appstate::AppState, templates};
-use std::fs;
+use crate::{appstate::AppState, handlers::body_from_path_with_mime, templates};
 use trillium::{conn_try, conn_unwrap, Conn, KnownHeaderName, Status};
 use trillium_router::RouterConnExt;
 use trillium_ructe::RucteConnExt;
@@ -50,16 +49,10 @@ pub async fn get_attachment(conn: Conn) -> Conn {
     let post = conn_unwrap!(blog.get_post(&slug), conn);
     let attachment_name = conn_unwrap!(conn.param("attachment"), conn);
     let attachment = conn_unwrap!(post.get_attachment(attachment_name), conn);
+    let (body, content_type) =
+        conn_try!(body_from_path_with_mime(attachment.get_path()).await, conn);
 
-    let contents = conn_try!(fs::read(attachment.get_path()), conn);
-    conn.with_status(Status::Ok)
-        .with_header(KnownHeaderName::CacheControl, "max-age=31536000") // 1 year as a second
-        .with_header(
-            KnownHeaderName::ContentType,
-            mime_guess::from_path(attachment.get_path())
-                .first_or_octet_stream()
-                .to_string(),
-        )
-        .with_body(contents)
-        .halt()
+    conn.with_header(KnownHeaderName::CacheControl, "max-age=31536000") // 1 year as a second
+        .with_header(KnownHeaderName::ContentType, content_type)
+        .ok(body)
 }
