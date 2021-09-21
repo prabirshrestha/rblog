@@ -10,8 +10,8 @@ pub fn app() -> impl Handler {
             let state = AppState::new_from_env().unwrap();
             State::new(state)
         }),
-        Logger::new().with_formatter(apache_combined("-", "-")),
         ConnId::new(),
+        Logger::new().with_formatter(apache_combined("-", "-")),
         Router::new()
             .get("/", routes::posts::get_posts)
             .get(
