@@ -1308,9 +1308,9 @@ dependencies = [
 
 [[package]]
 name = "trillium-http"
-version = "0.2.1"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9bc0c4d19e1c2c9f19d697f2ca94e9e497d37fa16a87d505bdca94bc79305803"
+checksum = "d068b304a3fb68d6cdb5a3660b5b33f665536c5a35e6bf5fd14fa0f2bea55ff3"
 dependencies = [
  "encoding_rs",
  "futures-lite",
