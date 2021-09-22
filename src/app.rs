@@ -7,6 +7,7 @@ use trillium_router::Router;
 pub fn app() -> impl Handler {
     (
         State::new(AppState::new_from_env().unwrap()),
+        handlers::remove_server_response_header,
         ConnId::new(),
         Logger::new().with_formatter(apache_combined("-", "-")),
         Router::new()
