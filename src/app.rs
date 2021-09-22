@@ -1,15 +1,12 @@
 use crate::{appstate::AppState, handlers, routes};
-use trillium::{Handler, Init, State};
+use trillium::{Handler, State};
 use trillium_conn_id::ConnId;
 use trillium_logger::{apache_combined, Logger};
 use trillium_router::Router;
 
 pub fn app() -> impl Handler {
     (
-        Init::new(|_| async move {
-            let state = AppState::new_from_env().unwrap();
-            State::new(state)
-        }),
+        State::new(AppState::new_from_env().unwrap()),
         ConnId::new(),
         Logger::new().with_formatter(apache_combined("-", "-")),
         Router::new()
