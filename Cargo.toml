@@ -1,6 +1,6 @@
 [package]
 name = "rblog"
-version = "0.55.0"
+version = "0.100.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
 edition = "2018"
 license = "MIT"
@@ -10,8 +10,6 @@ repository = "https://github.com/prabirshrestha/rblog"
 build = "src/build.rs"
 [build-dependencies]
 ructe = { version = "0.13.0", features = ["sass", "mime03"] }
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 anyhow = "1.0.38"
