@@ -18,9 +18,7 @@ pub async fn not_found(conn: Conn) -> Conn {
 pub async fn get_static_file(conn: Conn) -> Conn {
     let name = conn_unwrap!(conn.param("name"), conn);
     let data = conn_unwrap!(StaticFile::get(name), conn);
-    conn.with_status(Status::Ok)
-        .with_header(KnownHeaderName::ContentType, data.mime.to_string())
+    conn.with_header(KnownHeaderName::ContentType, data.mime.to_string())
         .with_header(KnownHeaderName::CacheControl, "max-age=31536000") // 1 year as second
-        .with_body(data.content)
-        .halt()
+        .ok(data.content)
 }
