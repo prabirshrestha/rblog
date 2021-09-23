@@ -7,7 +7,7 @@ pub async fn remove_server_response_header(mut conn: Conn) -> Conn {
 
 pub async fn ensure_trailing_slash(conn: Conn) -> Conn {
     let path = conn.path().to_owned();
-    if path.ends_with("/") {
+    if path.ends_with('/') {
         conn
     } else {
         conn.with_status(Status::PermanentRedirect)

@@ -29,7 +29,7 @@ pub async fn get_post(conn: Conn) -> Conn {
     let state = conn.state::<AppState>().unwrap().to_owned();
     let blog = state.get_blog();
 
-    let post = conn_unwrap!(blog.get_post(&slug), conn);
+    let post = conn_unwrap!(blog.get_post(slug), conn);
     conn.render_html(|o| templates::post(o, blog, post))
 }
 
@@ -46,7 +46,7 @@ pub async fn get_attachment(conn: Conn) -> Conn {
     let state = conn.state::<AppState>().unwrap().to_owned();
     let blog = state.get_blog();
 
-    let post = conn_unwrap!(blog.get_post(&slug), conn);
+    let post = conn_unwrap!(blog.get_post(slug), conn);
     let attachment_name = conn_unwrap!(conn.param("attachment"), conn);
     let attachment = conn_unwrap!(post.get_attachment(attachment_name), conn);
     let (body, content_type) =
