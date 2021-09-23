@@ -309,19 +309,13 @@ impl PostMetadata {
     }
 
     pub fn get_iso8601_datetime(&self) -> Option<String> {
-        if let Some(date) = self.get_date() {
-            Some(date.to_rfc3339())
-        } else {
-            None
-        }
+        self.get_date().as_ref().map(|date| date.to_rfc3339())
     }
 
     pub fn get_friendly_date(&self) -> Option<String> {
-        if let Some(date) = self.get_date() {
-            Some(date.format("%v").to_string())
-        } else {
-            None
-        }
+        self.get_date()
+            .as_ref()
+            .map(|date| date.format("%v").to_string())
     }
 }
 

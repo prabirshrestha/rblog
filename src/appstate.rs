@@ -20,7 +20,7 @@ impl AppState {
             Path::new("./blog.conf")
         };
 
-        let conf = BlogConf::new_from_file(&conf_path)?;
+        let conf = BlogConf::new_from_file(conf_path)?;
 
         Ok(Self {
             blog: Arc::new(Blog::from_conf(conf)?),
