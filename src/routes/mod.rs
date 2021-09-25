@@ -10,6 +10,15 @@ pub async fn health_check(conn: Conn) -> Conn {
     conn.with_status(Status::Ok).halt()
 }
 
+pub async fn robots_txt(conn: Conn) -> Conn {
+    conn.with_header(KnownHeaderName::ContentType, "text/plain; charset=UTF-8")
+        .ok(r#"
+User-agent: *
+
+Disallow: /healthcheck
+"#)
+}
+
 pub async fn not_found(conn: Conn) -> Conn {
     conn.render_html(|o| templates::notfound(o))
         .with_status(Status::NotFound)

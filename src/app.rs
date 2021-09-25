@@ -22,7 +22,8 @@ pub fn app() -> impl Handler {
             .get("/posts/:slug/:attachment", routes::posts::get_attachment)
             .get("/rss", routes::rss::get_rss_feed)
             .get("/static/:name", routes::get_static_file)
-            .get("/healthcheck", routes::health_check),
+            .get("/healthcheck", routes::health_check)
+            .get("/robots.txt", routes::robots_txt),
         routes::not_found,
     )
 }
