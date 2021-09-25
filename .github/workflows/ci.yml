@@ -1,17 +1,51 @@
 name: CI
 
 on:
-  pull_request:       # trigger on pull requests
+  pull_request:
   push:
-    branches:         # array of glob patterns matching against refs/heads. Optional; defaults to all
-      - master        # triggers on pushes that contain changes in master
+    branches:
+      - master
+      - ci
+    tags:
+      - 'v0.[0-9]+.[0-9]+'
+      - 'v0.[0-9]+.[0-9]+-beta.[0-9]+'
+      - 'v0.[0-9]+.[0-9]+-alpha.[0-9]+'
 
 jobs:
+  style:
+    name: check style
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+        components: rustfmt, clippy
+    - name: rust fmt
+      uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: --all -- --check
+    - name: clippypush
+      uses: actions-rs/cargo@v1
+      with:
+        command: clippy
+        args: -- -D warnings
+
   build:
     env:
       # Emit backtraces on panics.
       RUST_BACKTRACE: 1
     runs-on: ${{ matrix.os }}
+    needs: [style]
     strategy:
       matrix:
         build: [linux, linux-arm, macos, winmsvc]
@@ -24,7 +58,7 @@ jobs:
           - build: linux-arm
             os: ubuntu-latest
             rust: stable
-            target: arm-unknown-linux-musleabihf
+            target: aarch64-unknown-linux-musl
             usecross: true
           - build: macos
             os: macos-latest
@@ -43,6 +77,22 @@ jobs:
       with:
         fetch-depth: 1
 
+    - name: Get the build metadata
+      shell: bash
+      run: |
+        echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        echo "CARGO_VERSION=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
+        echo "PKG_NAME=$(grep -m 1 '^name = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
+
+    - name: Validate git tag and Cargo.toml version
+      shell: bash
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        if [ "${{ env.VERSION }}" != "v${{ env.CARGO_VERSION }}" ]; then
+          echo "git tag version (${{ env.VERSION }}) does not match Cargo.toml version (v${{ env.CARGO_VERSION }})"
+          exit 1
+        fi
+
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -56,47 +106,68 @@ jobs:
       with:
         use-cross: ${{ matrix.usecross }}
         command: build
-        args: --verbose --locked --all --target ${{ matrix.target }}
+        args: --verbose --locked --all --release --target ${{ matrix.target }}
 
     - name: Test
       uses: actions-rs/cargo@v1
       with:
         use-cross: ${{ matrix.usecross }}
         command: test
-        args: --verbose --all --target ${{ matrix.target }}
+        args: --verbose --locked --all --release --target ${{ matrix.target }}
 
-  rustfmt:
-    name: rustfmt
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        profile: minimal
-        components: rustfmt
-    - name: rust fmt
-      uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: --all -- --check
+    - name: Strip release binary (linux and macos only)
+      if: matrix.build == 'linux' || matrix.build == 'macos'
+      run: strip "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}"
 
-  clippy:
-    name: clippy
+    - name: Build archive
+      shell: bash
+      run: |
+        staging="${{ env.PKG_NAME }}-${{ env.VERSION }}-${{ matrix.target }}"
+        mkdir -p "$staging"
+        cp {README.md,LICENSE*} "$staging/"
+        if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          cp "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}.exe" "$staging/"
+          7z a "$staging.zip" "$staging"
+          echo "ASSET=${staging}.zip" >> $GITHUB_ENV
+        else
+          cp "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}" "$staging/"
+          tar czf "$staging.tar.gz" "$staging"
+          echo "ASSET=${staging}.tar.gz" >> $GITHUB_ENV
+        fi
+
+    - name: Create draft release and upload asset
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        draft: true
+        files: ${{ env.ASSET }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-crate:
+    name: publish-crate
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [build]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
-          profile: minimal
+          fetch-depth: 1
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
           toolchain: stable
+          profile: minimal
           override: true
-          components: clippy
-      - name: clippypush
+      - name: Login to crates.io
         uses: actions-rs/cargo@v1
         with:
-          command: clippy
-          args: -- -D warnings
+          use-cross: ${{ matrix.usecross }}
+          command: login
+          args: ${{ secrets.CRATES_TOKEN }}
+      - name: Publish to crates.io
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.usecross }}
+          command: publish
