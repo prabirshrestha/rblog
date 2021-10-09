@@ -29,4 +29,5 @@ trillium-conn-id = "0.2.0"
 trillium-logger = "0.4.0"
 trillium-router = "0.3.0"
 trillium-ructe = "0.3.1"
+trillium-send-file = { version = "0.1.0", features = ["smol"] }
 trillium-smol = "0.2.0"

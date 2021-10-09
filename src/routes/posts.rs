@@ -1,7 +1,8 @@
-use crate::{appstate::AppState, handlers::body_from_path_with_mime, templates};
-use trillium::{conn_try, conn_unwrap, Conn, KnownHeaderName, Status};
+use crate::{appstate::AppState, templates};
+use trillium::{conn_unwrap, Conn, KnownHeaderName, Status};
 use trillium_router::RouterConnExt;
 use trillium_ructe::RucteConnExt;
+use trillium_send_file::SendFileConnExt;
 
 pub async fn get_posts(conn: Conn) -> Conn {
     let state = conn.state::<AppState>().unwrap().to_owned();
@@ -49,10 +50,7 @@ pub async fn get_attachment(conn: Conn) -> Conn {
     let post = conn_unwrap!(blog.get_post(slug), conn);
     let attachment_name = conn_unwrap!(conn.param("attachment"), conn);
     let attachment = conn_unwrap!(post.get_attachment(attachment_name), conn);
-    let (body, content_type) =
-        conn_try!(body_from_path_with_mime(attachment.get_path()).await, conn);
-
     conn.with_header(KnownHeaderName::CacheControl, "max-age=31536000") // 1 year as a second
-        .with_header(KnownHeaderName::ContentType, content_type)
-        .ok(body)
+        .send_file(attachment.get_path().into())
+        .await
 }
