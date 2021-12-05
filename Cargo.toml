@@ -25,7 +25,7 @@ serde = { version = "1.0.123", features = ["derive"] }
 serde_yaml = "0.8.17"
 slug = "0.1.4"
 trillium = "0.2.2"
-trillium-conn-id = "0.2.0"
+trillium-conn-id = "0.2.1"
 trillium-logger = "0.4.0"
 trillium-router = "0.3.0"
 trillium-ructe = "0.3.1"
