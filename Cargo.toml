@@ -15,7 +15,7 @@ ructe = { version = "0.13.0", features = ["sass", "mime03"] }
 anyhow = "1.0.51"
 async-fs = "1.5.0"
 chrono = { version = "0.4.19", features = ["serde"] }
-comrak = "0.9.1"
+comrak = "0.12.1"
 dotenv = "0.15.0"
 mime = "0.3.16"
 mime_guess = "2.0.3"
