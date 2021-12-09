@@ -2,6 +2,7 @@ mod app;
 mod appstate;
 mod blog;
 mod handlers;
+mod markdown;
 mod routes;
 
 use app::app;
