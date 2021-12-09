@@ -28,4 +28,12 @@ fn should_compress_html() {
             .on(&handler),
         "content-encoding" => "gzip"
     );
+
+    // TODO: comment for now. https://github.com/trillium-rs/trillium/issues/145
+    // assert_headers!(
+    //     get("/")
+    //         .with_request_header(KnownHeaderName::AcceptEncoding, "")
+    //         .on(&handler),
+    //     "content-encoding" => None
+    // );
 }
