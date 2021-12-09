@@ -1,6 +1,5 @@
 use anyhow::{bail, Result};
 use chrono::{DateTime, Utc};
-use comrak::{markdown_to_html, ComrakOptions};
 use serde::{Deserialize, Serialize};
 use slug::slugify;
 use std::cmp::Ord;
@@ -8,6 +7,8 @@ use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::fs;
 use std::path::{Path, PathBuf};
+
+use crate::markdown::markdown_to_html;
 
 #[derive(Debug)]
 pub struct Blog {
@@ -202,23 +203,12 @@ impl Post {
             None => Some(slugify(&metadata.title)),
         };
 
-        let raw_content = content.trim();
-        let mut options = ComrakOptions::default();
-        options.parse.smart = true;
-        options.render.github_pre_lang = true;
-        options.extension.table = true;
-        options.extension.autolink = true;
-        options.extension.superscript = true;
-        options.extension.strikethrough = true;
-        options.extension.tasklist = true;
-        options.extension.header_ids = Some("--".to_string());
-
-        let html = markdown_to_html(raw_content, &options);
+        let content = content.trim();
 
         let post = Post {
             metadata,
-            content: raw_content.into(),
-            html_content: html,
+            content: content.into(),
+            html_content: markdown_to_html(content),
             attachments: HashMap::new(),
         };
 
