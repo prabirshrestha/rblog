@@ -10,7 +10,7 @@ pub fn markdown_to_html(markdown_input: &str) -> String {
 
     let parser = Parser::new_ext(markdown_input, options);
 
-    let mut html_output = String::new();
+    let mut html_output = String::with_capacity(markdown_input.len() * 3 / 2);
     html::push_html(&mut html_output, parser);
 
     html_output
