@@ -402,6 +402,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "etag"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aec9f8918ec91bd35f3068e33da01b72a295ac8a7baacb0290b56ffeeec9d88f"
+dependencies = [
+ "str-buf",
+ "xxhash-rust",
+]
+
+[[package]]
 name = "event-listener"
 version = "2.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -920,8 +930,8 @@ dependencies = [
  "trillium-logger",
  "trillium-router",
  "trillium-ructe",
- "trillium-send-file",
  "trillium-smol",
+ "trillium-static",
  "trillium-testing",
 ]
 
@@ -941,6 +951,12 @@ name = "regex-syntax"
 version = "0.6.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f497285884f3fcff424ffc933e56d7cbca511def0c9831a7f9b5f6153e3cc89b"
+
+[[package]]
+name = "relative-path"
+version = "1.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "73d4caf086b102ab49d0525b721594a555ab55c6556086bbe52a430ad26c3bd7"
 
 [[package]]
 name = "rlimit"
@@ -1146,6 +1162,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "str-buf"
+version = "2.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5d3f6746ae4fb2c851c6ad2fdaa1090f6777315bc7522b2a2bc5897e091eefb2"
+
+[[package]]
 name = "syn"
 version = "1.0.82"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1308,20 +1330,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "trillium-send-file"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c03d02649007004451065b2e87ac9b5d269331d4a3910da18dfee10414c1c92"
-dependencies = [
- "async-fs",
- "cfg-if",
- "futures-lite",
- "log",
- "mime_guess",
- "trillium",
-]
-
-[[package]]
 name = "trillium-server-common"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1353,6 +1361,23 @@ dependencies = [
  "trillium",
  "trillium-http",
  "trillium-server-common",
+]
+
+[[package]]
+name = "trillium-static"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "30f8fdac497588f1217959fa518fa21e9e569b6480485ef966f3e28826af24e2"
+dependencies = [
+ "async-fs",
+ "cfg-if",
+ "etag",
+ "futures-lite",
+ "httpdate",
+ "log",
+ "mime_guess",
+ "relative-path",
+ "trillium",
 ]
 
 [[package]]
@@ -1504,6 +1529,12 @@ name = "wyz"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "85e60b0d1b5f99db2556934e21937020776a5d31520bf169e851ac44e6420214"
+
+[[package]]
+name = "xxhash-rust"
+version = "0.8.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e575e15bedf6e57b5c2d763ffc6c3c760143466cbd09d762d539680ab5992ded"
 
 [[package]]
 name = "yaml-rust"
