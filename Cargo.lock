@@ -925,6 +925,7 @@ dependencies = [
  "serde_yaml",
  "slug",
  "trillium",
+ "trillium-caching-headers",
  "trillium-compression",
  "trillium-conn-id",
  "trillium-logger",
@@ -1249,6 +1250,17 @@ dependencies = [
  "futures-lite",
  "log",
  "trillium-http",
+]
+
+[[package]]
+name = "trillium-caching-headers"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0d1cc9754005a2ad9396f696fc5d9b4c7faa5a091944314b4b195ebc4869e14d"
+dependencies = [
+ "etag",
+ "httpdate",
+ "trillium",
 ]
 
 [[package]]
