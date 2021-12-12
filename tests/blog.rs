@@ -39,18 +39,18 @@ fn should_compress_html() {
 }
 
 #[test]
-fn should_set_request_header() {
+fn should_set_request_id_header() {
     let handler = app();
 
     let conn = get("/").run(&handler);
-    let etag_header = conn.inner().response_headers().get_str("etag");
-    assert!(etag_header.is_some());
+    let x_request_id_header = conn.inner().response_headers().get_str("x-request-id");
+    assert!(x_request_id_header.is_some());
 
     let conn = get("/posts/welcome/").run(&handler);
-    let etag_header = conn.inner().response_headers().get_str("etag");
-    assert!(etag_header.is_some());
+    let x_request_id_header = conn.inner().response_headers().get_str("x-request-id");
+    assert!(x_request_id_header.is_some());
 
     let conn = get("http://localhost:8080/posts/welcome/attachment.txt").run(&handler);
-    let etag_header = conn.inner().response_headers().get_str("etag");
-    assert!(etag_header.is_some());
+    let x_request_id_header = conn.inner().response_headers().get_str("x-request-id");
+    assert!(x_request_id_header.is_some());
 }
