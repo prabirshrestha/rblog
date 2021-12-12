@@ -37,3 +37,20 @@ fn should_compress_html() {
     //     "content-encoding" => None
     // );
 }
+
+#[test]
+fn should_set_request_header() {
+    let handler = app();
+
+    let conn = get("/").run(&handler);
+    let etag_header = conn.inner().response_headers().get_str("etag");
+    assert!(etag_header.is_some());
+
+    let conn = get("/posts/welcome/").run(&handler);
+    let etag_header = conn.inner().response_headers().get_str("etag");
+    assert!(etag_header.is_some());
+
+    let conn = get("http://localhost:8080/posts/welcome/attachment.txt").run(&handler);
+    let etag_header = conn.inner().response_headers().get_str("etag");
+    assert!(etag_header.is_some());
+}
