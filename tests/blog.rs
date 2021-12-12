@@ -37,3 +37,20 @@ fn should_compress_html() {
     //     "content-encoding" => None
     // );
 }
+
+#[test]
+fn should_set_request_id_header() {
+    let handler = app();
+
+    let conn = get("/").run(&handler);
+    let x_request_id_header = conn.inner().response_headers().get_str("x-request-id");
+    assert!(x_request_id_header.is_some());
+
+    let conn = get("/posts/welcome/").run(&handler);
+    let x_request_id_header = conn.inner().response_headers().get_str("x-request-id");
+    assert!(x_request_id_header.is_some());
+
+    let conn = get("/posts/welcome/attachment.txt").run(&handler);
+    let x_request_id_header = conn.inner().response_headers().get_str("x-request-id");
+    assert!(x_request_id_header.is_some());
+}
