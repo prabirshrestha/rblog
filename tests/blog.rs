@@ -50,7 +50,7 @@ fn should_set_request_id_header() {
     let x_request_id_header = conn.inner().response_headers().get_str("x-request-id");
     assert!(x_request_id_header.is_some());
 
-    let conn = get("http://localhost:8080/posts/welcome/attachment.txt").run(&handler);
+    let conn = get("/posts/welcome/attachment.txt").run(&handler);
     let x_request_id_header = conn.inner().response_headers().get_str("x-request-id");
     assert!(x_request_id_header.is_some());
 }
