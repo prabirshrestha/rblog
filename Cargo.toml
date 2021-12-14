@@ -29,7 +29,7 @@ trillium-caching-headers = "0.1.0"
 trillium-compression = "0.1.0"
 trillium-conn-id = "0.2.1"
 trillium-logger = "0.4.0"
-trillium-router = "0.3.0"
+trillium-router = "0.3.1"
 trillium-ructe = "0.3.1"
 trillium-smol = "0.2.0"
 trillium-static = { version = "0.4.0", features = ["smol"] }
