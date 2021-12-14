@@ -1388,10 +1388,11 @@ dependencies = [
 
 [[package]]
 name = "trillium-testing"
-version = "0.3.1"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f5c1fb6f096b4261c881bc7d537c9af342fbe0f9a488165514ddbf025956aa9"
+checksum = "b8fe6998640cf89a67077fabd40c97fd52f66180efa0b070a693a3e8ab5efcb4"
 dependencies = [
+ "async-channel",
  "async-dup",
  "cfg-if",
  "futures-lite",
