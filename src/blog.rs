@@ -27,6 +27,22 @@ pub struct BlogConf {
     github: Option<String>,
     twitter: Option<String>,
     disqus: Option<String>,
+    giscus: Option<Giscus>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Giscus {
+    pub script_src: String,
+    pub repo: String,
+    pub repo_id: String,
+    pub category: String,
+    pub category_id: String,
+    pub mapping: String,
+    pub reactions_enabled: u32,
+    pub emit_metadata: u32,
+    pub theme: String,
+    pub lang: String,
+    pub crossorigin: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -150,6 +166,10 @@ impl BlogConf {
 
     pub fn get_disqus(&self) -> Option<&str> {
         self.disqus.as_deref()
+    }
+
+    pub fn get_giscus(&self) -> Option<&Giscus> {
+        self.giscus.as_ref()
     }
 }
 
