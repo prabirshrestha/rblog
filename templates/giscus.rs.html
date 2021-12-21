@@ -1,0 +1,19 @@
+@use crate::blog::Blog;
+@(blog: &Blog)
+
+@if let Some(giscus) = blog.get_blog_conf().get_giscus() {
+    <div class=".giscus"></div>
+    <script src="@giscus.script_src"
+        data-repo="@giscus.repo"
+        data-repo-id="@giscus.repo_id"
+        data-category="@giscus.category"
+        data-category-id="@giscus.category_id"
+        data-mapping="@giscus.mapping"
+        data-reactions-enabled="@giscus.reactions_enabled"
+        data-emit-metadata="@giscus.emit_metadata"
+        data-theme="@giscus.theme"
+        data-lang="@giscus.lang"
+        crossorigin="@giscus.crossorigin"
+        async>
+    </script>
+}
