@@ -13,6 +13,7 @@ fn should_render_homepage() {
 }
 
 #[test]
+#[ignore]
 fn should_compress_html() {
     let handler = app();
     assert_headers!(
