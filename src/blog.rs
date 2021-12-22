@@ -1,5 +1,5 @@
 use anyhow::{bail, Result};
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Datelike, Utc};
 use serde::{Deserialize, Serialize};
 use slug::slugify;
 use std::cmp::Ord;
@@ -120,6 +120,10 @@ impl Blog {
 
     pub fn get_blog_conf(&self) -> &BlogConf {
         &self.conf
+    }
+
+    pub fn get_current_year(&self) -> i32 {
+        Utc::now().year()
     }
 }
 
