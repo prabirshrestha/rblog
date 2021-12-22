@@ -28,6 +28,7 @@ pub struct BlogConf {
     twitter: Option<String>,
     disqus: Option<String>,
     giscus: Option<Giscus>,
+    google_analytics: Option<GoogleAnalytics>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -43,6 +44,11 @@ pub struct Giscus {
     pub theme: String,
     pub lang: String,
     pub crossorigin: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct GoogleAnalytics {
+    pub ga_measurement_id: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -170,6 +176,10 @@ impl BlogConf {
 
     pub fn get_giscus(&self) -> Option<&Giscus> {
         self.giscus.as_ref()
+    }
+
+    pub fn get_google_analytics(&self) -> Option<&GoogleAnalytics> {
+        self.google_analytics.as_ref()
     }
 }
 
