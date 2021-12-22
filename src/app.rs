@@ -1,7 +1,7 @@
 use crate::{appstate::AppState, handlers, routes};
 use trillium::{Handler, State};
 use trillium_caching_headers::caching_headers;
-// use trillium_compression::compression;
+use trillium_compression::compression;
 use trillium_conn_id::ConnId;
 use trillium_logger::{apache_combined, Logger};
 use trillium_router::Router;
@@ -15,8 +15,8 @@ pub fn app() -> impl Handler {
             trillium_conn_id::log_formatter::conn_id,
             "-",
         )),
-        // compression(),
         caching_headers(),
+        compression(),
         Router::new()
             .get("/", routes::posts::get_posts)
             .get(
