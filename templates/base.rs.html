@@ -38,7 +38,7 @@
             @:content()
         </main>
         <footer>
-            &copy; 2020
+            &copy; @blog.get_current_year()
 			@if let Some(github) = blog.get_blog_conf().get_github() {
 				<a href="https://github.com/@github">Github</a>
 			}
