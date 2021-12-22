@@ -1,0 +1,12 @@
+@use crate::blog::Blog;
+@(blog: &Blog)
+
+@if let Some(google_analytics) = blog.get_blog_conf().get_google_analytics() {
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@google_analytics.ga_measurement_id"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag()@{window.dataLayer.push(arguments);@}
+        gtag('js', new Date());
+        gtag('config', '@google_analytics.ga_measurement_id');
+    </script>
+}
