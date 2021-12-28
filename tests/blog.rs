@@ -54,3 +54,34 @@ fn should_set_request_id_header() {
     let x_request_id_header = conn.inner().response_headers().get_str("x-request-id");
     assert!(x_request_id_header.is_some());
 }
+
+#[test]
+fn should_add_trailing_slash_for_posts() {
+    let handler = app();
+
+    let conn = get("/posts/welcome").run(&handler);
+    assert_status!(conn, 308);
+    assert_headers!(conn, "Location" => "/posts/welcome/");
+
+    let conn = get("/posts/Welcome").run(&handler);
+    assert_status!(conn, 308);
+    assert_headers!(conn, "Location" => "/posts/Welcome/");
+}
+
+#[test]
+fn should_return_premanent_slug_mismatch_for_get_post() {
+    let handler = app();
+
+    let conn = get("/posts/Welcome/").run(&handler);
+    assert_status!(conn, 308);
+    assert_headers!(conn, "Location" => "/posts/welcome/");
+}
+
+#[test]
+fn should_return_premanent_slug_mismatch_for_attachments() {
+    let handler = app();
+
+    let conn = get("/posts/Welcome/welcome.txt").run(&handler);
+    assert_status!(conn, 308);
+    assert_headers!(conn, "Location" => "/posts/welcome/welcome.txt");
+}

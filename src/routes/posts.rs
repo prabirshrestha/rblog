@@ -23,7 +23,10 @@ pub async fn get_post(conn: Conn) -> Conn {
     if slug != normalized_slug {
         return conn
             .with_status(Status::PermanentRedirect)
-            .with_header(KnownHeaderName::Location, normalized_slug)
+            .with_header(
+                KnownHeaderName::Location,
+                format!("/posts/{}/", normalized_slug),
+            )
             .halt();
     }
 
@@ -36,11 +39,16 @@ pub async fn get_post(conn: Conn) -> Conn {
 
 pub async fn get_attachment(conn: Conn) -> Conn {
     let slug = conn.param("slug").unwrap_or_default();
+    let attachment_name = conn_unwrap!(conn.param("attachment"), conn);
     let normalized_slug = slug.to_lowercase();
     if slug != normalized_slug {
+        let attachment_name = attachment_name.to_owned();
         return conn
             .with_status(Status::PermanentRedirect)
-            .with_header(KnownHeaderName::Location, normalized_slug)
+            .with_header(
+                KnownHeaderName::Location,
+                format!("/posts/{}/{}", normalized_slug, attachment_name),
+            )
             .halt();
     }
 
@@ -48,7 +56,6 @@ pub async fn get_attachment(conn: Conn) -> Conn {
     let blog = state.get_blog();
 
     let post = conn_unwrap!(blog.get_post(slug), conn);
-    let attachment_name = conn_unwrap!(conn.param("attachment"), conn);
     let attachment = conn_unwrap!(post.get_attachment(attachment_name), conn);
     conn.send_path(attachment.get_path()).await
 }
