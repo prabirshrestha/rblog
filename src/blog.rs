@@ -128,19 +128,26 @@ impl Blog {
 }
 
 impl BlogConf {
-    pub fn new_from_file(path: &Path) -> Result<Self> {
-        if !path.exists() {
-            bail!("File not found - {:?}", &path);
+    pub fn new_from_file(conf_path: &Path) -> Result<Self> {
+        if !conf_path.exists() {
+            bail!("File not found - {:?}", &conf_path);
         }
 
-        let conf_contents = fs::read_to_string(&path)?;
+        let conf_contents = fs::read_to_string(&conf_path)?;
         let mut conf: BlogConf = serde_yaml::from_str(&conf_contents)?;
 
         if conf.posts_dir.is_none() {
             conf.posts_dir = Some(String::from("./posts"));
         }
 
-        if !Path::new(&conf.posts_dir.as_ref().unwrap()).exists() {
+        let mut posts_dir_path = PathBuf::from(conf.posts_dir.as_ref().unwrap());
+        if posts_dir_path.is_relative() {
+            let conf_dir = conf_path.parent().unwrap();
+            posts_dir_path = PathBuf::from(conf_dir.join(posts_dir_path));
+            conf.posts_dir = Some(posts_dir_path.to_str().unwrap().to_owned());
+        }
+
+        if !posts_dir_path.exists() {
             bail!(
                 "Directory not found - {:?}",
                 conf.posts_dir.as_ref().unwrap()
