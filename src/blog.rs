@@ -143,7 +143,7 @@ impl BlogConf {
         let mut posts_dir_path = PathBuf::from(conf.posts_dir.as_ref().unwrap());
         if posts_dir_path.is_relative() {
             let conf_dir = conf_path.parent().unwrap();
-            posts_dir_path = PathBuf::from(conf_dir.join(posts_dir_path));
+            posts_dir_path = conf_dir.join(posts_dir_path);
             conf.posts_dir = Some(posts_dir_path.to_str().unwrap().to_owned());
         }
 
