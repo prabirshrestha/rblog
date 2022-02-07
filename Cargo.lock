@@ -654,6 +654,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "minimal-lexical"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
+
+[[package]]
 name = "miniz_oxide"
 version = "0.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -677,14 +683,25 @@ dependencies = [
 ]
 
 [[package]]
-name = "nom_locate"
-version = "3.0.2"
+name = "nom"
+version = "7.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4689294073dda8a54e484212171efdcb6b12b1908fd70c3dc3eec15b8833b06d"
+checksum = "1b1d11e1ef389c76fe5b81bcaf2ea32cf88b62bc494e19f493d0b30e7a930109"
+dependencies = [
+ "memchr",
+ "minimal-lexical",
+ "version_check",
+]
+
+[[package]]
+name = "nom_locate"
+version = "4.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "37794436ca3029a3089e0b95d42da1f0b565ad271e4d3bb4bad0c7bb70b10605"
 dependencies = [
  "bytecount",
  "memchr",
- "nom",
+ "nom 7.1.0",
 ]
 
 [[package]]
@@ -914,7 +931,7 @@ dependencies = [
  "mime_guess",
  "pretty_env_logger",
  "pulldown-cmark",
- "ructe",
+ "ructe 0.14.0",
  "serde",
  "serde_yaml",
  "slug",
@@ -974,18 +991,18 @@ dependencies = [
 
 [[package]]
 name = "rsass"
-version = "0.22.2"
+version = "0.23.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d12b2ef4a0638222476c8ca9cb0a51184647404fe637a088fc0dc06f0c14512d"
+checksum = "92bfc58e02cd215730b021f9e6f0f46e0a7e1f75aa558ca7a7492763fbe88df2"
 dependencies = [
+ "fastrand",
  "lazy_static",
- "nom",
+ "nom 7.1.0",
  "nom_locate",
  "num-bigint",
  "num-integer",
  "num-rational",
  "num-traits",
- "rand",
 ]
 
 [[package]]
@@ -998,8 +1015,21 @@ dependencies = [
  "bytecount",
  "itertools",
  "md5",
+ "nom 6.1.2",
+]
+
+[[package]]
+name = "ructe"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ef88d8c2492d7266e264b31e0ffcf1149d5ba183bccd3abaf1483ee905fc85de"
+dependencies = [
+ "base64",
+ "bytecount",
+ "itertools",
+ "md5",
  "mime",
- "nom",
+ "nom 7.1.0",
  "rsass",
 ]
 
@@ -1331,7 +1361,7 @@ version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "13e83bfa8db12e961409752f41a7e5e1b5f1c494ebe01ca18ed62e56787c0278"
 dependencies = [
- "ructe",
+ "ructe 0.13.4",
  "trillium",
 ]
 
