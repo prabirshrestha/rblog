@@ -9,7 +9,7 @@ repository = "https://github.com/prabirshrestha/rblog"
 
 build = "src/build.rs"
 [build-dependencies]
-ructe = { version = "0.13.0", features = ["sass", "mime03"] }
+ructe = { version = "0.14.0", features = ["sass", "mime03"] }
 
 [dependencies]
 anyhow = "1.0.53"
@@ -20,7 +20,7 @@ mime = "0.3.16"
 mime_guess = "2.0.3"
 pretty_env_logger = "0.4.0"
 pulldown-cmark = "0.9"
-ructe = { version = "0.13.0" }
+ructe = { version = "0.14.0" }
 serde = { version = "1.0.136", features = ["derive"] }
 serde_yaml = "0.8.23"
 slug = "0.1.4"
@@ -30,7 +30,7 @@ trillium-compression = "0.1.0"
 trillium-conn-id = "0.2.1"
 trillium-logger = "0.4.0"
 trillium-router = "0.3.2"
-trillium-ructe = "0.3.1"
+trillium-ructe = "0.4.0"
 trillium-smol = "0.2.1"
 trillium-static = { version = "0.4.0", features = ["smol"] }
 
