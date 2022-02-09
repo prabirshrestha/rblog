@@ -31,8 +31,8 @@ trillium-conn-id = "0.2.1"
 trillium-logger = "0.4.0"
 trillium-router = "0.3.2"
 trillium-ructe = "0.4.0"
-trillium-smol = "0.2.1"
-trillium-static = { version = "0.4.0", features = ["smol"] }
+trillium-static = { version = "0.4.0", features = ["tokio"] }
+trillium-tokio = "0.2.1"
 
 [dev-dependencies]
-trillium-testing = { version = "0.4.0", features = ["smol"] }
+trillium-testing = { version = "0.4.0", features = ["tokio"] }
