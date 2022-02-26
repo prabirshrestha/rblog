@@ -17,7 +17,7 @@ async-fs = "1.5.0"
 chrono = { version = "0.4.19", features = ["serde"] }
 dotenv = "0.15.0"
 mime = "0.3.16"
-mime_guess = "2.0.3"
+mime_guess = "2.0.4"
 pretty_env_logger = "0.4.0"
 pulldown-cmark = "0.9"
 ructe = { version = "0.14.0" }
