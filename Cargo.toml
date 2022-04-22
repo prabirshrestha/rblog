@@ -12,7 +12,7 @@ build = "src/build.rs"
 ructe = { version = "0.14.0", features = ["sass", "mime03"] }
 
 [dependencies]
-anyhow = "1.0.56"
+anyhow = "1.0.57"
 async-fs = "1.5.0"
 chrono = { version = "0.4.19", features = ["serde"] }
 dotenv = "0.15.0"
