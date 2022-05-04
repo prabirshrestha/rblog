@@ -21,7 +21,7 @@ mime_guess = "2.0.4"
 pretty_env_logger = "0.4.0"
 pulldown-cmark = "0.9"
 ructe = { version = "0.14.0" }
-serde = { version = "1.0.136", features = ["derive"] }
+serde = { version = "1.0.137", features = ["derive"] }
 serde_yaml = "0.8.23"
 slug = "0.1.4"
 trillium = "0.2.2"
