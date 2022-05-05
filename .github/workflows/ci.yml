@@ -18,7 +18,7 @@ jobs:
     steps:
 
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 1
 
@@ -73,7 +73,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 1
 
@@ -151,7 +151,7 @@ jobs:
     needs: [build]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 1
       - name: Install Rust
