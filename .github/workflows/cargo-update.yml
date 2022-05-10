@@ -2,6 +2,7 @@
 name: Update Deps
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '30 5 * * 1'
 
