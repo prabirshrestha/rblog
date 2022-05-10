@@ -2,8 +2,6 @@
 name: Update Deps
 
 on:
-  workflow_dispatch:
-  # Run every Monday
   schedule:
     - cron: '30 5 * * 1'
 
