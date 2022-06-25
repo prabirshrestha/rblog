@@ -7,13 +7,13 @@
 		<title>@blog.get_blog_conf().get_title()</title>
 		<link>@blog.get_blog_conf().get_root()</link>
 		<description><![CDATA[Blog]]></description>
-		<atom:link href="@blog.get_blog_conf().get_root()/rss" rel="self" type="application/rss+xml"></atom:link>
+		<atom:link href="@blog.get_blog_conf().get_root()/rss" rel="self" type="application/rss+xml" />
         @for post in posts {
             <item>
                 <title>@post.get_metadata().get_title()</title>
-                <link>@(blog.get_blog_conf().get_root())/@(post.get_metadata().get_slug().as_ref().unwrap())</link>
+                <link>@(blog.get_blog_conf().get_root())/posts/@(post.get_metadata().get_slug().as_ref().unwrap())/</link>
 				<description><![CDATA[@post.get_content()]]></description>
-				<pubDate>@post.get_metadata().get_iso8601_datetime().as_ref().unwrap()</pubDate>
+				<pubDate>@post.get_metadata().get_rfc2822_datetime().as_ref().unwrap()</pubDate>
                 <guid>@(blog.get_blog_conf().get_root())/@(post.get_metadata().get_slug().as_ref().unwrap())</guid>
             </item>
         }
