@@ -2,7 +2,6 @@ use anyhow::{bail, Result};
 use chrono::{DateTime, Datelike, Utc};
 use serde::{Deserialize, Serialize};
 use slug::slugify;
-use std::cmp::Ord;
 use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::fs;
@@ -341,6 +340,10 @@ impl PostMetadata {
 
     pub fn get_iso8601_datetime(&self) -> Option<String> {
         self.get_date().as_ref().map(|date| date.to_rfc3339())
+    }
+
+    pub fn get_rfc2822_datetime(&self) -> Option<String> {
+        self.get_date().as_ref().map(|date| date.to_rfc2822())
     }
 
     pub fn get_friendly_date(&self) -> Option<String> {
