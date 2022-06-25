@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
   pull_request:
       branches:
-      - master
+      - main
   push:
     branches:
-      - master
-      - ci
+      - main
+      - ci/*
     tags:
       - 'v0.[0-9]+.[0-9]+'
       - 'v0.[0-9]+.[0-9]+-beta.[0-9]+'
@@ -49,6 +49,8 @@ jobs:
       RUST_BACKTRACE: 1
     runs-on: ${{ matrix.os }}
     needs: [style]
+    outputs:
+      release_id: ${{ steps.release.outputs.id }}
     strategy:
       matrix:
         build: [linux, linux-arm, macos, winmsvc]
@@ -96,6 +98,10 @@ jobs:
           exit 1
         fi
 
+    - name: Install musl-tools
+      if: matrix.build == 'linux'
+      run: sudo apt install musl-tools
+
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -104,7 +110,14 @@ jobs:
         profile: minimal
         override: true
 
-    - name: Build
+    - name: Build debug
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: ${{ matrix.usecross }}
+        command: build
+        args: --verbose --locked --all --target ${{ matrix.target }}
+
+    - name: Build release
       uses: actions-rs/cargo@v1
       with:
         use-cross: ${{ matrix.usecross }}
@@ -139,6 +152,7 @@ jobs:
         fi
 
     - name: Create draft release and upload asset
+      id: release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
@@ -174,3 +188,44 @@ jobs:
         with:
           use-cross: ${{ matrix.usecross }}
           command: publish
+
+  publish-release:
+    name: publish-release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: ['build', 'publish-crate']
+    steps:
+      - name: Publish release
+        uses: StuYarrow/publish-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          id: ${{ needs.build.outputs.release_id }}
+
+  publish-aur:
+    name: publish-aur
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: ['build', 'publish-crate', 'publish-release']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Get the build metadata
+        shell: bash
+        run: |
+          echo "PKG_NAME=$(grep -m 1 '^name = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
+      - name: Create PKGBUILD
+        shell: bash
+        run: |
+          cd ${GITHUB_WORKSPACE}/packages/aur
+          ./genpkgbuild.sh
+      - name: Publish Release to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v2.2.5
+        with:
+          pkgname: ${{ env.PKG_NAME }}
+          pkgbuild: packages/aur/PKGBUILD
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
