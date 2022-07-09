@@ -15,7 +15,7 @@ maintainer=$(sed -n -E "s/authors = \[\"(.+)\"\]/\1/p" $CARGOTOMLPATH)
 
 cat >PKGBUILD <<EOL
 # Maintainer: $maintainer
-pkgname=$(name)-bin
+pkgname=${name}-bin
 pkgver=$version
 pkgrel=1
 pkgdesc="$description"
