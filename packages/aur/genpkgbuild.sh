@@ -22,7 +22,8 @@ pkgdesc="$description"
 url="$url"
 license=("$license")
 arch=("x86_64")
-provides=("$name")
+provides=("${name}-bin")
+conflicts=("${name}")
 source=("$TARGZURL")
 sha256sums=("$sha256")
 

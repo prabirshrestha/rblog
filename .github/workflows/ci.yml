@@ -224,7 +224,7 @@ jobs:
       - name: Publish Release to AUR
         uses: KSXGitHub/github-actions-deploy-aur@v2.2.5
         with:
-          pkgname: ${{ env.PKG_NAME }}
+          pkgname: ${{ env.PKG_NAME }}-bin
           pkgbuild: packages/aur/PKGBUILD
           commit_username: ${{ secrets.AUR_USERNAME }}
           commit_email: ${{ secrets.AUR_EMAIL }}
