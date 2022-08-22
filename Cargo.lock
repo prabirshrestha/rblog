@@ -903,9 +903,9 @@ dependencies = [
 
 [[package]]
 name = "rsass"
-version = "0.23.4"
+version = "0.25.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "92bfc58e02cd215730b021f9e6f0f46e0a7e1f75aa558ca7a7492763fbe88df2"
+checksum = "0ab003a9ff922b4d7b1f5f383bc54645887ad278f534dfc65e071096fcb30023"
 dependencies = [
  "fastrand",
  "lazy_static",
@@ -915,13 +915,14 @@ dependencies = [
  "num-integer",
  "num-rational",
  "num-traits",
+ "tracing",
 ]
 
 [[package]]
 name = "ructe"
-version = "0.14.0"
+version = "0.14.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef88d8c2492d7266e264b31e0ffcf1149d5ba183bccd3abaf1483ee905fc85de"
+checksum = "ef279e568db5dad3a1867112fedc63e2f0567991e82beec01c04ade6bd53c08a"
 dependencies = [
  "base64",
  "bytecount",
@@ -1188,6 +1189,38 @@ dependencies = [
  "futures-core",
  "pin-project-lite",
  "tokio",
+]
+
+[[package]]
+name = "tracing"
+version = "0.1.36"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2fce9567bd60a67d08a16488756721ba392f24f29006402881e43b19aac64307"
+dependencies = [
+ "cfg-if",
+ "pin-project-lite",
+ "tracing-attributes",
+ "tracing-core",
+]
+
+[[package]]
+name = "tracing-attributes"
+version = "0.1.22"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11c75893af559bc8e10716548bdef5cb2b983f8e637db9d0e15126b61b484ee2"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "tracing-core"
+version = "0.1.29"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5aeea4303076558a00714b823f9ad67d58a3bbda1df83d8827d21193156e22f7"
+dependencies = [
+ "once_cell",
 ]
 
 [[package]]
