@@ -1,11 +1,11 @@
 use listenfd::ListenFd;
-use rblog::app::app;
+use salvo::extra::logging::LogHandler;
 use salvo::prelude::*;
 use std::net::SocketAddr;
 
 #[tokio::main]
 async fn main() {
-    pretty_env_logger::init();
+    tracing_subscriber::fmt().init();
     // trillium_tokio::run(app());
     serve().await;
 }
@@ -26,6 +26,8 @@ async fn serve() {
         hyper::server::Server::bind(&addr)
     };
 
-    let router = Router::new().get(hello_world);
+    tracing::info!("Listening on http://127.0.0.1:8080");
+
+    let router = Router::new().hoop(LogHandler).get(hello_world);
     server.serve(Service::new(router)).await.unwrap();
 }
