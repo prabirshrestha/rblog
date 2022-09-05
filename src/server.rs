@@ -23,11 +23,6 @@ pub async fn run() -> Result<()> {
     Ok(())
 }
 
-#[handler]
-async fn hello_world(res: &mut Response) {
-    res.render("hello world");
-}
-
 async fn make_service() -> Result<Service> {
     let router = Router::new()
         .hoop(extra::logging::LogHandler::default())
