@@ -1,20 +1,30 @@
+use crate::blog::Post;
 use crate::{appstate::AppState, templates};
+use anyhow::Context;
+use anyhow::Result;
+use ructe::templates::ToHtml;
+use salvo::prelude::*;
 use trillium::{conn_unwrap, Conn, KnownHeaderName, Status};
 use trillium_router::RouterConnExt;
 use trillium_ructe::RucteConnExt;
 use trillium_static::StaticConnExt;
 
-pub async fn get_posts(conn: Conn) -> Conn {
-    let state = conn.state::<AppState>().unwrap().to_owned();
+#[handler]
+pub async fn get_posts(req: &mut Request, depot: &mut Depot, res: &mut Response) -> Result<()> {
+    let state = depot.obtain::<AppState>().unwrap();
 
     let blog = state.get_blog();
 
-    let posts = blog
+    let posts: Vec<&Post> = blog
         .get_all_posts()
         .map(|key| blog.get_post(key).unwrap())
         .collect();
 
-    conn.render_html(|o| templates::posts_html(o, blog, posts))
+    let mut buf = Vec::new();
+    templates::posts_html(&mut buf, blog, posts)?;
+    res.render(Text::Html(String::from_utf8(buf)?));
+
+    Ok(())
 }
 
 pub async fn get_post(conn: Conn) -> Conn {
