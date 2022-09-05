@@ -3,6 +3,8 @@ use listenfd::ListenFd;
 use salvo::{extra, prelude::*};
 use std::net::SocketAddr;
 
+use crate::routes;
+
 pub async fn run() -> Result<()> {
     let mut listenfd = ListenFd::from_env();
     let (addr, server) = if let Some(listener) = listenfd.take_tcp_listener(0)? {
@@ -29,15 +31,8 @@ async fn hello_world(res: &mut Response) {
 
 async fn make_service() -> Result<Service> {
     let router = Router::new()
-        .hoop(extra::logging::LogHandler)
-        .hoop(
-            extra::compression::CompressionHandler::new()
-                .with_algos(&[
-                    extra::compression::CompressionAlgo::Brotli,
-                    extra::compression::CompressionAlgo::Gzip,
-                ])
-                .with_min_length(1),
-        )
-        .get(hello_world);
+        .hoop(extra::logging::LogHandler::default())
+        .hoop(extra::compression::CompressionHandler::default())
+        .push(Router::with_path("/healthcheck").get(routes::health_check));
     Ok(Service::new(router))
 }

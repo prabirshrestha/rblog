@@ -2,12 +2,14 @@ pub mod posts;
 pub mod rss;
 
 use crate::templates::{self, statics::StaticFile};
+use salvo::prelude::*;
 use trillium::{conn_unwrap, Conn, KnownHeaderName, Status};
 use trillium_router::RouterConnExt;
 use trillium_ructe::RucteConnExt;
 
-pub async fn health_check(conn: Conn) -> Conn {
-    conn.with_status(Status::Ok).halt()
+#[handler]
+pub async fn health_check(res: &mut Response) {
+    res.render(Text::Plain("OK"))
 }
 
 pub async fn robots_txt(conn: Conn) -> Conn {
