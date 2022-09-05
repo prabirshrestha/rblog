@@ -1,4 +1,4 @@
-use crate::routes;
+use crate::{appstate::AppState, routes};
 use anyhow::Result;
 use listenfd::ListenFd;
 use salvo::{extra, prelude::*};
@@ -25,6 +25,7 @@ pub async fn run() -> Result<()> {
 
 async fn make_service() -> Result<Service> {
     let router = Router::new()
+        .hoop(extra::affix::inject(AppState::new_from_env()?))
         .hoop(extra::logging::LogHandler::default())
         .hoop(extra::compression::CompressionHandler::default())
         .push(Router::with_path("/healthcheck").get(routes::health_check))
