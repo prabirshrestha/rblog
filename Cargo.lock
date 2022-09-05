@@ -1372,7 +1372,7 @@ checksum = "4501abdff3ae82a1c1b477a17252eb69cee9e66eb915c1abaa4f44d873df9f09"
 [[package]]
 name = "salvo"
 version = "0.32.0"
-source = "git+https://github.com/salvo-rs/salvo.git#ef9147f718608071e4536d88cad451b06de0a750"
+source = "git+https://github.com/salvo-rs/salvo.git?rev=ef9147f#ef9147f718608071e4536d88cad451b06de0a750"
 dependencies = [
  "salvo_core",
  "salvo_extra",
@@ -1381,7 +1381,7 @@ dependencies = [
 [[package]]
 name = "salvo_core"
 version = "0.32.0"
-source = "git+https://github.com/salvo-rs/salvo.git#ef9147f718608071e4536d88cad451b06de0a750"
+source = "git+https://github.com/salvo-rs/salvo.git?rev=ef9147f#ef9147f718608071e4536d88cad451b06de0a750"
 dependencies = [
  "Inflector",
  "async-compression",
@@ -1422,7 +1422,7 @@ dependencies = [
 [[package]]
 name = "salvo_extra"
 version = "0.32.0"
-source = "git+https://github.com/salvo-rs/salvo.git#ef9147f718608071e4536d88cad451b06de0a750"
+source = "git+https://github.com/salvo-rs/salvo.git?rev=ef9147f#ef9147f718608071e4536d88cad451b06de0a750"
 dependencies = [
  "async-compression",
  "bytes",
@@ -1436,7 +1436,7 @@ dependencies = [
 [[package]]
 name = "salvo_macros"
 version = "0.32.0"
-source = "git+https://github.com/salvo-rs/salvo.git#ef9147f718608071e4536d88cad451b06de0a750"
+source = "git+https://github.com/salvo-rs/salvo.git?rev=ef9147f#ef9147f718608071e4536d88cad451b06de0a750"
 dependencies = [
  "Inflector",
  "darling",
