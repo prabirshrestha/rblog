@@ -1,6 +1,6 @@
 use anyhow::Result;
 use listenfd::ListenFd;
-use salvo::{extra::logging::LogHandler, prelude::*};
+use salvo::{extra, prelude::*};
 use std::net::SocketAddr;
 
 pub async fn run() -> Result<()> {
@@ -18,6 +18,7 @@ pub async fn run() -> Result<()> {
     tracing::info!("Listening on {}", addr);
 
     server.serve(make_service().await?).await?;
+
     Ok(())
 }
 
@@ -27,6 +28,16 @@ async fn hello_world(res: &mut Response) {
 }
 
 async fn make_service() -> Result<Service> {
-    let router = Router::new().hoop(LogHandler).get(hello_world);
+    let router = Router::new()
+        .hoop(extra::logging::LogHandler)
+        .hoop(
+            extra::compression::CompressionHandler::new()
+                .with_algos(&[
+                    extra::compression::CompressionAlgo::Brotli,
+                    extra::compression::CompressionAlgo::Gzip,
+                ])
+                .with_min_length(1),
+        )
+        .get(hello_world);
     Ok(Service::new(router))
 }
