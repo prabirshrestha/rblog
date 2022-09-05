@@ -12,13 +12,15 @@ pub async fn health_check(res: &mut Response) {
     res.render(Text::Plain("OK"))
 }
 
-pub async fn robots_txt(conn: Conn) -> Conn {
-    conn.with_header(KnownHeaderName::ContentType, "text/plain; charset=UTF-8")
-        .ok(r#"
+#[handler]
+pub async fn robots_txt(res: &mut Response) {
+    res.render(Text::Plain(
+        r#"
 User-agent: *
 
 Disallow: /healthcheck
-"#)
+"#,
+    ))
 }
 
 pub async fn not_found(conn: Conn) -> Conn {

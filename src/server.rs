@@ -1,9 +1,8 @@
+use crate::routes;
 use anyhow::Result;
 use listenfd::ListenFd;
 use salvo::{extra, prelude::*};
 use std::net::SocketAddr;
-
-use crate::routes;
 
 pub async fn run() -> Result<()> {
     let mut listenfd = ListenFd::from_env();
@@ -33,6 +32,7 @@ async fn make_service() -> Result<Service> {
     let router = Router::new()
         .hoop(extra::logging::LogHandler::default())
         .hoop(extra::compression::CompressionHandler::default())
-        .push(Router::with_path("/healthcheck").get(routes::health_check));
+        .push(Router::with_path("/healthcheck").get(routes::health_check))
+        .push(Router::with_path("/robots.txt").get(routes::robots_txt));
     Ok(Service::new(router))
 }
