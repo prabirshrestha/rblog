@@ -15,7 +15,7 @@ pub async fn get_posts(req: &mut Request, depot: &mut Depot, res: &mut Response)
 
     let blog = state.get_blog();
 
-    let posts: Vec<&Post> = blog
+    let posts = blog
         .get_all_posts()
         .map(|key| blog.get_post(key).unwrap())
         .collect();

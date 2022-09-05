@@ -1,9 +1,11 @@
 use crate::{appstate::AppState, templates};
-use trillium::{Conn, KnownHeaderName};
-use trillium_ructe::RucteConnExt;
+use anyhow::Result;
+use hyper::http::HeaderValue;
+use salvo::prelude::*;
 
-pub async fn get_rss_feed(conn: Conn) -> Conn {
-    let state = conn.state::<AppState>().unwrap().to_owned();
+#[handler]
+pub async fn rss_feed(req: &mut Request, depot: &mut Depot, res: &mut Response) -> Result<()> {
+    let state = depot.obtain::<AppState>().unwrap();
 
     let blog = state.get_blog();
     let posts = blog
@@ -11,8 +13,14 @@ pub async fn get_rss_feed(conn: Conn) -> Conn {
         .map(|key| state.get_blog().get_post(key).unwrap())
         .collect();
 
-    conn.render(|o| templates::rss(o, blog, posts)).with_header(
-        KnownHeaderName::ContentType,
-        "application/rss+xml; charset=utf-8",
-    )
+    let mut buf = Vec::new();
+    templates::rss(&mut buf, blog, posts)?;
+    res.render(String::from_utf8(buf)?);
+
+    res.headers_mut().insert(
+        "Content-Type",
+        HeaderValue::from_static("application/rss+xml; charset=utf-8"),
+    );
+
+    Ok(())
 }

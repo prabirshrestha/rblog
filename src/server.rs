@@ -29,6 +29,7 @@ async fn make_service() -> Result<Service> {
         .hoop(extra::logging::LogHandler::default())
         .hoop(extra::compression::CompressionHandler::default())
         .get(routes::posts::get_posts)
+        .push(Router::with_path("/rss").get(routes::rss::rss_feed))
         .push(Router::with_path("/healthcheck").get(routes::health_check))
         .push(Router::with_path("/robots.txt").get(routes::robots_txt));
     Ok(Service::new(router))
