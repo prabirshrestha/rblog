@@ -4,7 +4,7 @@ use hyper::http::HeaderValue;
 use salvo::prelude::*;
 
 #[handler]
-pub async fn rss_feed(req: &mut Request, depot: &mut Depot, res: &mut Response) -> Result<()> {
+pub async fn rss_feed(depot: &mut Depot, res: &mut Response) -> Result<()> {
     let state = depot.obtain::<AppState>().unwrap();
 
     let blog = state.get_blog();

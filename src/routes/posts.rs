@@ -1,5 +1,4 @@
 use crate::{appstate::AppState, templates};
-use anyhow::Context;
 use anyhow::Result;
 use salvo::{fs::NamedFile, prelude::*};
 
@@ -60,8 +59,6 @@ pub async fn get_attachment(
 
     let state = depot.obtain::<AppState>().unwrap();
     let blog = state.get_blog();
-
-    let post = blog.get_post(slug);
 
     if let Some(post) = blog.get_post(slug) {
         if let Some(attachment) = post.get_attachment(attachment_name) {

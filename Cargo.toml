@@ -29,15 +29,3 @@ slug = "0.1.4"
 tokio = { version = "1.21.0" }
 tracing = "0.1.36"
 tracing-subscriber = "0.3.15"
-trillium = "0.2.2"
-trillium-caching-headers = "0.1.0"
-trillium-compression = "0.1.0"
-trillium-conn-id = "0.2.1"
-trillium-logger = "0.4.0"
-trillium-router = "0.3.3"
-trillium-ructe = "0.4.0"
-trillium-static = { version = "0.4.0", features = ["tokio"] }
-trillium-tokio = "0.2.1"
-
-[dev-dependencies]
-trillium-testing = { version = "0.4.0", features = ["tokio"] }

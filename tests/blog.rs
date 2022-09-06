@@ -1,3 +1,4 @@
+/*
 use rblog::app::app;
 use trillium::KnownHeaderName;
 use trillium_testing::prelude::*;
@@ -85,3 +86,4 @@ fn should_return_premanent_slug_mismatch_for_attachments() {
     assert_status!(conn, 308);
     assert_headers!(conn, "Location" => "/posts/welcome/welcome.txt");
 }
+*/
