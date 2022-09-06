@@ -31,6 +31,7 @@ async fn make_service() -> Result<Service> {
         .get(routes::posts::get_posts)
         .push(Router::with_path("/posts/<slug>").get(routes::posts::get_post))
         .push(Router::with_path("/posts/<slug>/<attachment>").get(routes::posts::get_attachment))
+        .push(Router::with_path("/static/<name>").get(routes::get_static_file))
         .push(Router::with_path("/rss").get(routes::rss::rss_feed))
         .push(Router::with_path("/healthcheck").get(routes::health_check))
         .push(Router::with_path("/robots.txt").get(routes::robots_txt));
