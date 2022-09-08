@@ -26,8 +26,8 @@ pub async fn run() -> Result<()> {
 async fn make_service() -> Result<Service> {
     let router = Router::new()
         .hoop(extra::affix::inject(AppState::new_from_env()?))
-        .hoop(extra::logging::LogHandler::default())
-        .hoop(extra::compression::CompressionHandler::default())
+        .hoop(extra::logging::Logger::default())
+        .hoop(extra::compression::Compression::default())
         .get(routes::posts::get_posts)
         .push(Router::with_path("/posts/<slug>").get(routes::posts::get_post))
         .push(Router::with_path("/posts/<slug>/<attachment>").get(routes::posts::get_attachment))
