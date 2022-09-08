@@ -1,6 +1,6 @@
 use crate::{appstate::AppState, templates};
 use anyhow::Result;
-use hyper::http::HeaderValue;
+use hyper::{header, http::HeaderValue};
 use salvo::prelude::*;
 
 #[handler]
@@ -17,10 +17,11 @@ pub async fn rss_feed(depot: &mut Depot, res: &mut Response) -> Result<()> {
     templates::rss(&mut buf, blog, posts)?;
     res.render(String::from_utf8(buf)?);
 
-    res.headers_mut().insert(
-        "Content-Type",
+    res.with_header(
+        header::CONTENT_TYPE,
         HeaderValue::from_static("application/rss+xml; charset=utf-8"),
-    );
+        true,
+    )?;
 
     Ok(())
 }

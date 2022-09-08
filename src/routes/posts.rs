@@ -37,7 +37,7 @@ pub async fn get_post(req: &mut Request, depot: &mut Depot, res: &mut Response) 
         templates::post_html(&mut buf, blog, post)?;
         res.render(Text::Html(String::from_utf8(buf)?));
     } else {
-        res.set_status_code(StatusCode::NOT_FOUND);
+        res.with_status_code(StatusCode::NOT_FOUND);
     }
 
     Ok(())
@@ -71,6 +71,6 @@ pub async fn get_attachment(
         }
     }
 
-    res.set_status_code(StatusCode::NOT_FOUND);
+    res.with_status_code(StatusCode::NOT_FOUND);
     Ok(())
 }
