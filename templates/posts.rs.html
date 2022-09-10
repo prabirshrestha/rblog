@@ -11,9 +11,9 @@
             @for post in posts {
                 <li>
                     <a href="@post.get_url()">
-						@if let Some(date) = post.get_metadata().get_friendly_date().as_ref() {
-							<div class="date">@date</div>
-						}
+                        @if let Some(date) = post.get_metadata().get_friendly_date().as_ref() {
+                            <div class="date">@date</div>
+                        }
                         <h3 class="title">@post.get_metadata().get_title()</h3>
                     </a>
                 </li>

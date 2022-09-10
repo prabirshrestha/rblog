@@ -22,7 +22,7 @@ pub async fn get_posts(depot: &mut Depot, res: &mut Response) -> Result<()> {
 pub async fn get_post(req: &mut Request, depot: &mut Depot, res: &mut Response) -> Result<()> {
     let slug: &str = req.param("slug").unwrap_or_default();
     let normalized_slug = slug.to_lowercase();
-    if slug != normalized_slug {
+    if slug != normalized_slug || !req.uri().path().ends_with("/") {
         res.render(Redirect::permanent(&format!("/posts/{}/", normalized_slug)));
         return Ok(());
     }

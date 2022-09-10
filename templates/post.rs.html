@@ -9,9 +9,9 @@
             <h2>@subtitle</h2>
         }
         <div class="post-info">
-			@if let Some(date) = post.get_metadata().get_friendly_date().as_ref() {
-				<time datetime="@date">@date</time>
-			}
+            @if let Some(date) = post.get_metadata().get_friendly_date().as_ref() {
+                <time datetime="@date">@date</time>
+            }
         </div>
     </header>
 
