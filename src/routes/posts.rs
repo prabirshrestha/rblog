@@ -1,4 +1,4 @@
-use crate::{appstate::AppState, templates};
+use crate::{appstate::AppState, render_html, templates};
 use anyhow::Result;
 use salvo::{fs::NamedFile, prelude::*};
 
@@ -13,9 +13,7 @@ pub async fn get_posts(depot: &mut Depot, res: &mut Response) -> Result<()> {
         .map(|key| blog.get_post(key).unwrap())
         .collect();
 
-    let mut buf = Vec::new();
-    templates::posts_html(&mut buf, blog, posts)?;
-    res.render(Text::Html(String::from_utf8(buf)?));
+    render_html(res, |o| templates::posts_html(o, &blog, &posts))?;
 
     Ok(())
 }
@@ -33,9 +31,7 @@ pub async fn get_post(req: &mut Request, depot: &mut Depot, res: &mut Response) 
 
     let blog = state.get_blog();
     if let Some(post) = blog.get_post(slug) {
-        let mut buf = Vec::new();
-        templates::post_html(&mut buf, blog, post)?;
-        res.render(Text::Html(String::from_utf8(buf)?));
+        render_html(res, |o| templates::post_html(o, blog, post))?;
     } else {
         res.with_status_code(StatusCode::NOT_FOUND);
     }

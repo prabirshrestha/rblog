@@ -1,6 +1,6 @@
 @use super::base_html;
 @use crate::blog::{Blog, Post};
-@(blog: &Blog, posts: Vec<&Post>)
+@(blog: &Blog, posts: &Vec<&Post>)
 
 @:base_html(blog.get_blog_conf().get_title(), blog, {
     <header class="posts">

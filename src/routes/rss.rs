@@ -1,4 +1,4 @@
-use crate::{appstate::AppState, templates};
+use crate::{appstate::AppState, render_rss, templates};
 use anyhow::Result;
 use salvo::prelude::*;
 
@@ -12,9 +12,7 @@ pub async fn rss_feed(depot: &mut Depot, res: &mut Response) -> Result<()> {
         .map(|key| state.get_blog().get_post(key).unwrap())
         .collect();
 
-    let mut buf = Vec::new();
-    templates::rss(&mut buf, blog, posts)?;
-    res.render(Text::Rss(String::from_utf8(buf)?));
+    render_rss(res, |o| templates::rss(o, blog, posts))?;
 
     Ok(())
 }
