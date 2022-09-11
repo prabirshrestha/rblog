@@ -27,8 +27,8 @@ async fn make_service() -> Result<Service> {
     let router = Router::new()
         .hoop(extra::affix::inject(AppState::new_from_env()?))
         .hoop(extra::logging::Logger::default())
+        .hoop(extra::compression::Compression::default().with_force_priority(true)) // Compression must be before CachingHeader.
         .hoop(extra::caching_headers::CachingHeaders::default())
-        .hoop(extra::compression::Compression::default())
         .get(routes::posts::get_posts)
         .push(
             Router::with_path("/posts/<slug>")
