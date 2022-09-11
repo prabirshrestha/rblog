@@ -22,7 +22,7 @@ mime = "0.3.16"
 mime_guess = "2.0.4"
 pulldown-cmark = "0.9"
 ructe = { version = "0.14.0" }
-salvo = { git = "https://github.com/salvo-rs/salvo.git", rev = "08c8918", features = ["affix", "anyhow", "caching-headers", "compression", "logging"] }
+salvo = { git = "https://github.com/salvo-rs/salvo.git", rev = "08c8918", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "tailing-slash"] }
 serde = { version = "1.0.143", features = ["derive"] }
 serde_yaml = "0.9.4"
 slug = "0.1.4"
