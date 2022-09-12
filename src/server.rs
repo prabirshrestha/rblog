@@ -32,7 +32,7 @@ async fn make_service() -> Result<Service> {
         .get(routes::posts::get_posts)
         .push(
             Router::with_path("/posts/<slug>")
-                .hoop(extra::tailing_slash::add_slash())
+                .hoop(extra::trailing_slash::add_slash())
                 .get(routes::posts::get_post),
         )
         .push(Router::with_path("/posts/<slug>/<attachment>").get(routes::posts::get_attachment))
