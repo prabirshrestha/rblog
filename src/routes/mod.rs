@@ -1,33 +1,36 @@
 pub mod posts;
 pub mod rss;
 
-use crate::templates::{self, statics::StaticFile};
-use trillium::{conn_unwrap, Conn, KnownHeaderName, Status};
-use trillium_router::RouterConnExt;
-use trillium_ructe::RucteConnExt;
+use crate::templates::statics::StaticFile;
+use anyhow::{Context, Result};
+use hyper::header;
+use salvo::{http::response::Body, prelude::*};
 
-pub async fn health_check(conn: Conn) -> Conn {
-    conn.with_status(Status::Ok).halt()
+#[handler]
+pub async fn health_check(res: &mut Response) {
+    res.render(Text::Plain("OK"))
 }
 
-pub async fn robots_txt(conn: Conn) -> Conn {
-    conn.with_header(KnownHeaderName::ContentType, "text/plain; charset=UTF-8")
-        .ok(r#"
+#[handler]
+pub async fn robots_txt(res: &mut Response) {
+    res.render(Text::Plain(
+        r#"
 User-agent: *
-
 Disallow: /healthcheck
-"#)
+"#,
+    ))
 }
 
-pub async fn not_found(conn: Conn) -> Conn {
-    conn.render_html(|o| templates::notfound(o))
-        .with_status(Status::NotFound)
-}
-
-pub async fn get_static_file(conn: Conn) -> Conn {
-    let name = conn_unwrap!(conn.param("name"), conn);
-    let data = conn_unwrap!(StaticFile::get(name), conn);
-    conn.with_header(KnownHeaderName::ContentType, data.mime.to_string())
-        .with_header(KnownHeaderName::CacheControl, "max-age=31536000") // 1 year as second
-        .ok(data.content)
+#[handler]
+pub async fn get_static_file(req: &mut Request, res: &mut Response) -> Result<()> {
+    let name = req.param("name").context("name not found")?;
+    let data = StaticFile::get(name).context("Static File not found")?;
+    res.with_header(header::CONTENT_TYPE, &data.mime.to_string(), true)?
+        .with_header(
+            header::CACHE_CONTROL,
+            "max-age=31536000", // 1 year as second
+            true,
+        )?
+        .with_body(Body::Once(data.content.into()));
+    Ok(())
 }

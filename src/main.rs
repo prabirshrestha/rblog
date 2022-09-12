@@ -1,6 +1,8 @@
-use rblog::app::app;
+use rblog::server;
 
-fn main() {
-    pretty_env_logger::init();
-    trillium_tokio::run(app());
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    tracing_subscriber::fmt().init();
+    server::run().await?;
+    Ok(())
 }
