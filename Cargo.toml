@@ -1,6 +1,6 @@
 [package]
 name = "rblog"
-version = "0.122.0"
+version = "0.123.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
 edition = "2021"
 license = "MIT"
@@ -12,7 +12,7 @@ build = "src/build.rs"
 ructe = { version = "0.14.0", features = ["sass", "mime03"] }
 
 [dependencies]
-anyhow = "1.0.63"
+anyhow = "1.0.64"
 async-fs = "1.5.0"
 chrono = { version = "0.4.22", features = ["serde"] }
 dotenv = "0.15.0"
@@ -24,7 +24,7 @@ pulldown-cmark = "0.9"
 ructe = { version = "0.14.0" }
 salvo = { version = "0.34.0", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
 serde = { version = "1.0.143", features = ["derive"] }
-serde_yaml = "0.9.4"
+serde_yaml = "0.9.11"
 slug = "0.1.4"
 tokio = { version = "1.21.0" }
 tracing = "0.1.36"

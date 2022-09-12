@@ -933,6 +933,12 @@ dependencies = [
  "libc",
 ]
 
+name = "once_cell"
+version = "1.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2f7254b99e31cad77da24b08ebf628882739a608578bb1bcdfc1f9c21260d7c0"
+
+
 [[package]]
 name = "once_cell"
 version = "1.14.0"
@@ -1076,7 +1082,7 @@ dependencies = [
 
 [[package]]
 name = "rblog"
-version = "0.122.0"
+version = "0.123.0"
 dependencies = [
  "anyhow",
  "async-fs",
@@ -1280,10 +1286,17 @@ dependencies = [
 ]
 
 [[package]]
+
 name = "serde_json"
 version = "1.0.85"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e55a28e3aaef9d5ce0506d0a14dbba8054ddc7e499ef522dd8b26859ec9d4a44"
+
+name = "serde_yaml"
+version = "0.9.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "89f31df3f50926cdf2855da5fd8812295c34752cb20438dae42a67f79e021ac3"
+
 dependencies = [
  "itoa",
  "ryu",
