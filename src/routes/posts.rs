@@ -13,7 +13,7 @@ pub async fn get_posts(depot: &mut Depot, res: &mut Response) -> Result<()> {
         .map(|key| blog.get_post(key).unwrap())
         .collect();
 
-    render_html(res, |o| templates::posts_html(o, &blog, &posts))?;
+    render_html(res, |o| templates::posts_html(o, blog, &posts))?;
 
     Ok(())
 }
