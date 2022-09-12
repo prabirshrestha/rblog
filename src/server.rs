@@ -47,7 +47,7 @@ async fn make_service() -> Result<Service> {
 struct NotFoundCatcher;
 
 impl Catcher for NotFoundCatcher {
-    fn catch(&self, req: &Request, _depot: &Depot, res: &mut Response) -> bool {
+    fn catch(&self, _req: &Request, _depot: &Depot, res: &mut Response) -> bool {
         if let Some(StatusCode::NOT_FOUND) = res.status_code() {
             match render_html(res, |o| templates::notfound(o)) {
                 Ok(_) => true,
