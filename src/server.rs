@@ -12,7 +12,12 @@ pub async fn run() -> Result<()> {
             hyper::server::Server::from_tcp(listener)?,
         )
     } else {
-        let addr: SocketAddr = "127.0.0.1:8080".parse()?;
+        let addr: SocketAddr = format!(
+            "{}:{}",
+            std::env::var("HOST").unwrap_or("0.0.0.0".into()),
+            std::env::var("PORT").unwrap_or("8080".into())
+        )
+        .parse()?;
         (addr, hyper::server::Server::bind(&addr))
     };
 
