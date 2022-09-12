@@ -1,7 +1,7 @@
-use crate::{appstate::AppState, routes};
+use crate::{appstate::AppState, render_html, routes, templates};
 use anyhow::Result;
 use listenfd::ListenFd;
-use salvo::{extra, prelude::*};
+use salvo::{extra, prelude::*, Catcher};
 use std::net::SocketAddr;
 
 pub async fn run() -> Result<()> {
@@ -40,5 +40,21 @@ async fn make_service() -> Result<Service> {
         .push(Router::with_path("/rss").get(routes::rss::rss_feed))
         .push(Router::with_path("/healthcheck").get(routes::health_check))
         .push(Router::with_path("/robots.txt").get(routes::robots_txt));
-    Ok(Service::new(router))
+    let catchers: Vec<Box<dyn Catcher>> = vec![Box::new(NotFoundCatcher)];
+    Ok(Service::new(router).with_catchers(catchers))
+}
+
+struct NotFoundCatcher;
+
+impl Catcher for NotFoundCatcher {
+    fn catch(&self, req: &Request, depot: &Depot, res: &mut Response) -> bool {
+        if let Some(StatusCode::NOT_FOUND) = res.status_code() {
+            match render_html(res, |o| templates::notfound(o)) {
+                Ok(_) => true,
+                Err(_) => false,
+            }
+        } else {
+            false
+        }
+    }
 }
