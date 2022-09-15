@@ -1172,9 +1172,9 @@ checksum = "4501abdff3ae82a1c1b477a17252eb69cee9e66eb915c1abaa4f44d873df9f09"
 
 [[package]]
 name = "salvo"
-version = "0.34.0"
+version = "0.34.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b8d74a012c4592356d0d2d6994629531a75ed69f12f6dd7d6c0ace5ec76adf6c"
+checksum = "e0d5860968c3504a1d13618078d2c833b23b2c7b194ce23e999891953d04b20c"
 dependencies = [
  "salvo_core",
  "salvo_extra",
@@ -1182,9 +1182,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_core"
-version = "0.34.0"
+version = "0.34.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3c379564a86c25d4d5d7228f7a6ff355b0b90827212784b3c14904c7243a0723"
+checksum = "e104409bf6168999cae0d11d4340fdcb333592ddce2a5bd2c45e300e6a8e6f68"
 dependencies = [
  "Inflector",
  "anyhow",
@@ -1224,9 +1224,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_extra"
-version = "0.34.0"
+version = "0.34.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b2ddc19c97c5a4330814b2ed9ef8f425f12b23a762648d82c8b2065a2732717"
+checksum = "1992b67e7a740ee5f4801bc39bdb669ff0abf8678cd2c624ad30d01dae528caf"
 dependencies = [
  "async-compression",
  "bytes",
@@ -1240,9 +1240,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_macros"
-version = "0.34.0"
+version = "0.34.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc5ae55ad007fc5208daaa6565770b5d669163ceab9b6765c1f52b3562d3e3c1"
+checksum = "d1fe2ec840671e1427625d4dfb1c00177c64052fe0bfacf26964ab6d75446f45"
 dependencies = [
  "Inflector",
  "darling",
