@@ -23,10 +23,7 @@ pub async fn get_post(req: &mut Request, depot: &mut Depot, res: &mut Response) 
     let slug: &str = req.param("slug").unwrap_or_default();
     let normalized_slug = slug.to_lowercase();
     if slug != normalized_slug {
-        res.render(Redirect::permanent(&format!(
-            "/posts/{}/",
-            normalized_slug
-        )));
+        res.render(Redirect::permanent(&format!("/posts/{}/", normalized_slug)));
         return Ok(());
     }
 
