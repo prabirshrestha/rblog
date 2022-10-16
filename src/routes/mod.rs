@@ -4,7 +4,7 @@ pub mod rss;
 use crate::templates::statics::StaticFile;
 use anyhow::{Context, Result};
 use hyper::header;
-use salvo::{http::response::Body, prelude::*};
+use salvo::{http::ResBody, prelude::*};
 
 #[handler]
 pub async fn health_check(res: &mut Response) {
@@ -31,6 +31,6 @@ pub async fn get_static_file(req: &mut Request, res: &mut Response) -> Result<()
             "max-age=31536000", // 1 year as second
             true,
         )?
-        .with_body(Body::Once(data.content.into()));
+        .with_body(ResBody::Once(data.content.into()));
     Ok(())
 }

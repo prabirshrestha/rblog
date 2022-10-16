@@ -26,7 +26,7 @@ pub async fn get_post(req: &mut Request, depot: &mut Depot, res: &mut Response) 
         res.render(Redirect::permanent(&format!(
             "/posts/{}/",
             normalized_slug
-        ))?);
+        )));
         return Ok(());
     }
 
@@ -55,7 +55,7 @@ pub async fn get_attachment(
         res.render(Redirect::other(&format!(
             "/posts/{}/{}",
             normalized_slug, attachment_name
-        ))?);
+        )));
         return Ok(());
     }
 
