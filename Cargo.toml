@@ -13,7 +13,7 @@ ructe = { version = "0.15.0", features = ["sass", "mime03"] }
 
 [dependencies]
 anyhow = "1.0.66"
-async-fs = "1.5.0"
+async-fs = "1.6.0"
 chrono = { version = "0.4.22", features = ["serde"] }
 dotenv = "0.15.0"
 hyper = { version = "0.14.20", features = ["server"] }
@@ -23,8 +23,8 @@ mime_guess = "2.0.4"
 pulldown-cmark = "0.9"
 ructe = { version = "0.15.0" }
 salvo = { version = "0.37.1", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
-serde = { version = "1.0.145", features = ["derive"] }
-serde_yaml = "0.9.13"
+serde = { version = "1.0.147", features = ["derive"] }
+serde_yaml = "0.9.14"
 slug = "0.1.4"
 tokio = { version = "1.21.2" }
 tracing = "0.1.37"

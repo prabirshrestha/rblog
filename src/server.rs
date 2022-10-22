@@ -1,8 +1,9 @@
+use std::net::SocketAddr;
+
 use crate::{appstate::AppState, render_html, routes, templates};
 use anyhow::Result;
 use listenfd::ListenFd;
 use salvo::{prelude::*, Catcher};
-use std::net::SocketAddr;
 
 pub async fn run() -> Result<()> {
     let mut listenfd = ListenFd::from_env();
