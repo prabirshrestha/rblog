@@ -225,7 +225,9 @@ article header time {
       color: #f1f1f3;
     }
     a {
-      text-decoration: underline;
+      color: #ccc;
+      text-decoration: none;
+      border-bottom: 2px solid #db4d86;
     }
   }
 }
