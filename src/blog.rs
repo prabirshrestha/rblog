@@ -28,6 +28,7 @@ pub struct BlogConf {
     disqus: Option<String>,
     giscus: Option<Giscus>,
     google_analytics: Option<GoogleAnalytics>,
+    syntax_highlight: Option<bool>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -190,6 +191,10 @@ impl BlogConf {
 
     pub fn get_google_analytics(&self) -> Option<&GoogleAnalytics> {
         self.google_analytics.as_ref()
+    }
+
+    pub fn get_syntax_highlight(&self) -> Option<bool> {
+        self.syntax_highlight
     }
 }
 
