@@ -351,6 +351,12 @@ impl PostMetadata {
             .as_ref()
             .map(|date| date.format("%v").to_string())
     }
+
+    pub fn get_html_time_datetime(&self) -> Option<String> {
+        self.get_date()
+            .as_ref()
+            .map(|date| date.format("%Y-%m-%dT%H:%MZ").to_string())
+    }
 }
 
 impl Attachment {
