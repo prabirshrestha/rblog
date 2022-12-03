@@ -3,19 +3,18 @@
 @(blog: &Blog, posts: &Vec<&Post>)
 
 @:base_html(blog.get_blog_conf().get_title(), blog, {
-    <header class="posts">
-        <h1>@blog.get_blog_conf().get_title()</h1>
-    </header>
     <section class="posts">
         <ul>
             @for post in posts {
                 <li>
-                    <a href="@post.get_url()">
-                        @if let Some(date) = post.get_metadata().get_friendly_date().as_ref() {
-                            <div class="date">@date</div>
-                        }
-                        <h3 class="title">@post.get_metadata().get_title()</h3>
+                    <a href="@post.get_url()" title="@post.get_metadata().get_title()">
+                        @post.get_metadata().get_title()
                     </a>
+                    @if let Some(friendly_date) = post.get_metadata().get_friendly_date().as_ref() {
+                        @if let Some(datetime) = post.get_metadata().get_html_time_datetime().as_ref() {
+                            <time datetime="@datetime">@friendly_date</time>
+                        }
+                    }
                 </li>
             }
         </ul>

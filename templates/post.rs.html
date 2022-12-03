@@ -3,21 +3,21 @@
 @(blog: &Blog, post: &Post)
 
 @:base_html(format!("{} - {}", post.get_metadata().get_title(), blog.get_blog_conf().get_title()).as_str(), blog, {
-    <header class="article">
-        <h1><a href="@post.get_url()">@post.get_metadata().get_title()</a></h1>
-        @if let Some(subtitle) = post.get_metadata().get_subtitle().as_ref() {
-            <h2>@subtitle</h2>
-        }
-        <div class="post-info">
-            @if let Some(date) = post.get_metadata().get_friendly_date().as_ref() {
-                <time datetime="@date">@date</time>
-            }
-        </div>
-    </header>
-
     <article>
-        @Html(post.get_html_content())
-        @:giscus_html(blog)
-        @:disqus_html(blog)
+        <header>
+            <h1>@post.get_metadata().get_title()</h1>
+            @if let Some(friendly_date) = post.get_metadata().get_friendly_date().as_ref() {
+                @if let Some(datetime) = post.get_metadata().get_html_time_datetime().as_ref() {
+                    <time datetime="@datetime">@friendly_date</time>
+                }
+            }
+        </header>
+        <section id="post-content">
+            @Html(post.get_html_content())
+        </section>
+        <section>
+            @:giscus_html(blog)
+            @:disqus_html(blog)
+        </section>
     </article>
 })
