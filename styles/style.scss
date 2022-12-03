@@ -109,14 +109,14 @@ blockquote {
 /**
  * Site wide classes
  */
-main {
+.main {
   width: 800px;
-  padding: 20px;
+  padding: 1rem;
   margin: 0 auto;
 }
 
 @media only screen and (max-width: 840px) {
-  main {
+  .main {
     width: calc(100% - 40px);
   }
 }
@@ -153,6 +153,7 @@ main {
     font-family: monospace;
     color: #666;
     font-size: 0.9rem;
+    min-width: 15%;
   }
 
   @media only screen and (max-width: 600px) {
@@ -183,6 +184,26 @@ article header time {
 }
 
 /**
+ * Main header styling
+ */
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-direction: row;
+
+  a {
+    color: #111111;
+  }
+
+  nav a{
+    text-transform: uppercase;
+    font-size: 0.7rem;
+  }
+}
+
+/**
  * Footer styling
  */
 footer {
@@ -191,6 +212,7 @@ footer {
   font-weight: normal;
   text-align: center;
   margin: 5px;
+  text-transform: uppercase;
 }
 
 /**
