@@ -183,6 +183,17 @@ article header time {
 }
 
 /**
+ * Footer styling
+ */
+footer {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: normal;
+  text-align: center;
+  margin: 5px;
+}
+
+/**
  * Dark theme
  */
 @media (prefers-color-scheme: dark) {
