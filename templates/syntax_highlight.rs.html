@@ -1,0 +1,9 @@
+@use crate::blog::Blog;
+@(blog: &Blog)
+
+@if let Some(syntax_highlight) = blog.get_blog_conf().get_syntax_highlight() {
+    @if syntax_highlight {
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    }
+}
