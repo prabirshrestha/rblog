@@ -142,6 +142,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e1b586273c5702936fe7b7d6896644d8be71e6314cfe09d3167c95f712589e8"
 
 [[package]]
+name = "base64"
+version = "0.20.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0ea22880d78093b0cbe17c89f64a7d457941e65759157ec6cb31a31d652b05e5"
+
+[[package]]
 name = "bitflags"
 version = "1.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -474,9 +480,9 @@ dependencies = [
 
 [[package]]
 name = "etag"
-version = "3.0.0"
+version = "4.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aec9f8918ec91bd35f3068e33da01b72a295ac8a7baacb0290b56ffeeec9d88f"
+checksum = "4b3d0661a2ccddc26cba0b834e9b717959ed6fdd76c7129ee159c170a875bf44"
 dependencies = [
  "str-buf",
  "xxhash-rust",
@@ -1443,9 +1449,9 @@ checksum = "4501abdff3ae82a1c1b477a17252eb69cee9e66eb915c1abaa4f44d873df9f09"
 
 [[package]]
 name = "salvo"
-version = "0.37.7"
+version = "0.37.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "24bcfe3ad932be5844b5c7cb4a8a6c390b120759c31e6ea065caf763119dcf1b"
+checksum = "e3decbfebb29fec38a57ceb97a4a48b396c04df97eab82622cb24d4171df072e"
 dependencies = [
  "salvo_core",
  "salvo_extra",
@@ -1453,14 +1459,14 @@ dependencies = [
 
 [[package]]
 name = "salvo_core"
-version = "0.37.7"
+version = "0.37.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb1b199dd08eebadbe518beffa26b63e02b93bdf8b09bf9ecd8740b65def38c8"
+checksum = "34ff3ad2d3dfbdb6710b82a35aac600297f6c207edfa7cd4928262ebfc54c1fb"
 dependencies = [
  "anyhow",
  "async-compression",
  "async-trait",
- "base64 0.13.1",
+ "base64 0.20.0",
  "bytes",
  "cookie",
  "cruet",
@@ -1495,12 +1501,12 @@ dependencies = [
 
 [[package]]
 name = "salvo_extra"
-version = "0.37.7"
+version = "0.37.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6726713b992b9857ed66a7ff48253b2780b0f96fc71908bc4dd2fc89c43aae6e"
+checksum = "6a655fcaccde10505995d49232de2fabeb92bd1b68334e605c3c0a2c61fe4ca8"
 dependencies = [
  "async-compression",
- "base64 0.13.1",
+ "base64 0.20.0",
  "bytes",
  "etag",
  "fastrand",
@@ -1523,9 +1529,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_macros"
-version = "0.37.7"
+version = "0.37.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c47a031f77aadfc539253d32a79cf140b87e472abd8a8a625d3505fc3ac7b849"
+checksum = "058b859771c61c648fda5448d9cc58ecf2f176a60b4df6ccfec6d195e4d4327e"
 dependencies = [
  "cruet",
  "darling",
@@ -1648,17 +1654,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "sha-1"
-version = "0.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5058ada175748e33390e40e872bd0fe59a19f265d0158daa551c5a88a76009c"
-dependencies = [
- "cfg-if",
- "cpufeatures",
- "digest",
-]
-
-[[package]]
 name = "sha1"
 version = "0.10.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1738,9 +1733,9 @@ checksum = "7f6002a767bff9e83f8eeecf883ecb8011875a21ae8da43bffb817a57e78cc09"
 
 [[package]]
 name = "str-buf"
-version = "2.0.5"
+version = "3.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0873cb29201126440dcc78d0b1f5a13d917e78831778429a7920ca9c7f3dae1e"
+checksum = "e75b72ee54e2f93c3ea1354066162be893ee5e25773ab743de3e088cecbb4f31"
 
 [[package]]
 name = "strsim"
@@ -1927,9 +1922,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-tungstenite"
-version = "0.17.2"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f714dd15bead90401d77e04243611caec13726c2408afd5b31901dfcdcb3b181"
+checksum = "54319c93411147bced34cb5609a80e0a8e44c5999c93903a81cd866630ec0bfd"
 dependencies = [
  "futures-util",
  "log",
@@ -2032,9 +2027,9 @@ checksum = "59547bce71d9c38b83d9c0e92b6066c4253371f15005def0c30d9657f50c7642"
 
 [[package]]
 name = "tungstenite"
-version = "0.17.3"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e27992fd6a8c29ee7eef28fc78349aa244134e10ad447ce3b9f0ac0ed0fa4ce0"
+checksum = "30ee6ab729cd4cf0fd55218530c4522ed30b7b6081752839b68fcec8d0960788"
 dependencies = [
  "base64 0.13.1",
  "byteorder",
@@ -2043,7 +2038,7 @@ dependencies = [
  "httparse",
  "log",
  "rand 0.8.5",
- "sha-1",
+ "sha1",
  "thiserror",
  "url",
  "utf-8",
