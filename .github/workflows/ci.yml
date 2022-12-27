@@ -53,7 +53,8 @@ jobs:
       release_id: ${{ steps.release.outputs.id }}
     strategy:
       matrix:
-        build: [linux, linux-arm, macos, winmsvc]
+        # build: [linux, linux-arm, macos, winmsvc]
+        build: [linux, macos, winmsvc]
         include:
           - build: linux
             os: ubuntu-latest
