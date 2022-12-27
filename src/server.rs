@@ -33,8 +33,8 @@ async fn make_service() -> Result<Service> {
     let router = Router::new()
         .hoop(salvo::affix::inject(AppState::new_from_env()?))
         .hoop(salvo::logging::Logger::default())
-        .hoop(salvo::compression::Compression::default().with_force_priority(true)) // Compression must be before CachingHeader.
-        .hoop(salvo::caching_headers::CachingHeaders::default())
+        // .hoop(salvo::caching_headers::CachingHeaders::default()) // CachingHeader must be before Compression.
+        // .hoop(salvo::compression::Compression::default().with_force_priority(true))
         .get(routes::posts::get_posts)
         .push(
             Router::with_path("/posts/<slug>")
