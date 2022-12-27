@@ -54,18 +54,17 @@ jobs:
     strategy:
       matrix:
         # build: [linux, linux-arm, macos, winmsvc]
-        build: [linux, macos, winmsvc]
         include:
           - build: linux
             os: ubuntu-latest
             rust: stable
             target: x86_64-unknown-linux-musl
             usecross: false
-          - build: linux-arm
-            os: ubuntu-latest
-            rust: stable
-            target: aarch64-unknown-linux-musl
-            usecross: true
+          # - build: linux-arm
+          #   os: ubuntu-latest
+          #   rust: stable
+          #   target: aarch64-unknown-linux-musl
+          #   usecross: true
           - build: macos
             os: macos-latest
             rust: stable
