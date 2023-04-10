@@ -1364,7 +1364,8 @@ dependencies = [
  "mime",
  "mime_guess",
  "pulldown-cmark",
- "ructe",
+ "ructe 0.15.0",
+ "ructe 0.16.1",
  "salvo",
  "serde",
  "serde_yaml",
@@ -1455,6 +1456,19 @@ dependencies = [
  "mime",
  "nom",
  "rsass",
+]
+
+[[package]]
+name = "ructe"
+version = "0.16.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "79c86c1631418815c5947a34be5872806586c65398754ec91cc2df35a8e26ba8"
+dependencies = [
+ "base64 0.21.0",
+ "bytecount",
+ "itertools",
+ "md5",
+ "nom",
 ]
 
 [[package]]
