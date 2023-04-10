@@ -12,7 +12,7 @@ pub async fn rss_feed(depot: &mut Depot, res: &mut Response) -> Result<()> {
         .map(|key| state.get_blog().get_post(key).unwrap())
         .collect();
 
-    render_rss(res, |o| templates::rss(o, blog, posts))?;
+    render_rss(res, |o| templates::rss_html(o, blog, posts))?;
 
     Ok(())
 }

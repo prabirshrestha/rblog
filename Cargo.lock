@@ -1069,17 +1069,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "nom_locate"
-version = "4.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b1e299bf5ea7b212e811e71174c5d1a5d065c4c0ad0c8691ecb1f97e3e66025e"
-dependencies = [
- "bytecount",
- "memchr",
- "nom",
-]
-
-[[package]]
 name = "nu-ansi-term"
 version = "0.46.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1117,6 +1106,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0638a1c9d0a3c0914158145bc76cff373a75a627e6ecbfb71cbe6f453a5a19b0"
 dependencies = [
  "autocfg",
+ "num-bigint",
  "num-integer",
  "num-traits",
 ]
@@ -1353,7 +1343,7 @@ dependencies = [
 
 [[package]]
 name = "rblog"
-version = "0.252.0"
+version = "0.253.0"
 dependencies = [
  "anyhow",
  "async-fs",
@@ -1364,8 +1354,7 @@ dependencies = [
  "mime",
  "mime_guess",
  "pulldown-cmark",
- "ructe 0.15.0",
- "ructe 0.16.1",
+ "ructe",
  "salvo",
  "serde",
  "serde_yaml",
@@ -1427,35 +1416,19 @@ dependencies = [
 
 [[package]]
 name = "rsass"
-version = "0.26.0"
+version = "0.27.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "665387d3be91521de331a04cc7118c8c129ffe43c5f4e8a61e78990850046b5a"
+checksum = "a43695dd28122f6c684273de89796a56a98e02e9694b8ab57b160fdc6e6d69af"
 dependencies = [
  "arc-swap",
  "fastrand",
  "lazy_static",
  "nom",
- "nom_locate",
  "num-bigint",
  "num-integer",
  "num-rational",
  "num-traits",
  "tracing",
-]
-
-[[package]]
-name = "ructe"
-version = "0.15.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85517cd381cf0c34694881d8aaf173107c6af7670e66cec18d7a1a8bfce3b758"
-dependencies = [
- "base64 0.13.1",
- "bytecount",
- "itertools",
- "md5",
- "mime",
- "nom",
- "rsass",
 ]
 
 [[package]]
@@ -1468,7 +1441,9 @@ dependencies = [
  "bytecount",
  "itertools",
  "md5",
+ "mime",
  "nom",
+ "rsass",
 ]
 
 [[package]]

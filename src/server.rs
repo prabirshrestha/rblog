@@ -55,7 +55,7 @@ struct NotFoundCatcher;
 impl Catcher for NotFoundCatcher {
     fn catch(&self, _req: &Request, _depot: &Depot, res: &mut Response) -> bool {
         if let Some(StatusCode::NOT_FOUND) = res.status_code() {
-            match render_html(res, |o| templates::notfound(o)) {
+            match render_html(res, |o| templates::notfound_html(o)) {
                 Ok(_) => true,
                 Err(_) => false,
             }
