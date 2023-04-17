@@ -16,14 +16,14 @@ anyhow = "1.0.70"
 async-fs = "1.6.0"
 chrono = { version = "0.4.24", features = ["serde"] }
 dotenv = "0.15.0"
-hyper = { version = "0.14.25", features = ["server"] }
+hyper = { version = "0.14.26", features = ["server"] }
 listenfd = "1.0.1"
 mime = "0.3.17"
 mime_guess = "2.0.4"
 pulldown-cmark = "0.9"
 ructe = "0.16.1"
 salvo = { version = "0.37.9", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
-serde = { version = "1.0.159", features = ["derive"] }
+serde = { version = "1.0.160", features = ["derive"] }
 serde_yaml = "0.9.21"
 slug = "0.1.4"
 tokio = { version = "1.27.0" }
