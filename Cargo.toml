@@ -26,6 +26,6 @@ salvo = { version = "0.37.9", features = ["affix", "anyhow", "caching-headers", 
 serde = { version = "1.0.163", features = ["derive"] }
 serde_yaml = "0.9.21"
 slug = "0.1.4"
-tokio = { version = "1.27.0" }
+tokio = { version = "1.28.2" }
 tracing = "0.1.37"
 tracing-subscriber = "0.3.16"
