@@ -5,11 +5,6 @@
   ],
   "packageRules": [
     {
-      "matchLanguages": ["rust"],
-      "groupName": "Rust dependencies",
-      "extends": ["schedule:weekly"]
-    },
-    {
       "matchManagers": ["github-actions"],
       "groupName": "Github Actions dependencies",
       "extends": ["schedule:monthly"]
