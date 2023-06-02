@@ -32,6 +32,8 @@ jobs:
         override: true
         profile: minimal
         components: rustfmt, clippy
+    - name: rust cache
+      uses: Swatinem/rust-cache@v2
     - name: rust fmt
       uses: actions-rs/cargo@v1
       with:
