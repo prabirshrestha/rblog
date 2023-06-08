@@ -3,8 +3,7 @@ pub mod rss;
 
 use crate::templates::statics::StaticFile;
 use anyhow::{Context, Result};
-use hyper::header;
-use salvo::prelude::*;
+use salvo::{prelude::*, http::header};
 
 #[handler]
 pub async fn health_check(res: &mut Response) {

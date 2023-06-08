@@ -1334,7 +1334,6 @@ dependencies = [
  "async-fs",
  "chrono",
  "dotenv",
- "hyper",
  "listenfd",
  "mime",
  "mime_guess",

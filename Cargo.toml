@@ -16,7 +16,6 @@ anyhow = "1.0.71"
 async-fs = "1.6.0"
 chrono = { version = "0.4.26", features = ["serde"] }
 dotenv = "0.15.0"
-hyper = { version = "=1.0.0-rc.3", features = ["server"] }
 listenfd = "1.0.1"
 mime = "0.3.17"
 mime_guess = "2.0.4"
