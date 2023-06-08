@@ -3,14 +3,14 @@ use std::net::SocketAddr;
 use crate::{appstate::AppState, render_html, routes, templates};
 use anyhow::Result;
 use listenfd::ListenFd;
-use salvo::{prelude::*, Catcher};
+use salvo::{catcher::Catcher, conn::tcp::TcpAcceptor, prelude::*};
 
 pub async fn run() -> Result<()> {
     let mut listenfd = ListenFd::from_env();
-    let (addr, server) = if let Some(listener) = listenfd.take_tcp_listener(0)? {
+    let (addr, listener) = if let Some(listener) = listenfd.take_tcp_listener(0)? {
         (
             listener.local_addr()?,
-            hyper::server::Server::from_tcp(listener)?,
+            tokio::net::TcpListener::from_std(listener.into()).unwrap(),
         )
     } else {
         let addr: SocketAddr = format!(
@@ -19,12 +19,12 @@ pub async fn run() -> Result<()> {
             std::env::var("PORT").unwrap_or("8080".into())
         )
         .parse()?;
-        (addr, hyper::server::Server::bind(&addr))
+        (addr, tokio::net::TcpListener::bind(addr).await.unwrap())
     };
 
     tracing::info!("Listening on {}", addr);
-
-    server.serve(make_service().await?).await?;
+    let acceptor = TcpAcceptor::try_from(listener).unwrap();
+    Server::new(acceptor).serve(make_service().await?).await;
 
     Ok(())
 }
@@ -46,21 +46,24 @@ async fn make_service() -> Result<Service> {
         .push(Router::with_path("/rss").get(routes::rss::rss_feed))
         .push(Router::with_path("/healthcheck").get(routes::health_check))
         .push(Router::with_path("/robots.txt").get(routes::robots_txt));
-    let catchers: Vec<Box<dyn Catcher>> = vec![Box::new(NotFoundCatcher)];
-    Ok(Service::new(router).with_catchers(catchers))
+    Ok(Service::new(router).catcher(Catcher::default().hoop(not_found_catcher)))
 }
 
-struct NotFoundCatcher;
-
-impl Catcher for NotFoundCatcher {
-    fn catch(&self, _req: &Request, _depot: &Depot, res: &mut Response) -> bool {
-        if let Some(StatusCode::NOT_FOUND) = res.status_code() {
-            match render_html(res, |o| templates::notfound_html(o)) {
-                Ok(_) => true,
-                Err(_) => false,
+#[handler]
+async fn not_found_catcher(
+    req: &mut Request,
+    res: &mut Response,
+    depot: &mut Depot,
+    ctrl: &mut FlowCtrl,
+) {
+    if let Some(StatusCode::NOT_FOUND) = res.status_code {
+        match render_html(res, |o| templates::notfound_html(o)) {
+            Ok(_) => {}
+            Err(_) => {
+                ctrl.call_next(req, depot, res).await;
             }
-        } else {
-            false
         }
+    } else {
+        ctrl.call_next(req, depot, res).await;
     }
 }

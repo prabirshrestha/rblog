@@ -25,8 +25,8 @@ Disallow: /healthcheck
 pub async fn get_static_file(req: &mut Request, res: &mut Response) -> Result<()> {
     let name = req.param("name").context("name not found")?;
     let data = StaticFile::get(name).context("Static File not found")?;
-    res.with_header(header::CONTENT_TYPE, &data.mime.to_string(), true)?
-        .with_header(
+    res.add_header(header::CONTENT_TYPE, &data.mime.to_string(), true)?
+        .add_header(
             header::CACHE_CONTROL,
             "max-age=31536000", // 1 year as second
             true,

@@ -33,7 +33,7 @@ pub async fn get_post(req: &mut Request, depot: &mut Depot, res: &mut Response) 
     if let Some(post) = blog.get_post(slug) {
         render_html(res, |o| templates::post_html(o, blog, post))?;
     } else {
-        res.with_status_code(StatusCode::NOT_FOUND);
+        res.status_code(StatusCode::NOT_FOUND);
     }
 
     Ok(())
@@ -67,7 +67,7 @@ pub async fn get_attachment(
         }
     }
 
-    res.with_status_code(StatusCode::NOT_FOUND);
+    res.status_code(StatusCode::NOT_FOUND);
 
     Ok(())
 }
