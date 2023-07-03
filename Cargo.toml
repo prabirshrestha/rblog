@@ -22,7 +22,7 @@ mime_guess = "2.0.4"
 pulldown-cmark = "0.9"
 ructe = "0.16.1"
 salvo = { version = "0.44.1", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
-serde = { version = "1.0.165", features = ["derive"] }
+serde = { version = "1.0.166", features = ["derive"] }
 serde_yaml = "0.9.22"
 slug = "0.1.4"
 tokio = { version = "1.29.1" }
