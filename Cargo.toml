@@ -21,7 +21,7 @@ mime = "0.3.17"
 mime_guess = "2.0.4"
 pulldown-cmark = "0.9"
 ructe = "0.16.1"
-salvo = { version = "0.44.1", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
+salvo = { version = "0.45.0", default-features=false, features = ["affix", "anyhow", "caching-headers", "compression", "logging", "rustls", "trailing-slash"] }
 serde = { version = "1.0.170", features = ["derive"] }
 serde_yaml = "0.9.22"
 slug = "0.1.4"
