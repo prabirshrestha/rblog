@@ -574,17 +574,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "futures-macro"
-version = "0.3.28"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "89ca545a94061b6365f2c7355b4b32bd20df3ff95f02da9329b34ccc3bd6ee72"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "futures-sink"
 version = "0.3.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -604,7 +593,6 @@ checksum = "26b01e40b772d54cf6c6d721c1d1abd0647a0106a12ecaa1c186273392a69533"
 dependencies = [
  "futures-core",
  "futures-io",
- "futures-macro",
  "futures-sink",
  "futures-task",
  "memchr",
@@ -773,9 +761,9 @@ dependencies = [
 
 [[package]]
 name = "http-body-util"
-version = "0.1.0-rc.2"
+version = "0.1.0-rc.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "92445bc9cc14bfa0a3ce56817dc3b5bcc227a168781a356b702410789cec0d10"
+checksum = "08ef12f041acdd397010e5fb6433270c147d3b8b2d0a840cd7fff8e531dca5c8"
 dependencies = [
  "bytes",
  "futures-util",
@@ -798,13 +786,12 @@ checksum = "c4a1e36c821dbe04574f602848a19f742f4fb3c98d40449f11bcad18d6b17421"
 
 [[package]]
 name = "hyper"
-version = "1.0.0-rc.3"
+version = "1.0.0-rc.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b75264b2003a3913f118d35c586e535293b3e22e41f074930762929d071e092"
+checksum = "d280a71f348bcc670fc55b02b63c53a04ac0bf2daff2980795aeaf53edae10e6"
 dependencies = [
  "bytes",
  "futures-channel",
- "futures-core",
  "futures-util",
  "h2",
  "http",
@@ -1477,9 +1464,9 @@ checksum = "f91339c0467de62360649f8d3e185ca8de4224ff281f66000de5eb2a77a79041"
 
 [[package]]
 name = "salvo"
-version = "0.46.0"
+version = "0.47.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f0eeb598d75ee3c8020c3c3b1b35161c50b2a94a950e57415e28a932740ee47"
+checksum = "280403c2ae26ee387af3f34bc53b8cb09708778bf5e3f7aa9079f7afba9f6133"
 dependencies = [
  "salvo-compression",
  "salvo_core",
@@ -1488,9 +1475,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-compression"
-version = "0.46.0"
+version = "0.47.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc8d33961ef6bbda00d01358aa9771020318da9991bd21a30721b4b5d5c5acb4"
+checksum = "4889dac4b542bbeda8c95d9247fe9a511bea752f28a800d07c8ec5515c1dfaff"
 dependencies = [
  "brotli",
  "bytes",
@@ -1507,28 +1494,21 @@ dependencies = [
 
 [[package]]
 name = "salvo-utils"
-version = "0.0.3"
+version = "0.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f350ad191e14881904af65bbe14ee2a84fee1c74e4616334b412c6a68151e6d7"
+checksum = "35cb87a925e7696818a5a716dc6b17ff4ffa8cb769be907b623bc8637d661234"
 dependencies = [
- "futures-channel",
- "futures-util",
- "http",
  "hyper",
- "once_cell",
  "pin-project-lite",
- "socket2",
  "tokio",
- "tower",
- "tower-service",
  "tracing",
 ]
 
 [[package]]
 name = "salvo_core"
-version = "0.46.0"
+version = "0.47.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4292dfecdf2c559eb70cbe0dcb1b5ec100e0069b7eddbb6a1031d32fb4f14d0c"
+checksum = "fbc424cdace0e7096408004d2f9da1c2148b2e056c2ada0944c8db35d1dbf344"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1559,6 +1539,7 @@ dependencies = [
  "salvo-utils",
  "salvo_macros",
  "serde",
+ "serde-xml-rs",
  "serde_json",
  "serde_urlencoded",
  "tempfile",
@@ -1573,9 +1554,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_extra"
-version = "0.46.0"
+version = "0.47.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a5237460cb6afd5016c42c375fe7e22082ed7560fc99d44502e3b17a9491d58"
+checksum = "e3de362a102165776c1862e34aabf362c828762df4debf637026eb9d52ef8bf6"
 dependencies = [
  "base64 0.21.2",
  "etag",
@@ -1592,9 +1573,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_macros"
-version = "0.46.0"
+version = "0.47.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c8bc86f37b088c154c6645087118dd6646836a1874411527815e5980aec0e7db"
+checksum = "61375e8eb286d1c11b3ab2c5cedfc65d7ae0d2b975719e8e42fbda128db37e9a"
 dependencies = [
  "cruet",
  "proc-macro-crate",
@@ -1617,6 +1598,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "30e27d1e4fd7659406c492fd6cfaf2066ba8773de45ca75e855590f856dc34a9"
 dependencies = [
  "serde_derive",
+]
+
+[[package]]
+name = "serde-xml-rs"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb3aa78ecda1ebc9ec9847d5d3aba7d618823446a049ba2491940506da6e2782"
+dependencies = [
+ "log",
+ "serde",
+ "thiserror",
+ "xml-rs",
 ]
 
 [[package]]
@@ -1951,41 +1944,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "tower"
-version = "0.4.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b8fa9be0de6cf49e536ce1851f987bd21a43b771b09473c3549a6c853db37c1c"
-dependencies = [
- "futures-core",
- "futures-util",
- "pin-project",
- "pin-project-lite",
- "tokio",
- "tower-layer",
- "tower-service",
- "tracing",
-]
-
-[[package]]
-name = "tower-layer"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c20c8dbed6283a09604c3e69b4b7eeb54e298b8a600d4d5ecb5ad39de609f1d0"
-
-[[package]]
-name = "tower-service"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6bc1c9ce2b5135ac7f93c72918fc37feb872bdc6a5533a8b85eb4b86bfdae52"
-
-[[package]]
 name = "tracing"
 version = "0.1.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ce8c33a8d48bd45d624a6e523445fd21ec13d3653cd51f681abf67418f54eb8"
 dependencies = [
  "cfg-if",
- "log",
  "pin-project-lite",
  "tracing-attributes",
  "tracing-core",
@@ -2342,6 +2306,12 @@ checksum = "ca0ace3845f0d96209f0375e6d367e3eb87eb65d27d445bdc9f1843a26f39448"
 dependencies = [
  "memchr",
 ]
+
+[[package]]
+name = "xml-rs"
+version = "0.8.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5a56c84a8ccd4258aed21c92f70c0f6dea75356b6892ae27c24139da456f9336"
 
 [[package]]
 name = "xxhash-rust"
