@@ -23,7 +23,7 @@ pulldown-cmark = "0.9"
 ructe = "0.16.1"
 salvo = { version = "0.47.0", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
 serde = { version = "1.0.171", features = ["derive"] }
-serde_yaml = "0.9.23"
+serde_yaml = "0.9.24"
 slug = "0.1.4"
 tokio = { version = "1.29.1" }
 tracing = "0.1.37"
