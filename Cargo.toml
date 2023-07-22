@@ -9,7 +9,7 @@ repository = "https://github.com/prabirshrestha/rblog"
 
 build = "src/build.rs"
 [build-dependencies]
-ructe = { version = "0.16.1", features = ["sass", "mime03"] }
+ructe = { version = "0.17.0", features = ["sass", "mime03"] }
 
 [dependencies]
 anyhow = "1.0.72"
@@ -20,7 +20,7 @@ listenfd = "1.0.1"
 mime = "0.3.17"
 mime_guess = "2.0.4"
 pulldown-cmark = "0.9"
-ructe = "0.16.1"
+ructe = "0.17.0"
 salvo = { version = "0.48.2", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
 serde = { version = "1.0.174", features = ["derive"] }
 serde_yaml = "0.9.25"
