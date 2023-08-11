@@ -24,6 +24,7 @@ pub struct BlogConf {
     enable_drafts: Option<bool>,
     posts_dir: Option<String>,
     github: Option<String>,
+    mastodon: Option<String>,
     twitter: Option<String>,
     disqus: Option<String>,
     giscus: Option<Giscus>,
@@ -175,6 +176,10 @@ impl BlogConf {
 
     pub fn get_github(&self) -> Option<&str> {
         self.github.as_deref()
+    }
+
+    pub fn get_mastodon(&self) -> Option<&str> {
+        self.mastodon.as_deref()
     }
 
     pub fn get_twitter(&self) -> Option<&str> {

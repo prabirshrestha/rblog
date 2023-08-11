@@ -22,6 +22,9 @@
                 @if let Some(github) = blog.get_blog_conf().get_github() {
                     <a href="https://github.com/@github">Github</a>
                 }
+                @if let Some(mastodon) = blog.get_blog_conf().get_mastodon() {
+                    <a href="@mastodon">Mastodon</a>
+                }
                 @if let Some(twitter) = blog.get_blog_conf().get_twitter() {
                     <a href="https://twitter.com/@twitter">Twitter</a>
                 }
@@ -34,6 +37,9 @@
             &copy; @blog.get_current_year()
             @if let Some(github) = blog.get_blog_conf().get_github() {
                 <a href="https://github.com/@github">Github</a>
+            }
+            @if let Some(mastodon) = blog.get_blog_conf().get_mastodon() {
+                <a href="@mastodon">Mastodon</a>
             }
             @if let Some(twitter) = blog.get_blog_conf().get_twitter() {
                 <a href="https://twitter.com/@twitter">Twitter</a>
