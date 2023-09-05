@@ -1465,9 +1465,9 @@ checksum = "1ad4cc8da4ef723ed60bced201181d83791ad433213d8c24efffda1eec85d741"
 
 [[package]]
 name = "salvo"
-version = "0.54.1"
+version = "0.54.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "927748435af7149e357480bafa1ebd92bd96527f5db90e8c599a819fef29ba29"
+checksum = "bc0f93ee6e16dce0c87cc3c4f03eca1fc0cbeec5294c65a33b12725db6a621cf"
 dependencies = [
  "salvo-compression",
  "salvo_core",
@@ -1476,9 +1476,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-compression"
-version = "0.54.1"
+version = "0.54.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "afdb2fb6f7885fe2eb936409161f8cad3b39865afa050b3969802d430a7122c6"
+checksum = "abdd84352449a5498b268188d0942ca9ed64b0350aa0ff3e842e199a1b5edf83"
 dependencies = [
  "brotli",
  "bytes",
@@ -1507,9 +1507,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_core"
-version = "0.54.1"
+version = "0.54.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68eccd838dd259e4b5f15e9d176fcc6ae9ecbcbd5a3b9b5933984e28479ab9d7"
+checksum = "ea68f2bb62548bda63f9752197d14dbe7fa0645aab0ea7f322efda1cacfa5af0"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1556,9 +1556,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_extra"
-version = "0.54.1"
+version = "0.54.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "266a52976499fde7a55a6ceb513afb6c8bd4fabbd2154a039f9d6f084e000a89"
+checksum = "ccae2a3db479d338ebc95e00d9a36c58d89f51743799cbfae1cf5c4c63f01d41"
 dependencies = [
  "base64 0.21.2",
  "etag",
@@ -1571,13 +1571,14 @@ dependencies = [
  "tokio",
  "tokio-tungstenite",
  "tracing",
+ "ulid",
 ]
 
 [[package]]
 name = "salvo_macros"
-version = "0.54.1"
+version = "0.54.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1dc6ccf43d31c48089e9980283c1c1aa749992c098c284511a9db9392338c81e"
+checksum = "2a896f7117c5ebcae078ac1110086f4fc269ef843dba097f79797dad95fb3302"
 dependencies = [
  "cruet",
  "proc-macro-crate",
@@ -2027,6 +2028,15 @@ name = "typenum"
 version = "1.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "497961ef93d974e23eb6f433eb5fe1b7930b659f06d12dec6fc44a8f554c0bba"
+
+[[package]]
+name = "ulid"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0f9d3475df4ff8a8f7804c0fc3394b44fdcfc4fb635717bf05fbb7c41c83a376"
+dependencies = [
+ "rand 0.8.5",
+]
 
 [[package]]
 name = "unicase"
