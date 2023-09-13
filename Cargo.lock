@@ -1464,9 +1464,9 @@ checksum = "1ad4cc8da4ef723ed60bced201181d83791ad433213d8c24efffda1eec85d741"
 
 [[package]]
 name = "salvo"
-version = "0.54.3"
+version = "0.55.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc0f93ee6e16dce0c87cc3c4f03eca1fc0cbeec5294c65a33b12725db6a621cf"
+checksum = "21c547bf83c4330323004366b89323d0cb4fc50f28b5cbf75c667b6e2b48872b"
 dependencies = [
  "salvo-compression",
  "salvo_core",
@@ -1475,9 +1475,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-compression"
-version = "0.54.3"
+version = "0.55.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "abdd84352449a5498b268188d0942ca9ed64b0350aa0ff3e842e199a1b5edf83"
+checksum = "c0c73ceafed333c2bc829a8a1329173f0046f8610ab8f0016162ec98188cb778"
 dependencies = [
  "brotli",
  "bytes",
@@ -1506,9 +1506,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_core"
-version = "0.54.3"
+version = "0.55.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ea68f2bb62548bda63f9752197d14dbe7fa0645aab0ea7f322efda1cacfa5af0"
+checksum = "2c8cc7306374d61360d747e078587fc45375d37fc63fd90f478caceafa213d70"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1555,9 +1555,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_extra"
-version = "0.54.3"
+version = "0.55.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ccae2a3db479d338ebc95e00d9a36c58d89f51743799cbfae1cf5c4c63f01d41"
+checksum = "c12289379a6494055f82fdf7919fab36d7cb5e0a1d3e9b71197f150f9c80ed94"
 dependencies = [
  "base64 0.21.2",
  "etag",
@@ -1575,9 +1575,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_macros"
-version = "0.54.3"
+version = "0.55.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a896f7117c5ebcae078ac1110086f4fc269ef843dba097f79797dad95fb3302"
+checksum = "b8b1173ee5be52d6b0d58210fef5742218923021a8e7baa65efdbc96e27c43fe"
 dependencies = [
  "cruet",
  "proc-macro-crate",
