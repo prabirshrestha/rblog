@@ -1229,11 +1229,10 @@ checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
 
 [[package]]
 name = "proc-macro-crate"
-version = "1.3.1"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f4c021e1093a56626774e81216a4ce732a735e5bad4868a03f3ed65ca0c3919"
+checksum = "7e8366a6159044a37876a2b9817124296703c586a5c92e2c53751fa06d8d43e8"
 dependencies = [
- "once_cell",
  "toml_edit",
 ]
 
@@ -1457,9 +1456,9 @@ checksum = "1ad4cc8da4ef723ed60bced201181d83791ad433213d8c24efffda1eec85d741"
 
 [[package]]
 name = "salvo"
-version = "0.55.5"
+version = "0.56.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5053ca741d780a11b8b6e7f00636800f565fe07bf240f3c83152ecf16b0c0630"
+checksum = "b98ff6c04d8df75fc31d091df7394882c38959a6fc8b8681e05449b9ae11ad74"
 dependencies = [
  "salvo-compression",
  "salvo_core",
@@ -1468,9 +1467,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-compression"
-version = "0.55.5"
+version = "0.56.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3ccc5e47c9dc339e7b6871f6e54dce5f3ef60ea88bf4eda72013a0d714f10b93"
+checksum = "999fbe2ce4d5faf74ca7e807e732b95a93277375d32ca40b36f83d2fa5294efd"
 dependencies = [
  "brotli",
  "bytes",
@@ -1479,7 +1478,6 @@ dependencies = [
  "indexmap 2.0.0",
  "salvo_core",
  "tokio",
- "tokio-stream",
  "tokio-util",
  "tracing",
  "zstd",
@@ -1506,9 +1504,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_core"
-version = "0.55.5"
+version = "0.56.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd45f3de956d7e523432c99b2602563ad3c3fcf75f1f998098d8ad225d2747bf"
+checksum = "cc9092b59127997e6edfffbb41b245fccd33da461599a460561c99c64fcd3c1a"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1542,11 +1540,11 @@ dependencies = [
  "serde-xml-rs",
  "serde_json",
  "serde_urlencoded",
+ "sync_wrapper",
  "tempfile",
  "textnonce",
  "thiserror",
  "tokio",
- "tokio-stream",
  "tokio-util",
  "tracing",
  "url",
@@ -1555,9 +1553,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_extra"
-version = "0.55.5"
+version = "0.56.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9535bbe38e106b5603ccd885b228bbd3f9ca868688fcb09e753a24de33b5a718"
+checksum = "51451e697288ba9d19a680f78f17632f582f86742afb0f13caad6380f4e98341"
 dependencies = [
  "base64 0.21.4",
  "etag",
@@ -1575,9 +1573,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_macros"
-version = "0.55.5"
+version = "0.56.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "37cf9542ef61ab8f5daf4f626c0e6a2f9f745463cca28a250978799aeb8bfdc8"
+checksum = "cfbb9d33fae0595c1de6c67db9281037d646462c1105fe497dace02743c2c50d"
 dependencies = [
  "cruet",
  "proc-macro-crate",
@@ -1756,6 +1754,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "sync_wrapper"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2047c6ded9c721764247e62cd3b03c09ffc529b2ba5b10ec482ae507a4a70160"
+
+[[package]]
 name = "tempfile"
 version = "3.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1880,17 +1884,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tokio-stream"
-version = "0.1.14"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "397c988d37662c7dda6d2208364a706264bf3d6138b11d436cbac0ad38832842"
-dependencies = [
- "futures-core",
- "pin-project-lite",
- "tokio",
-]
-
-[[package]]
 name = "tokio-tungstenite"
 version = "0.20.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1924,9 +1917,9 @@ checksum = "7cda73e2f1397b1262d6dfdcef8aafae14d1de7748d66822d3bfeeb6d03e5e4b"
 
 [[package]]
 name = "toml_edit"
-version = "0.19.15"
+version = "0.20.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b5bb770da30e5cbfde35a2d7b9b8a2c4b8ef89548a7a6aeab5c9a576e3e7421"
+checksum = "396e4d48bbb2b7554c944bde63101b5ae446cff6ec4a24227428f15eb72ef338"
 dependencies = [
  "indexmap 2.0.0",
  "toml_datetime",
