@@ -1456,9 +1456,9 @@ checksum = "1ad4cc8da4ef723ed60bced201181d83791ad433213d8c24efffda1eec85d741"
 
 [[package]]
 name = "salvo"
-version = "0.56.0"
+version = "0.57.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b98ff6c04d8df75fc31d091df7394882c38959a6fc8b8681e05449b9ae11ad74"
+checksum = "5c620a746925cfec3196278d3e1bcacad39b912b244e3c8d4eea4bc5773e01d3"
 dependencies = [
  "salvo-compression",
  "salvo_core",
@@ -1467,9 +1467,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-compression"
-version = "0.56.0"
+version = "0.57.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "999fbe2ce4d5faf74ca7e807e732b95a93277375d32ca40b36f83d2fa5294efd"
+checksum = "1bd842544d809c07286f5b7d9410e941dcfe6f6dffb5245e04c2ad2824920476"
 dependencies = [
  "brotli",
  "bytes",
@@ -1504,9 +1504,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_core"
-version = "0.56.0"
+version = "0.57.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc9092b59127997e6edfffbb41b245fccd33da461599a460561c99c64fcd3c1a"
+checksum = "f7f1936135d5eeb5c2f14e853d757037e9a2d0fbea38467bda3f59429cefda5b"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -1519,6 +1519,7 @@ dependencies = [
  "enumflags2",
  "flate2",
  "form_urlencoded",
+ "futures-channel",
  "futures-util",
  "headers",
  "http",
@@ -1553,9 +1554,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_extra"
-version = "0.56.0"
+version = "0.57.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "51451e697288ba9d19a680f78f17632f582f86742afb0f13caad6380f4e98341"
+checksum = "df7404f3521e7b243dfd159602ba90017cc1246954cf03c09dad563acf472b70"
 dependencies = [
  "base64 0.21.4",
  "etag",
@@ -1573,9 +1574,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_macros"
-version = "0.56.0"
+version = "0.57.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cfbb9d33fae0595c1de6c67db9281037d646462c1105fe497dace02743c2c50d"
+checksum = "2d24a33d9f49f70f684102616ed16115609eaa35dd057991a989e8ad1ba1f950"
 dependencies = [
  "cruet",
  "proc-macro-crate",
