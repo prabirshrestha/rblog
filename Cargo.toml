@@ -26,5 +26,5 @@ serde = { version = "1.0.189", features = ["derive"] }
 serde_yaml = "0.9.25"
 slug = "0.1.4"
 tokio = { version = "1.33.0" }
-tracing = "0.1.39"
+tracing = "0.1.40"
 tracing-subscriber = "0.3.17"
