@@ -88,3 +88,10 @@ jobs:
         run: |
           strip rblog.exe
           7z a ../../../${{ matrix.name }} rblog.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ matrix.name }}
+          path: ${{ matrix.name }}
+          if-no-files-found: error
