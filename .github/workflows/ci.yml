@@ -75,20 +75,3 @@ jobs:
           command: build
           args: --verbose --locked --all --release --target ${{ matrix.target }}
 
-      - name: prepare unix artifacts
-        if: matrix.os != 'windows-latest'
-        run: |
-          tar czvf ${{ matrix.name }} -C ./target/release rblog
-      - name: prepare windows artifacts
-        if: matrix.os == 'windows-latest'
-        run: |
-          cd target/release
-          strip objstor.exe
-          7z a ../../../${{ matrix.name }} objstor.exe
-          cd -
-
-      - name: upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.name }}
-          path: ${{ matrix.name }}
