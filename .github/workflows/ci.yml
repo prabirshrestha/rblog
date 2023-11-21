@@ -113,6 +113,11 @@ jobs:
         with:
           name: rblog-x86_64-unknown-linux-gnu.tar.gz
           path: .
+      - name: Download x86_64-unknown-linux-musl.tar.gz
+        uses: actions/download-artifact@v1
+        with:
+          name: rblog-x86_64-unknown-linux-musl.tar.gz
+          path: .
       - name: Download rblog-x86_64-apple-darwin.tar.gz
         uses: actions/download-artifact@v1
         with:
@@ -131,6 +136,8 @@ jobs:
           files: |
             rblog-x86_64-unknown-linux-gnu.tar.gz
             rblog-x86_64-unknown-linux-gnu.tar.gz.sha256
+            rblog-x86_64-unknown-linux-musl.tar.gz
+            rblog-x86_64-unknown-linux-musl.tar.gz.sha256
             rblog-x86_64-apple-darwin.tar.gz
             rblog-x86_64-apple-darwin.tar.gz.sha256
             rblog-x86_64-pc-windows-msvc.zip
