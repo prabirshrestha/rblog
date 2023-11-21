@@ -16,7 +16,6 @@ on:
 
 jobs:
   build:
-    name: build
     strategy:
       fail-fast: true
       matrix:
@@ -61,6 +60,20 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-features
+
+      - name: Build debug
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.usecross }}
+          command: build
+          args: --verbose --locked --all --target ${{ matrix.target }}
+
+      - name: Build release
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.usecross }}
+          command: build
+          args: --verbose --locked --all --release --target ${{ matrix.target }}
 
       - name: prepare unix artifacts
         if: matrix.os != 'windows-latest'
