@@ -75,3 +75,10 @@ jobs:
           command: build
           args: --verbose --locked --all --release --target ${{ matrix.target }}
 
+      - name: Prepare unix archive
+        if: matrix.os != 'windows-latest'
+        run: |
+          cd target/${{ matrix.target }}/release
+          strip rblog
+          tar czvf ../../../${{ matrix.name }} rblog
+          cd -
