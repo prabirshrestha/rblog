@@ -15,218 +15,67 @@ on:
       - 'v0.[0-9]+.[0-9]+-alpha.[0-9]+'
 
 jobs:
-  style:
-    name: check style
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        profile: minimal
-        components: rustfmt, clippy
-    - name: rust cache
-      uses: Swatinem/rust-cache@v2
-    - name: rust fmt
-      uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: --all -- --check
-    - name: clippy
-      uses: actions-rs/clippy-check@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        args: --all-features
-
   build:
-    env:
-      # Emit backtraces on panics.
-      RUST_BACKTRACE: 1
-    runs-on: ${{ matrix.os }}
-    needs: [style]
-    outputs:
-      release_id: ${{ steps.release.outputs.id }}
+    name: build
     strategy:
+      fail-fast: true
       matrix:
-        # build: [linux, linux-arm, macos, winmsvc]
+        target:
+            - x86_64-unknown-linux-gnu
+            - x86_64-apple-darwin
+            - x86_64-pc-windows-msvc
         include:
-          - build: linux
+          - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            rust: stable
-            target: x86_64-unknown-linux-musl
-            usecross: false
-          # - build: linux-arm
-          #   os: ubuntu-latest
-          #   rust: stable
-          #   target: aarch64-unknown-linux-musl
-          #   usecross: true
-          - build: macos
+            name: objstor-x86_64-unknown-linux-gnu.tar.gz
+          - target: x86_64-apple-darwin
             os: macos-latest
-            rust: stable
-            target: x86_64-apple-darwin
-            usecross: false
-          - build: winmsvc
+            name: objstor-x86_64-apple-darwin.tar.gz
+          - target: x86_64-pc-windows-msvc
             os: windows-latest
-            rust: stable
-            target: x86_64-pc-windows-msvc
-            usecross: false
-
+            name: objstor-x86_64-pc-windows-msvc.zip
+    runs-on: ${{ matrix.os }}
+    env:
+      # emit backtraces on panics.
+      RUST_BACKTRACE: 1
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
-
-    - name: Get the build metadata
-      shell: bash
-      run: |
-        echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-        echo "CARGO_VERSION=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
-        echo "PKG_NAME=$(grep -m 1 '^name = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
-
-    - name: Validate git tag and Cargo.toml version
-      shell: bash
-      if: startsWith(github.ref, 'refs/tags/')
-      run: |
-        if [ "${{ env.VERSION }}" != "v${{ env.CARGO_VERSION }}" ]; then
-          echo "git tag version (${{ env.VERSION }}) does not match Cargo.toml version (v${{ env.CARGO_VERSION }})"
-          exit 1
-        fi
-
-    - name: Install musl-tools
-      if: matrix.build == 'linux'
-      run: sudo apt install musl-tools
-
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: ${{ matrix.rust }}
-        target: ${{ matrix.target }}
-        profile: minimal
-        override: true
-
-    - name: Build debug
-      uses: actions-rs/cargo@v1
-      with:
-        use-cross: ${{ matrix.usecross }}
-        command: build
-        args: --verbose --locked --all --target ${{ matrix.target }}
-
-    - name: Build release
-      uses: actions-rs/cargo@v1
-      with:
-        use-cross: ${{ matrix.usecross }}
-        command: build
-        args: --verbose --locked --all --release --target ${{ matrix.target }}
-
-    - name: Test
-      uses: actions-rs/cargo@v1
-      with:
-        use-cross: ${{ matrix.usecross }}
-        command: test
-        args: --verbose --locked --all --release --target ${{ matrix.target }}
-
-    - name: Strip release binary (linux and macos only)
-      if: matrix.build == 'linux' || matrix.build == 'macos'
-      run: strip "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}"
-
-    - name: Build archive
-      shell: bash
-      run: |
-        staging="${{ env.PKG_NAME }}-${{ env.VERSION }}-${{ matrix.target }}"
-        mkdir -p "$staging"
-        cp {README.md,LICENSE*} "$staging/"
-        if [ "${{ matrix.os }}" = "windows-latest" ]; then
-          cp "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}.exe" "$staging/"
-          7z a "$staging.zip" "$staging"
-          echo "ASSET=${staging}.zip" >> $GITHUB_ENV
-        else
-          cp "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}" "$staging/"
-          tar czf "$staging.tar.gz" "$staging"
-          echo "ASSET=${staging}.tar.gz" >> $GITHUB_ENV
-        fi
-
-    - name: Create draft release and upload asset
-      id: release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        draft: true
-        files: ${{ env.ASSET }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish-crate:
-    name: publish-crate
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: [build]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          profile: minimal
           override: true
-      - name: Login to crates.io
+          profile: minimal
+          components: rustfmt, clippy
+      - uses: swatinem/rust-cache@v2.7.0
+
+      - name: rust fmt
         uses: actions-rs/cargo@v1
         with:
-          use-cross: ${{ matrix.usecross }}
-          command: login
-          args: ${{ secrets.CRATES_TOKEN }}
-      - name: Publish to crates.io
-        uses: actions-rs/cargo@v1
+          command: fmt
+          args: --all -- --check
+      - name: clippy
+        uses: actions-rs/clippy-check@v1
         with:
-          use-cross: ${{ matrix.usecross }}
-          command: publish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
 
-  publish-release:
-    name: publish-release
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: ['build', 'publish-crate']
-    steps:
-      - name: Publish release
-        uses: StuYarrow/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          id: ${{ needs.build.outputs.release_id }}
+      - name: prepare unix artifacts
+        if: matrix.os != 'windows-latest'
+        run: |
+          tar czvf ${{ matrix.name }} -C ./target/release rblog
+      - name: prepare windows artifacts
+        if: matrix.os == 'windows-latest'
+        run: |
+          cd target/release
+          strip objstor.exe
+          7z a ../../../${{ matrix.name }} objstor.exe
+          cd -
 
-  publish-aur:
-    name: publish-aur
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: ['build', 'publish-crate', 'publish-release']
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: upload artifacts
+        uses: actions/upload-artifact@v3
         with:
-          fetch-depth: 1
-      - name: Get the build metadata
-        shell: bash
-        run: |
-          echo "PKG_NAME=$(grep -m 1 '^name = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
-      - name: Create PKGBUILD
-        shell: bash
-        run: |
-          cd ${GITHUB_WORKSPACE}/packages/aur
-          ./genpkgbuild.sh
-      - name: Publish Release to AUR
-        uses: KSXGitHub/github-actions-deploy-aur@v2.7.0
-        with:
-          pkgname: ${{ env.PKG_NAME }}-bin
-          pkgbuild: packages/aur/PKGBUILD
-          commit_username: ${{ secrets.AUR_USERNAME }}
-          commit_email: ${{ secrets.AUR_EMAIL }}
-          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+          name: ${{ matrix.name }}
+          path: ${{ matrix.name }}
