@@ -15,161 +15,106 @@ on:
       - 'v0.[0-9]+.[0-9]+-alpha.[0-9]+'
 
 jobs:
-  style:
-    name: check style
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        profile: minimal
-        components: rustfmt, clippy
-    - name: rust cache
-      uses: Swatinem/rust-cache@v2
-    - name: rust fmt
-      uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: --all -- --check
-    - name: clippy
-      uses: actions-rs/clippy-check@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        args: --all-features
-
   build:
-    env:
-      # Emit backtraces on panics.
-      RUST_BACKTRACE: 1
-    runs-on: ${{ matrix.os }}
-    needs: [style]
-    outputs:
-      release_id: ${{ steps.release.outputs.id }}
     strategy:
+      fail-fast: false
       matrix:
-        # build: [linux, linux-arm, macos, winmsvc]
+        target:
+            - x86_64-unknown-linux-gnu
+            - x86_64-unknown-linux-musl
+            - x86_64-apple-darwin
+            - aarch64-apple-darwin
+            - x86_64-pc-windows-msvc
         include:
-          - build: linux
+          - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            rust: stable
-            target: x86_64-unknown-linux-musl
-            usecross: false
-          # - build: linux-arm
-          #   os: ubuntu-latest
-          #   rust: stable
-          #   target: aarch64-unknown-linux-musl
-          #   usecross: true
-          - build: macos
+            name: rblog-x86_64-unknown-linux-gnu.tar.gz
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+            name: rblog-x86_64-unknown-linux-musl.tar.gz
+          - target: x86_64-apple-darwin
             os: macos-latest
-            rust: stable
-            target: x86_64-apple-darwin
-            usecross: false
-          - build: winmsvc
+            name: rblog-x86_64-apple-darwin.tar.gz
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            name: rblog-aarch64-apple-darwin.tar.gz
+          - target: x86_64-pc-windows-msvc
             os: windows-latest
-            rust: stable
-            target: x86_64-pc-windows-msvc
-            usecross: false
-
+            name: rblog-x86_64-pc-windows-msvc.zip
+    runs-on: ${{ matrix.os }}
+    env:
+      # emit backtraces on panics.
+      RUST_BACKTRACE: 1
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 1
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          override: true
+          profile: minimal
+          components: rustfmt, clippy
+      - name: Install musl tools
+        if: matrix.target == 'x86_64-unknown-linux-musl'
+        run: sudo apt-get install -y musl-tools
+      - uses: swatinem/rust-cache@v2.7.0
 
-    - name: Get the build metadata
-      shell: bash
-      run: |
-        echo "VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-        echo "CARGO_VERSION=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
-        echo "PKG_NAME=$(grep -m 1 '^name = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
+      - name: rust fmt
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+      - name: clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
 
-    - name: Validate git tag and Cargo.toml version
-      shell: bash
-      if: startsWith(github.ref, 'refs/tags/')
-      run: |
-        if [ "${{ env.VERSION }}" != "v${{ env.CARGO_VERSION }}" ]; then
-          echo "git tag version (${{ env.VERSION }}) does not match Cargo.toml version (v${{ env.CARGO_VERSION }})"
-          exit 1
-        fi
+      - name: Build debug
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.usecross }}
+          command: build
+          args: --verbose --locked --all --target ${{ matrix.target }}
 
-    - name: Install musl-tools
-      if: matrix.build == 'linux'
-      run: sudo apt install musl-tools
+      - name: Build release
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.usecross }}
+          command: build
+          args: --verbose --locked --all --release --target ${{ matrix.target }}
 
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: ${{ matrix.rust }}
-        target: ${{ matrix.target }}
-        profile: minimal
-        override: true
+      - name: Prepare unix archive
+        if: matrix.os != 'windows-latest'
+        working-directory: target/${{ matrix.target }}/release
+        run: |
+          strip rblog
+          tar czvf ../../../${{ matrix.name }} rblog
 
-    - name: Build debug
-      uses: actions-rs/cargo@v1
-      with:
-        use-cross: ${{ matrix.usecross }}
-        command: build
-        args: --verbose --locked --all --target ${{ matrix.target }}
+      - name: Prepare windows archive
+        if: matrix.os == 'windows-latest'
+        working-directory: target/${{ matrix.target }}/release
+        run: |
+          strip rblog.exe
+          7z a ../../../${{ matrix.name }} rblog.exe
 
-    - name: Build release
-      uses: actions-rs/cargo@v1
-      with:
-        use-cross: ${{ matrix.usecross }}
-        command: build
-        args: --verbose --locked --all --release --target ${{ matrix.target }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.name }}
+          path: ${{ matrix.name }}
+          if-no-files-found: error
 
-    - name: Test
-      uses: actions-rs/cargo@v1
-      with:
-        use-cross: ${{ matrix.usecross }}
-        command: test
-        args: --verbose --locked --all --release --target ${{ matrix.target }}
-
-    - name: Strip release binary (linux and macos only)
-      if: matrix.build == 'linux' || matrix.build == 'macos'
-      run: strip "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}"
-
-    - name: Build archive
-      shell: bash
-      run: |
-        staging="${{ env.PKG_NAME }}-${{ env.VERSION }}-${{ matrix.target }}"
-        mkdir -p "$staging"
-        cp {README.md,LICENSE*} "$staging/"
-        if [ "${{ matrix.os }}" = "windows-latest" ]; then
-          cp "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}.exe" "$staging/"
-          7z a "$staging.zip" "$staging"
-          echo "ASSET=${staging}.zip" >> $GITHUB_ENV
-        else
-          cp "target/${{ matrix.target }}/release/${{ env.PKG_NAME }}" "$staging/"
-          tar czf "$staging.tar.gz" "$staging"
-          echo "ASSET=${staging}.tar.gz" >> $GITHUB_ENV
-        fi
-
-    - name: Create draft release and upload asset
-      id: release
-      uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        draft: true
-        files: ${{ env.ASSET }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish-crate:
-    name: publish-crate
-    runs-on: ubuntu-latest
+  publish_crate:
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [build]
+    needs:
+      - build
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: Install Rust
@@ -181,33 +126,69 @@ jobs:
       - name: Login to crates.io
         uses: actions-rs/cargo@v1
         with:
-          use-cross: ${{ matrix.usecross }}
           command: login
           args: ${{ secrets.CRATES_TOKEN }}
       - name: Publish to crates.io
         uses: actions-rs/cargo@v1
         with:
-          use-cross: ${{ matrix.usecross }}
           command: publish
 
-  publish-release:
-    name: publish-release
-    runs-on: ubuntu-latest
+  release:
     if: startsWith(github.ref, 'refs/tags/')
-    needs: ['build', 'publish-crate']
+    needs: 
+      - publish_crate
+    runs-on: ubuntu-latest
     steps:
-      - name: Publish release
-        uses: StuYarrow/publish-release@v1
+      - uses: actions/checkout@v4
+      - name: Download x86_64-unknown-linux-gnu.tar.gz
+        uses: actions/download-artifact@v1
+        with:
+          name: rblog-x86_64-unknown-linux-gnu.tar.gz
+          path: .
+      - name: Download x86_64-unknown-linux-musl.tar.gz
+        uses: actions/download-artifact@v1
+        with:
+          name: rblog-x86_64-unknown-linux-musl.tar.gz
+          path: .
+      - name: Download rblog-x86_64-apple-darwin.tar.gz
+        uses: actions/download-artifact@v1
+        with:
+          name: rblog-x86_64-apple-darwin.tar.gz
+          path: .
+      - name: Download rblog-aarch64-apple-darwin.tar.gz
+        uses: actions/download-artifact@v1
+        with:
+          name: rblog-aarch64-apple-darwin.tar.gz
+          path: .
+      - name: rblog-x86_64-pc-windows-msvc.zip
+        uses: actions/download-artifact@v1
+        with:
+          name: rblog-x86_64-pc-windows-msvc.zip
+          path: .
+      - name: Generate checksums
+        run: for file in rblog-*; do openssl dgst -sha256 -r "$file" | awk '{print $1}' > "${file}.sha256"; done
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            rblog-x86_64-unknown-linux-gnu.tar.gz
+            rblog-x86_64-unknown-linux-gnu.tar.gz.sha256
+            rblog-x86_64-unknown-linux-musl.tar.gz
+            rblog-x86_64-unknown-linux-musl.tar.gz.sha256
+            rblog-x86_64-apple-darwin.tar.gz
+            rblog-x86_64-apple-darwin.tar.gz.sha256
+            rblog-aarch64-apple-darwin.tar.gz
+            rblog-aarch64-apple-darwin.tar.gz.sha256
+            rblog-x86_64-pc-windows-msvc.zip
+            rblog-x86_64-pc-windows-msvc.zip.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          id: ${{ needs.build.outputs.release_id }}
 
-  publish-aur:
-    name: publish-aur
+  publish_aur_package:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    needs: ['build', 'publish-crate', 'publish-release']
+    needs:
+      - release
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
