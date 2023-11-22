@@ -28,19 +28,14 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            name: rblog-x86_64-unknown-linux-gnu.tar.gz
           - target: x86_64-unknown-linux-musl
             os: ubuntu-latest
-            name: rblog-x86_64-unknown-linux-musl.tar.gz
           - target: x86_64-apple-darwin
             os: macos-latest
-            name: rblog-x86_64-apple-darwin.tar.gz
           - target: aarch64-apple-darwin
             os: macos-latest
-            name: rblog-aarch64-apple-darwin.tar.gz
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-            name: rblog-x86_64-pc-windows-msvc.zip
     runs-on: ${{ matrix.os }}
     env:
       # emit backtraces on panics.
@@ -49,6 +44,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - run: echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -92,14 +88,14 @@ jobs:
         working-directory: target/${{ matrix.target }}/release
         run: |
           strip rblog
-          tar czvf ../../../${{ matrix.name }} rblog
+          tar czvf ../../../rblog-v${{ version }}-${{ matrix.target }}.tar.gz rblog
 
       - name: Prepare windows archive
         if: matrix.os == 'windows-latest'
         working-directory: target/${{ matrix.target }}/release
         run: |
           strip rblog.exe
-          7z a ../../../${{ matrix.name }} rblog.exe
+          7z a ../../../rblog-v${{ version }}-${{ matrix.target }}.zip rblog.exe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -140,30 +136,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: echo "version=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Download x86_64-unknown-linux-gnu.tar.gz
         uses: actions/download-artifact@v1
         with:
-          name: rblog-x86_64-unknown-linux-gnu.tar.gz
+          name: rblog-v${{ version }}-x86_64-unknown-linux-gnu.tar.gz
           path: .
       - name: Download x86_64-unknown-linux-musl.tar.gz
         uses: actions/download-artifact@v1
         with:
-          name: rblog-x86_64-unknown-linux-musl.tar.gz
+          name: rblog-v${{ version }}-x86_64-unknown-linux-musl.tar.gz
           path: .
       - name: Download rblog-x86_64-apple-darwin.tar.gz
         uses: actions/download-artifact@v1
         with:
-          name: rblog-x86_64-apple-darwin.tar.gz
+          name: rblog-v${{ version }}-x86_64-apple-darwin.tar.gz
           path: .
       - name: Download rblog-aarch64-apple-darwin.tar.gz
         uses: actions/download-artifact@v1
         with:
-          name: rblog-aarch64-apple-darwin.tar.gz
+          name: rblog-v${{ version }}aarch64-apple-darwin.tar.gz
           path: .
       - name: rblog-x86_64-pc-windows-msvc.zip
         uses: actions/download-artifact@v1
         with:
-          name: rblog-x86_64-pc-windows-msvc.zip
+          name: rblog-v${{ version }}-x86_64-pc-windows-msvc.zip
           path: .
       - name: Generate checksums
         run: for file in rblog-*; do openssl dgst -sha256 -r "$file" | awk '{print $1}' > "${file}.sha256"; done
@@ -171,16 +168,16 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            rblog-x86_64-unknown-linux-gnu.tar.gz
-            rblog-x86_64-unknown-linux-gnu.tar.gz.sha256
-            rblog-x86_64-unknown-linux-musl.tar.gz
-            rblog-x86_64-unknown-linux-musl.tar.gz.sha256
-            rblog-x86_64-apple-darwin.tar.gz
-            rblog-x86_64-apple-darwin.tar.gz.sha256
-            rblog-aarch64-apple-darwin.tar.gz
-            rblog-aarch64-apple-darwin.tar.gz.sha256
-            rblog-x86_64-pc-windows-msvc.zip
-            rblog-x86_64-pc-windows-msvc.zip.sha256
+            rblog-v${{ version }}-x86_64-unknown-linux-gnu.tar.gz
+            rblog-v${{ version }}-x86_64-unknown-linux-gnu.tar.gz.sha256
+            rblog-v${{ version }}-x86_64-unknown-linux-musl.tar.gz
+            rblog-v${{ version }}-x86_64-unknown-linux-musl.tar.gz.sha256
+            rblog-v${{ version }}-x86_64-apple-darwin.tar.gz
+            rblog-v${{ version }}-x86_64-apple-darwin.tar.gz.sha256
+            rblog-v${{ version }}-aarch64-apple-darwin.tar.gz
+            rblog-v${{ version }}-aarch64-apple-darwin.tar.gz.sha256
+            rblog-v${{ version }}-x86_64-pc-windows-msvc.zip
+            rblog-v${{ version }}-x86_64-pc-windows-msvc.zip.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
