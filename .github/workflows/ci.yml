@@ -110,7 +110,8 @@ jobs:
 
   publish_crate:
     if: startsWith(github.ref, 'refs/tags/')
-    needs: build
+    needs:
+      - build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -134,7 +135,8 @@ jobs:
 
   release:
     if: startsWith(github.ref, 'refs/tags/')
-    needs: publish_crate
+    needs: 
+      - publish_crate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -181,3 +183,31 @@ jobs:
             rblog-x86_64-pc-windows-msvc.zip.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish_aur_package:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    needs:
+      - release
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Get the build metadata
+        shell: bash
+        run: |
+          echo "PKG_NAME=$(grep -m 1 '^name = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
+      - name: Create PKGBUILD
+        shell: bash
+        run: |
+          cd ${GITHUB_WORKSPACE}/packages/aur
+          ./genpkgbuild.sh
+      - name: Publish Release to AUR
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.0
+        with:
+          pkgname: ${{ env.PKG_NAME }}-bin
+          pkgbuild: packages/aur/PKGBUILD
+          commit_username: ${{ secrets.AUR_USERNAME }}
+          commit_email: ${{ secrets.AUR_EMAIL }}
+          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
