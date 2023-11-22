@@ -88,14 +88,14 @@ jobs:
         working-directory: target/${{ matrix.target }}/release
         run: |
           strip rblog
-          tar czvf ../../../rblog-v${{ version }}-${{ matrix.target }}.tar.gz rblog
+          tar czvf ../../../rblog-v${{ env.version }}-${{ matrix.target }}.tar.gz rblog
 
       - name: Prepare windows archive
         if: matrix.os == 'windows-latest'
         working-directory: target/${{ matrix.target }}/release
         run: |
           strip rblog.exe
-          7z a ../../../rblog-v${{ version }}-${{ matrix.target }}.zip rblog.exe
+          7z a ../../../rblog-v${{ env.version }}-${{ matrix.target }}.zip rblog.exe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -140,27 +140,27 @@ jobs:
       - name: Download x86_64-unknown-linux-gnu.tar.gz
         uses: actions/download-artifact@v1
         with:
-          name: rblog-v${{ version }}-x86_64-unknown-linux-gnu.tar.gz
+          name: rblog-v${{ env.version }}-x86_64-unknown-linux-gnu.tar.gz
           path: .
       - name: Download x86_64-unknown-linux-musl.tar.gz
         uses: actions/download-artifact@v1
         with:
-          name: rblog-v${{ version }}-x86_64-unknown-linux-musl.tar.gz
+          name: rblog-v${{ env.version }}-x86_64-unknown-linux-musl.tar.gz
           path: .
       - name: Download rblog-x86_64-apple-darwin.tar.gz
         uses: actions/download-artifact@v1
         with:
-          name: rblog-v${{ version }}-x86_64-apple-darwin.tar.gz
+          name: rblog-v${{ env.version }}-x86_64-apple-darwin.tar.gz
           path: .
       - name: Download rblog-aarch64-apple-darwin.tar.gz
         uses: actions/download-artifact@v1
         with:
-          name: rblog-v${{ version }}aarch64-apple-darwin.tar.gz
+          name: rblog-v${{ env.version }}aarch64-apple-darwin.tar.gz
           path: .
       - name: rblog-x86_64-pc-windows-msvc.zip
         uses: actions/download-artifact@v1
         with:
-          name: rblog-v${{ version }}-x86_64-pc-windows-msvc.zip
+          name: rblog-v${{ env.version }}-x86_64-pc-windows-msvc.zip
           path: .
       - name: Generate checksums
         run: for file in rblog-*; do openssl dgst -sha256 -r "$file" | awk '{print $1}' > "${file}.sha256"; done
@@ -168,16 +168,16 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            rblog-v${{ version }}-x86_64-unknown-linux-gnu.tar.gz
-            rblog-v${{ version }}-x86_64-unknown-linux-gnu.tar.gz.sha256
-            rblog-v${{ version }}-x86_64-unknown-linux-musl.tar.gz
-            rblog-v${{ version }}-x86_64-unknown-linux-musl.tar.gz.sha256
-            rblog-v${{ version }}-x86_64-apple-darwin.tar.gz
-            rblog-v${{ version }}-x86_64-apple-darwin.tar.gz.sha256
-            rblog-v${{ version }}-aarch64-apple-darwin.tar.gz
-            rblog-v${{ version }}-aarch64-apple-darwin.tar.gz.sha256
-            rblog-v${{ version }}-x86_64-pc-windows-msvc.zip
-            rblog-v${{ version }}-x86_64-pc-windows-msvc.zip.sha256
+            rblog-v${{ env.version }}-x86_64-unknown-linux-gnu.tar.gz
+            rblog-v${{ env.version }}-x86_64-unknown-linux-gnu.tar.gz.sha256
+            rblog-v${{ env.version }}-x86_64-unknown-linux-musl.tar.gz
+            rblog-v${{ env.version }}-x86_64-unknown-linux-musl.tar.gz.sha256
+            rblog-v${{ env.version }}-x86_64-apple-darwin.tar.gz
+            rblog-v${{ env.version }}-x86_64-apple-darwin.tar.gz.sha256
+            rblog-v${{ env.version }}-aarch64-apple-darwin.tar.gz
+            rblog-v${{ env.version }}-aarch64-apple-darwin.tar.gz.sha256
+            rblog-v${{ env.version }}-x86_64-pc-windows-msvc.zip
+            rblog-v${{ env.version }}-x86_64-pc-windows-msvc.zip.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
