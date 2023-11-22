@@ -134,7 +134,7 @@ impl BlogConf {
             bail!("File not found - {:?}", &conf_path);
         }
 
-        let conf_contents = fs::read_to_string(&conf_path)?;
+        let conf_contents = fs::read_to_string(conf_path)?;
         let mut conf: BlogConf = serde_yaml::from_str(&conf_contents)?;
 
         if conf.posts_dir.is_none() {
