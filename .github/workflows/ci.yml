@@ -98,19 +98,19 @@ jobs:
           strip rblog.exe
           7z a ../../../rblog-v${{ env.version }}-${{ matrix.target }}.zip rblog.exe
 
-      - name: Upload artifact
+      - name: Upload unix artifact
         uses: actions/upload-artifact@v3
         if: matrix.os != 'windows-latest'
         with:
-          name: ${{ matrix.name }}
+          name: rblog-v${{ env.version }}-${{ matrix.target }}.tar.gz
           path: rblog-v${{ env.version }}-${{ matrix.target }}.tar.gz
           if-no-files-found: error
 
-      - name: Upload artifact
+      - name: Upload windows artifact
         uses: actions/upload-artifact@v3
         if: matrix.os == 'windows-latest'
         with:
-          name: ${{ matrix.name }}
+          name: rblog-v${{ env.version }}-${{ matrix.target }}.zip
           path: rblog-v${{ env.version }}-${{ matrix.target }}.zip
           if-no-files-found: error
 
