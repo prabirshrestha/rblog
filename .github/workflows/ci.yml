@@ -232,6 +232,24 @@ jobs:
           push: ${{ github.ref == 'refs/heads/main' }}
           no-cache: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rblog:nightly
+      - name: Build and push latest docker image
+        uses: docker/build-push-action@v5.1.0
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          context: ./pkg/docker
+          file: ./pkg/docker/Dockerfile
+          platforms: linux/amd64
+          push: true
+          no-cache: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/rblog:${{ github.ref_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/rblog:latest
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: prabirshrestha/rblog
 
   publish_aur_package:
     runs-on: ubuntu-latest
