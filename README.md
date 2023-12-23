@@ -24,7 +24,28 @@ systemfd --no-pid -s http::8080 -- cargo watch -x 'run'
 
 ### Running in docker
 
-Set `HOST` environment variable to `0.0.0.0`.
+#### Running tagged docker image
+
+```bash
+docker run -v ./posts:/data/posts -v ./blog.conf:/data/blog.conf -p 8080:8080 prabirshrestha/rblog:v0.264.0
+```
+
+#### Running latest docker image
+
+```bash
+docker run -v ./posts:/data/posts -v ./blog.conf:/data/blog.conf -p 8080:8080 prabirshrestha/rblog:latest
+```
+#### Running nightly docker image
+
+```bash
+docker run -v ./posts:/data/posts -v ./blog.conf:/data/blog.conf -p 8080:8080 prabirshrestha/rblog:nightly
+```
+
+*For demos ignore the volume mappings.*
+
+```bash
+docker run -p 8080:8080 prabirshrestha/rblog:nightly
+```
 
 ## License
 
