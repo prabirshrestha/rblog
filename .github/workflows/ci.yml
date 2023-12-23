@@ -225,13 +225,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push nightly docker image
         uses: docker/build-push-action@v5.1.0
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           context: ./pkg/docker
           file: ./pkg/docker/Dockerfile
           platforms: linux/amd64
-          # push: ${{ github.ref == 'refs/heads/main' }}
-          push: false
+          push: ${{ github.ref == 'refs/heads/main' }}
           no-cache: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rblog:nightly
 
