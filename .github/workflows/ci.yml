@@ -101,7 +101,7 @@ jobs:
           7z a ../../../rblog-v${{ env.version }}-${{ matrix.target }}.zip rblog.exe
 
       - name: Upload unix artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: matrix.os != 'windows-latest'
         with:
           name: rblog-v${{ env.version }}-${{ matrix.target }}.tar.gz
@@ -109,7 +109,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload windows artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: matrix.os == 'windows-latest'
         with:
           name: rblog-v${{ env.version }}-${{ matrix.target }}.zip
@@ -153,27 +153,27 @@ jobs:
         run: |
           echo "version=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
       - name: Download x86_64-unknown-linux-gnu.tar.gz
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: rblog-v${{ env.version }}-x86_64-unknown-linux-gnu.tar.gz
           path: .
       - name: Download x86_64-unknown-linux-musl.tar.gz
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: rblog-v${{ env.version }}-x86_64-unknown-linux-musl.tar.gz
           path: .
       - name: Download rblog-x86_64-apple-darwin.tar.gz
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: rblog-v${{ env.version }}-x86_64-apple-darwin.tar.gz
           path: .
       - name: Download rblog-aarch64-apple-darwin.tar.gz
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: rblog-v${{ env.version }}-aarch64-apple-darwin.tar.gz
           path: .
       - name: rblog-x86_64-pc-windows-msvc.zip
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: rblog-v${{ env.version }}-x86_64-pc-windows-msvc.zip
           path: .
@@ -207,7 +207,7 @@ jobs:
         run: |
           echo "version=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
       - name: Download x86_64-unknown-linux-musl.tar.gz
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: rblog-v${{ env.version }}-x86_64-unknown-linux-musl.tar.gz
           path: .
@@ -245,7 +245,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/rblog:${{ github.ref_name }}
             ${{ secrets.DOCKERHUB_USERNAME }}/rblog:latest
       - name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v3
+        uses: peter-evans/dockerhub-description@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
