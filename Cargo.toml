@@ -14,7 +14,7 @@ ructe = { version = "0.17.0", features = ["sass", "mime03"] }
 [dependencies]
 anyhow = "1.0.80"
 async-fs = "2.1.1"
-chrono = { version = "0.4.34", features = ["serde"] }
+chrono = { version = "0.4.35", features = ["serde"] }
 dotenv = "0.15.0"
 listenfd = "1.0.1"
 mime = "0.3.17"
