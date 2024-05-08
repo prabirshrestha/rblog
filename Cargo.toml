@@ -19,10 +19,10 @@ dotenv = "0.15.0"
 listenfd = "1.0.1"
 mime = "0.3.17"
 mime_guess = "2.0.4"
-pulldown-cmark = "0.10.3"
+pulldown-cmark = "0.10"
 ructe = "0.17.0"
 salvo = { version = "0.66.2", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
-serde = { version = "1.0.197", features = ["derive"] }
+serde = { version = "1.0.200", features = ["derive"] }
 serde_yaml = "0.9.32"
 slug = "0.1.5"
 tokio = { version = "1.37.0" }
