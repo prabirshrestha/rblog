@@ -1538,7 +1538,7 @@ dependencies = [
 
 [[package]]
 name = "rblog"
-version = "0.268.0"
+version = "0.269.0"
 dependencies = [
  "anyhow",
  "async-fs",
