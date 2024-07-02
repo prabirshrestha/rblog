@@ -219,7 +219,7 @@ jobs:
           cp ./blog.conf ./pkg/docker/data/
           cp -r ./posts ./pkg/docker/data/
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3.1.0
+        uses: docker/login-action@v3.2.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -271,7 +271,7 @@ jobs:
           cd ${GITHUB_WORKSPACE}/packages/aur
           ./genpkgbuild.sh
       - name: Publish Release to AUR
-        uses: KSXGitHub/github-actions-deploy-aur@v2.7.1
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.2
         with:
           pkgname: ${{ env.PKG_NAME }}-bin
           pkgbuild: packages/aur/PKGBUILD
