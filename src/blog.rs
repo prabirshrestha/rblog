@@ -30,6 +30,8 @@ pub struct BlogConf {
     giscus: Option<Giscus>,
     google_analytics: Option<GoogleAnalytics>,
     syntax_highlight: Option<bool>,
+    facebook: Option<String>, // Facebook sharing link
+    twitter_share: Option<String>, // Twitter sharing link
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -126,6 +128,25 @@ impl Blog {
     pub fn get_current_year(&self) -> i32 {
         Utc::now().year()
     }
+
+    // Generate sharing links for Facebook and Twitter
+    pub fn generate_facebook_twitter_links(&self, post: &Post) -> (Option<String>, Option<String>) {
+        let post_url = format!("{}{}", self.conf.get_root(), post.get_url());
+        let facebook_link = self.conf.facebook.as_ref().map(|_| {
+            format!(
+                "https://www.facebook.com/sharer/sharer.php?u={}",
+                post_url
+            )
+        });
+        let twitter_link = self.conf.twitter_share.as_ref().map(|_| {
+            format!(
+                "https://twitter.com/intent/tweet?url={}&text={}",
+                post_url,
+                post.get_metadata().get_title()
+            )
+        });
+        (facebook_link, twitter_link)
+    }
 }
 
 impl BlogConf {
@@ -200,6 +221,14 @@ impl BlogConf {
 
     pub fn get_syntax_highlight(&self) -> Option<bool> {
         self.syntax_highlight
+    }
+
+    pub fn get_facebook(&self) -> Option<&str> {
+        self.facebook.as_deref()
+    }
+
+    pub fn get_twitter_share(&self) -> Option<&str> {
+        self.twitter_share.as_deref()
     }
 }
 
