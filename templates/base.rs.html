@@ -28,6 +28,9 @@
                 @if let Some(twitter) = blog.get_blog_conf().get_twitter() {
                     <a href="https://twitter.com/@twitter">Twitter</a>
                 }
+                @if let Some(facebook) = blog.get_blog_conf().get_facebook() {
+                    <a href="https://www.facebook.com/@facebook">Facebook</a>
+                }
             </nav>
         </header>
         <main>
@@ -43,6 +46,9 @@
             }
             @if let Some(twitter) = blog.get_blog_conf().get_twitter() {
                 <a href="https://twitter.com/@twitter">Twitter</a>
+            }
+            @if let Some(facebook) = blog.get_blog_conf().get_facebook() {
+                <a href="https://www.facebook.com/@facebook">Facebook</a>
             }
             <a href="/rss">
                 <a href="/rss">RSS</a>
