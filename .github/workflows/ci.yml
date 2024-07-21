@@ -219,12 +219,12 @@ jobs:
           cp ./blog.conf ./pkg/docker/data/
           cp -r ./posts ./pkg/docker/data/
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3.1.0
+        uses: docker/login-action@v3.2.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push nightly docker image
-        uses: docker/build-push-action@v6.2.0
+        uses: docker/build-push-action@v6.4.1
         with:
           context: ./pkg/docker
           file: ./pkg/docker/Dockerfile
@@ -233,7 +233,7 @@ jobs:
           no-cache: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rblog:nightly
       - name: Build and push latest docker image
-        uses: docker/build-push-action@v6.2.0
+        uses: docker/build-push-action@v6.4.1
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           context: ./pkg/docker
@@ -271,7 +271,7 @@ jobs:
           cd ${GITHUB_WORKSPACE}/packages/aur
           ./genpkgbuild.sh
       - name: Publish Release to AUR
-        uses: KSXGitHub/github-actions-deploy-aur@v2.7.1
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.2
         with:
           pkgname: ${{ env.PKG_NAME }}-bin
           pkgbuild: packages/aur/PKGBUILD
