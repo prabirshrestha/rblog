@@ -26,6 +26,7 @@ pub struct BlogConf {
     github: Option<String>,
     mastodon: Option<String>,
     twitter: Option<String>,
+    facebook: Option<String>,
     disqus: Option<String>,
     giscus: Option<Giscus>,
     google_analytics: Option<GoogleAnalytics>,
@@ -184,6 +185,10 @@ impl BlogConf {
 
     pub fn get_twitter(&self) -> Option<&str> {
         self.twitter.as_deref()
+    }
+
+    pub fn get_facebook(&self) -> Option<&str> {
+        self.facebook.as_deref()
     }
 
     pub fn get_disqus(&self) -> Option<&str> {
