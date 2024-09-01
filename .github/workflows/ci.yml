@@ -271,7 +271,7 @@ jobs:
           cd ${GITHUB_WORKSPACE}/packages/aur
           ./genpkgbuild.sh
       - name: Publish Release to AUR
-        uses: KSXGitHub/github-actions-deploy-aur@v2.7.2
+        uses: KSXGitHub/github-actions-deploy-aur@v3.0.1
         with:
           pkgname: ${{ env.PKG_NAME }}-bin
           pkgbuild: packages/aur/PKGBUILD
