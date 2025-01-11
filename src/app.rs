@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use crate::{app_config::AppConfig, controllers, services::blog::BlogService};
 use anyhow::Result;
-use salvo::{prelude::*, server::ServerHandle};
+use salvo::{catcher::Catcher, prelude::*, server::ServerHandle};
 use tokio::signal;
 use tracing::info;
 
@@ -57,9 +57,12 @@ impl App {
 
         tokio::spawn(shutdown_signal(handle));
 
-        let service = Router::new()
+        let router = Router::new()
             .hoop(salvo::affix_state::inject(self.clone()))
             .push(controllers::router());
+
+        let service =
+            Service::new(router).catcher(Catcher::default().hoop(controllers::errors::not_found));
 
         server.serve(service).await;
 

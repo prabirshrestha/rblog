@@ -10,8 +10,8 @@ use serde::{Deserialize, Serialize};
 use slug::slugify;
 
 use crate::{
-    markdown::markdown_to_html,
     models::{attachment::Attachment, post_metadata::PostMetadata},
+    utils::markdown::markdown_to_html,
 };
 
 #[derive(Debug, Deserialize, Serialize)]

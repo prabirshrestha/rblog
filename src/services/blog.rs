@@ -4,7 +4,6 @@ use crate::{app_config::AppConfig, models::posts::Post};
 use anyhow::Result;
 
 pub struct BlogService {
-    app_config: Arc<AppConfig>,
     pub posts: HashMap<String, Post>,
     pub ordered_posts: Vec<String>,
 }
@@ -34,7 +33,6 @@ impl BlogService {
             .collect();
 
         Ok(Self {
-            app_config,
             posts,
             ordered_posts,
         })

@@ -1,9 +1,11 @@
 pub use salvo::prelude::*;
 
+pub mod errors;
+
 mod assets;
 mod home;
 mod posts;
-pub mod rss;
+mod rss;
 
 pub fn router() -> Router {
     Router::new()

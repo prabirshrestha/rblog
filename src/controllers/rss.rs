@@ -4,14 +4,14 @@ use crate::{
     utils::render::RenderExt,
 };
 use anyhow::Result;
-use salvo::{fs::NamedFile, prelude::*};
+use salvo::prelude::*;
 
 pub fn routes() -> Router {
     Router::new().push(Router::with_path("/rss").get(get_rss))
 }
 
 #[handler]
-async fn get_rss(req: &mut Request, res: &mut Response, depot: &mut Depot) -> Result<()> {
+async fn get_rss(res: &mut Response, depot: &mut Depot) -> Result<()> {
     let App {
         blog_service,
         app_config,

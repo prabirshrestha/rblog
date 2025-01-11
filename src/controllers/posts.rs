@@ -52,10 +52,7 @@ pub async fn get_attachment(
         return Ok(());
     }
 
-    let App {
-        blog_service,
-        app_config,
-    } = depot.app();
+    let App { blog_service, .. } = depot.app();
 
     if let Some(post) = blog_service.get_post(slug) {
         if let Some(attachment) = post.attachments.get(attachment_name) {
