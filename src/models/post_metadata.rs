@@ -19,4 +19,8 @@ impl PostMetadata {
             .as_ref()
             .map(|date| date.format("%Y-%m-%dT%H:%MZ").to_string())
     }
+
+    pub fn get_rfc2822_datetime(&self) -> Option<String> {
+        self.date.as_ref().map(|date| date.to_rfc2822())
+    }
 }
