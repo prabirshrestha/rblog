@@ -6,12 +6,14 @@ use std::collections::HashMap;
 use std::ffi::OsStr;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
+use crate::app_config::AppConfig;
 use crate::markdown::markdown_to_html;
 
 #[derive(Debug)]
 pub struct Blog {
-    pub conf: BlogConf,
+    pub app_config: Arc<AppConfig>,
     pub posts: HashMap<String, Post>,
     pub ordered_posts: Vec<String>,
 }
@@ -74,8 +76,8 @@ pub struct Attachment {
 }
 
 impl Blog {
-    pub fn from_conf(conf: BlogConf) -> Result<Self> {
-        let posts = Post::read_all_from_dir(Path::new(conf.get_post_dir().as_ref().unwrap()))?;
+    pub fn new(app_config: Arc<AppConfig>) -> Result<Self> {
+        let posts = Post::read_all_from_dir(Path::new(&app_config.posts_dir))?;
         let mut values: Vec<&Post> = posts
             .values()
             .filter(|p| p.get_metadata().get_date().is_some())
@@ -98,14 +100,14 @@ impl Blog {
             .collect();
 
         Ok(Blog {
-            conf,
+            app_config,
             posts,
             ordered_posts,
         })
     }
 
     pub fn get_paged_posts(&self, page: usize) -> impl Iterator<Item = &str> {
-        let page_size = self.conf.get_page_size();
+        let page_size = self.app_config.page_size.unwrap_or_default();
         self.get_all_posts()
             .skip((page - 1) * page_size)
             .take(page_size)
@@ -117,10 +119,6 @@ impl Blog {
 
     pub fn get_post(&self, key: &str) -> Option<&Post> {
         self.posts.get(key)
-    }
-
-    pub fn get_blog_conf(&self) -> &BlogConf {
-        &self.conf
     }
 
     pub fn get_current_year(&self) -> i32 {

@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
-use crate::{app_config::AppConfig, controllers};
+use crate::{app_config::AppConfig, controllers, services::blog::BlogService};
+use anyhow::Result;
 use salvo::{prelude::*, server::ServerHandle};
 use tokio::signal;
 use tracing::info;
@@ -8,6 +9,7 @@ use tracing::info;
 #[derive(Clone)]
 pub struct App {
     pub app_config: Arc<AppConfig>,
+    pub blog_service: Arc<BlogService>,
 }
 
 impl App {
@@ -20,13 +22,17 @@ impl App {
         )
     }
 
-    pub async fn new_from_env() -> anyhow::Result<Self> {
-        let app_config = Arc::new(AppConfig::from_path()?);
-        Self::new_from_config(app_config).await
+    pub async fn from_env() -> Result<Self> {
+        let app_config = Arc::new(AppConfig::new()?);
+        Self::from_config(app_config).await
     }
 
-    pub async fn new_from_config(app_config: Arc<AppConfig>) -> anyhow::Result<Self> {
-        let app = Self { app_config };
+    pub async fn from_config(app_config: Arc<AppConfig>) -> Result<Self> {
+        let blog_service = Arc::new(BlogService::new(app_config.clone())?);
+        let app = Self {
+            app_config,
+            blog_service,
+        };
 
         Ok(app)
     }
@@ -35,7 +41,7 @@ impl App {
         &self.app_config
     }
 
-    pub async fn run(self) -> anyhow::Result<()> {
+    pub async fn run(self) -> Result<()> {
         info!("Starting server");
 
         let acceptor = TcpListener::new(format!(

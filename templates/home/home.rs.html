@@ -1,6 +1,8 @@
 @use super::super::layout_html;
-@()
+@use crate::app_config::AppConfig;
+@use crate::models::{posts::Post};
+@(app_config: &AppConfig, title: &str, _posts: &Vec<&Post>)
 
-@:layout_html({
+@:layout_html(&app_config, title, {
   <h1>Hello world!</h1>
 })

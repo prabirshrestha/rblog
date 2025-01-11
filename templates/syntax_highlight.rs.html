@@ -1,0 +1,9 @@
+@use crate::app_config::AppConfig;
+@(app_config: &AppConfig)
+
+@if let Some(syntax_highlight) = app_config.syntax_highlight {
+  @if syntax_highlight {
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+  }
+}

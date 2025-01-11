@@ -1,6 +1,8 @@
+use std::sync::Arc;
+
 use argh::FromArgs;
 
-use crate::app::App;
+use crate::{app::App, app_config::AppConfig};
 
 #[derive(FromArgs, PartialEq, Debug)]
 #[argh(description = "rblog")]
@@ -26,7 +28,15 @@ pub struct SubcommandVersion {}
 
 #[derive(FromArgs, PartialEq, Debug)]
 #[argh(subcommand, name = "run", description = "run rblog")]
-pub struct SubcommandRun {}
+pub struct SubcommandRun {
+    #[argh(
+        option,
+        short = 'c',
+        description = "path to config file",
+        default = "String::from(\"blog.yaml\")"
+    )]
+    config_file: String,
+}
 
 impl Cli {
     pub fn from_env() -> Self {
@@ -38,14 +48,16 @@ impl Cli {
             Some(subcommand) => match subcommand {
                 CliSubcommand::Version(_) => {
                     println!("{}", App::version());
-                    return Ok(());
                 }
-                CliSubcommand::Run(_) => {}
+                CliSubcommand::Run(args) => {
+                    let config = AppConfig::from_config_file(&args.config_file)?;
+                    App::from_config(Arc::new(config)).await?.run().await?;
+                }
             },
-            None => {}
+            None => {
+                App::from_env().await?.run().await?;
+            }
         }
-
-        App::new_from_env().await?.run().await?;
 
         Ok(())
     }
