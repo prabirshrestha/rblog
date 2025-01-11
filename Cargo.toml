@@ -9,10 +9,14 @@ repository = "https://github.com/prabirshrestha/rblog"
 
 build = "src/build.rs"
 [build-dependencies]
+anyhow = "1.0.82"
 ructe = { version = "0.17.0", features = ["sass", "mime03"] }
+vergen = "9.0.3"
+vergen-gitcl = { version = "1.0.3", features = ["build"] }
 
 [dependencies]
 anyhow = "1.0.82"
+argh = "0.1.13"
 async-fs = "2.1.2"
 chrono = { version = "0.4.37", features = ["serde"] }
 dotenv = "0.15.0"
@@ -21,10 +25,11 @@ mime = "0.3.17"
 mime_guess = "2.0.4"
 pulldown-cmark = "0.11"
 ructe = "0.17.0"
-salvo = { version = "0.68.0", features = ["affix", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
+salvo = { version = "0.75.0", features = ["affix-state", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
+schematic = { version = "0.17.8" }
 serde = { version = "1.0.200", features = ["derive"] }
 serde_yaml = "0.9.32"
 slug = "0.1.5"
-tokio = { version = "1.37.0" }
+tokio = { version = "1.37.0", features = ["macros", "rt-multi-thread", "signal"] }
 tracing = "0.1.40"
 tracing-subscriber = "0.3.18"

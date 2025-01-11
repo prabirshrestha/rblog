@@ -31,7 +31,7 @@ pub async fn run() -> Result<()> {
 
 async fn make_service() -> Result<Service> {
     let router = Router::new()
-        .hoop(salvo::affix::inject(AppState::new_from_env()?))
+        .hoop(salvo::affix_state::inject(AppState::new_from_env()?))
         .hoop(salvo::logging::Logger::default())
         // .hoop(salvo::caching_headers::CachingHeaders::default()) // CachingHeader must be before Compression.
         // .hoop(salvo::compression::Compression::default().with_force_priority(true))

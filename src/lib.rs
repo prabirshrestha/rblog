@@ -1,11 +1,15 @@
 use anyhow::Result;
 use salvo::prelude::*;
 
+pub mod app;
+pub mod app_config;
 pub mod appstate;
 pub mod blog;
+pub mod cli;
 pub mod markdown;
 pub mod routes;
 pub mod server;
+pub mod controllers;
 
 pub fn render<F>(res: &mut Response, do_render: F) -> Result<&mut Response>
 where
