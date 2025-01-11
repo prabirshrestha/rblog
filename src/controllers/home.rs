@@ -11,7 +11,7 @@ pub fn routes() -> Router {
 }
 
 #[handler]
-async fn home(_req: &mut Request, res: &mut Response, depot: &mut Depot) -> Result<()> {
+async fn home(res: &mut Response, depot: &mut Depot) -> Result<()> {
     let App {
         blog_service,
         app_config,
@@ -21,8 +21,6 @@ async fn home(_req: &mut Request, res: &mut Response, depot: &mut Depot) -> Resu
         .get_all_posts()
         .map(|key| blog_service.get_post(key).unwrap())
         .collect();
-
-    dbg!(&app_config);
 
     res.render_html(|o| templates::home::home_html(o, app_config, &posts))?;
 
