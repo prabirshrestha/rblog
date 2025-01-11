@@ -27,18 +27,18 @@ systemfd --no-pid -s http::8080 -- cargo watch -x 'run'
 #### Running tagged docker image
 
 ```bash
-docker run -v ./posts:/data/posts -v ./blog.conf:/data/blog.conf -p 8080:8080 prabirshrestha/rblog:v0.264.0
+docker run -v ./posts:/data/posts -v ./blog.conf:/data/blog.yaml -p 8080:8080 prabirshrestha/rblog:v0.264.0
 ```
 
 #### Running latest docker image
 
 ```bash
-docker run -v ./posts:/data/posts -v ./blog.conf:/data/blog.conf -p 8080:8080 prabirshrestha/rblog:latest
+docker run -v ./posts:/data/posts -v ./blog.conf:/data/blog.yaml -p 8080:8080 prabirshrestha/rblog:latest
 ```
 #### Running nightly docker image
 
 ```bash
-docker run -v ./posts:/data/posts -v ./blog.conf:/data/blog.conf -p 8080:8080 prabirshrestha/rblog:nightly
+docker run -v ./posts:/data/posts -v ./blog.conf:/data/blog.yaml -p 8080:8080 prabirshrestha/rblog:nightly
 ```
 
 *For demos ignore the volume mappings.*
