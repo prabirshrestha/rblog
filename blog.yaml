@@ -1,24 +1,24 @@
 title: rblog
 root: https://blog.com
-page_size: 3
-enable_drafts: false
-posts_dir: ./posts
+pageSize: 3
+enableDrafts: false
+postsDir: ./posts
 github: prabirshrestha
 twitter: prabirshrestha
 mastodon: https://mastodon.social/@prabirshrestha
-syntax_highlight: true
-# google_analytics:
-#     ga_measurement_id: changeme
+syntaxHighlight: true
+# googleAnalytics:
+#     gaMeasurementId: changeme
 # disqus: changeme
 # giscus: # refer to https://giscus.app/ for configuration values and setup
-#     script_src: https://giscus.app/client.js
+#     scriptSrc: https://giscus.app/client.js
 #     repo: owner/repo
-#     repo_id: changeme
+#     repoId: changeme
 #     category: Announcements
-#     category_id: changeme
+#     categoryid: changeme
 #     mapping: pathname
-#     reactions_enabled: 1
-#     emit_metadata: 0
+#     reactionsEnabled: 1
+#     emitMetadata: 0
 #     theme: preferred_color_scheme
 #     lang: en
 #     crossorigin: anonymous

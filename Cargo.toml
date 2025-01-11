@@ -26,7 +26,7 @@ mime_guess = "2.0.4"
 pulldown-cmark = "0.11"
 ructe = "0.17.0"
 salvo = { version = "0.75.0", features = ["affix-state", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
-schematic = { version = "0.17.8" }
+schematic = { version = "0.17.8", features = ["yaml"] }
 serde = { version = "1.0.200", features = ["derive"] }
 serde_yaml = "0.9.32"
 slug = "0.1.5"

@@ -125,4 +125,8 @@ impl Post {
 
         Ok(post)
     }
+
+    pub fn get_url(&self) -> String {
+        format!("/posts/{}/", &self.metadata.slug.as_ref().unwrap())
+    }
 }

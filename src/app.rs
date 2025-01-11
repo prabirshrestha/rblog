@@ -23,7 +23,7 @@ impl App {
     }
 
     pub async fn from_env() -> Result<Self> {
-        let app_config = Arc::new(AppConfig::new()?);
+        let app_config = Arc::new(AppConfig::from_config_file("blog.yaml")?);
         Self::from_config(app_config).await
     }
 

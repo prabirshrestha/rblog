@@ -8,3 +8,15 @@ pub struct PostMetadata {
     pub slug: Option<String>,
     pub date: Option<DateTime<Utc>>,
 }
+
+impl PostMetadata {
+    pub fn get_friendly_date(&self) -> Option<String> {
+        self.date.as_ref().map(|date| date.format("%v").to_string())
+    }
+
+    pub fn get_html_time_datetime(&self) -> Option<String> {
+        self.date
+            .as_ref()
+            .map(|date| date.format("%Y-%m-%dT%H:%MZ").to_string())
+    }
+}

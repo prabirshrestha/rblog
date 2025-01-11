@@ -2317,6 +2317,7 @@ dependencies = [
  "schematic_types",
  "serde",
  "serde_path_to_error",
+ "serde_yaml",
  "starbase_styles",
  "thiserror 2.0.11",
  "tracing",
@@ -2342,6 +2343,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f320deb050277c5bcc79213b01d749f8a847a63713e76d5748fdad654f47ed52"
 dependencies = [
  "indexmap",
+ "serde_yaml",
 ]
 
 [[package]]

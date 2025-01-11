@@ -22,6 +22,9 @@ async fn home(_req: &mut Request, res: &mut Response, depot: &mut Depot) -> Resu
         .map(|key| blog_service.get_post(key).unwrap())
         .collect();
 
-    res.render_html(|o| templates::home::home_html(o, app_config, "Blog", &posts))?;
+    dbg!(&app_config);
+
+    res.render_html(|o| templates::home::home_html(o, app_config, &posts))?;
+
     Ok(())
 }

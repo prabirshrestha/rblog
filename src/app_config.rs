@@ -68,10 +68,10 @@ pub struct GoogleAnalytics {
 }
 
 impl AppConfig {
-    pub fn new() -> anyhow::Result<Self> {
-        let result = ConfigLoader::<AppConfig>::new().load()?;
-        Ok(result.config)
-    }
+    // pub fn new() -> anyhow::Result<Self> {
+    //     let result = ConfigLoader::<AppConfig>::new().load()?;
+    //     Ok(result.config)
+    // }
 
     pub fn from_config_file(path: &str) -> anyhow::Result<Self> {
         let result = ConfigLoader::<AppConfig>::new().file(path)?.load()?;
