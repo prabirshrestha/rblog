@@ -1,0 +1,12 @@
+@use super::statics::*;
+@(content: Content)
+
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/assets/@style_css.name"/>
+  </head>
+  <body>
+    @:content()
+  </body>
+</html>
