@@ -8,6 +8,10 @@
       "matchManagers": ["github-actions"],
       "groupName": "Github Actions dependencies",
       "extends": ["schedule:monthly"]
+    },
+    {
+      "matchPackagePatterns": ["vergen", "vergen-gitcl"],
+      "groupName": "vergen"
     }
   ]
 }
