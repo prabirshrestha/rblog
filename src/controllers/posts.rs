@@ -1,25 +1,19 @@
-use crate::{appstate::AppState, render_html, templates};
+use crate::{
+    app::{App, AppDepot},
+    templates,
+    utils::render::RenderExt,
+};
 use anyhow::Result;
 use salvo::{fs::NamedFile, prelude::*};
 
-#[handler]
-pub async fn get_posts(depot: &mut Depot, res: &mut Response) -> Result<()> {
-    let state = depot.obtain::<AppState>().unwrap();
-
-    let blog = state.get_blog();
-
-    let posts = blog
-        .get_all_posts()
-        .map(|key| blog.get_post(key).unwrap())
-        .collect();
-
-    render_html(res, |o| templates::posts_html(o, blog, &posts))?;
-
-    Ok(())
+pub fn routes() -> Router {
+    Router::new()
+        .push(Router::with_path("/posts/<slug>").get(get_post))
+        .push(Router::with_path("/posts/<slug>/<attachment>").get(get_attachment))
 }
 
 #[handler]
-pub async fn get_post(req: &mut Request, depot: &mut Depot, res: &mut Response) -> Result<()> {
+async fn get_post(req: &mut Request, res: &mut Response, depot: &mut Depot) -> Result<()> {
     let slug: &str = req.param("slug").unwrap_or_default();
     let normalized_slug = slug.to_lowercase();
     if slug != normalized_slug {
@@ -27,11 +21,13 @@ pub async fn get_post(req: &mut Request, depot: &mut Depot, res: &mut Response) 
         return Ok(());
     }
 
-    let state = depot.obtain::<AppState>().unwrap();
+    let App {
+        blog_service,
+        app_config,
+    } = depot.app();
 
-    let blog = state.get_blog();
-    if let Some(post) = blog.get_post(slug) {
-        render_html(res, |o| templates::post_html(o, blog, post))?;
+    if let Some(post) = blog_service.get_post(&normalized_slug) {
+        res.render_html(|o| templates::posts::post_html(o, app_config, post))?;
     } else {
         res.status_code(StatusCode::NOT_FOUND);
     }
@@ -56,12 +52,11 @@ pub async fn get_attachment(
         return Ok(());
     }
 
-    let state = depot.obtain::<AppState>().unwrap();
-    let blog = state.get_blog();
+    let App { blog_service, .. } = depot.app();
 
-    if let Some(post) = blog.get_post(slug) {
-        if let Some(attachment) = post.get_attachment(attachment_name) {
-            let file = NamedFile::open(attachment.get_path()).await?;
+    if let Some(post) = blog_service.get_post(slug) {
+        if let Some(attachment) = post.attachments.get(attachment_name) {
+            let file = NamedFile::open(&attachment.path).await?;
             file.send(req.headers(), res).await;
             return Ok(());
         }

@@ -1,0 +1,21 @@
+@use crate::app_config::AppConfig;
+@use crate::models::{posts::Post};
+@(app_config: &AppConfig, posts: &Vec<&Post>)
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+    <title>@app_config.title</title>
+    <link>@app_config.root</link>
+    <description><![CDATA[Blog]]></description>
+    <atom:link href="@app_config.root/rss" rel="self" type="application/rss+xml" />
+      @for post in posts {
+        <item>
+          <title>@post.metadata.title</title>
+          <link>@(app_config.root)/posts/@(post.metadata.slug.as_ref().unwrap())/</link>
+          <description><![CDATA[@post.content]]></description>
+          <pubDate>@post.metadata.get_rfc2822_datetime().as_ref().unwrap()</pubDate>
+          <guid>@(app_config.root)/@(post.metadata.slug.as_ref().unwrap())</guid>
+        </item>
+      }
+	</channel>
+</rss>

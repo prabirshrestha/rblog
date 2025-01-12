@@ -1,0 +1,23 @@
+@use super::super::layout_html;
+@use crate::app_config::AppConfig;
+@use crate::models::{posts::Post};
+@(app_config: &AppConfig, posts: &Vec<&Post>)
+
+@:layout_html(app_config, &app_config.title, {
+  <section class="posts">
+    <ul>
+      @for post in posts {
+        <li>
+          <a href="@post.get_url()" title="@post.metadata.title">
+            @post.metadata.title
+          </a>
+          @if let Some(friendly_date) = post.metadata.get_friendly_date().as_ref() {
+            @if let Some(datetime) = post.metadata.get_html_time_datetime().as_ref() {
+              <time datetime="@datetime">@friendly_date</time>
+            }
+          }
+        </li>
+      }
+    </ul>
+  </section>
+})

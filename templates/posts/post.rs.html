@@ -1,0 +1,25 @@
+@use super::super::layout_html;
+@use super::{disqus_html, giscus_html};
+@use crate::app_config::AppConfig;
+@use crate::models::{posts::Post};
+@(app_config: &AppConfig, post: &Post)
+
+@:layout_html(app_config, &app_config.title, {
+  <article>
+    <header>
+      <h1>@post.metadata.title</h1>
+      @if let Some(friendly_date) = post.metadata.get_friendly_date().as_ref() {
+        @if let Some(datetime) = post.metadata.get_html_time_datetime().as_ref() {
+          <time datetime="@datetime">@friendly_date</time>
+        }
+      }
+    </header>
+    <section id="post-content">
+      @Html(&post.html_content)
+    </section>
+    <section>
+      @:giscus_html(app_config)
+      @:disqus_html(app_config)
+    </section>
+  </article>
+})

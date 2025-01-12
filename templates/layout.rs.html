@@ -1,0 +1,53 @@
+@use super::statics::*;
+@use super::syntax_highlight_html;
+@use super::google_analytics_html;
+@use crate::app_config::AppConfig;
+@(app_config: &AppConfig, title: &str, content: Content)
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charSet="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@title</title>
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="alternate" type="application/rss+xml" href="/rss" title="@title" />
+    <link rel="stylesheet" type="text/css" href="/assets/@style_css.name"/>
+  </head>
+    <body class="main">
+      <header class="main-header" role="banner">
+        <a class="home-link" href="/" aria-label="Go to the home page">☗ @app_config.title</a>
+        <nav>
+          @if let Some(github) = &app_config.github {
+            <a href="https://github.com/@github">Github</a>
+          }
+          @if let Some(mastodon) = &app_config.mastodon {
+            <a href="@mastodon">Mastodon</a>
+          }
+          @if let Some(twitter) = &app_config.twitter {
+            <a href="https://x.com/@twitter">X</a>
+          }
+        </nav>
+      </header>
+      <main>
+        @:content()
+      </main>
+      <footer>
+        @if let Some(github) = &app_config.github {
+          <a href="https://github.com/@github">Github</a>
+        }
+        @if let Some(mastodon) = &app_config.mastodon {
+          <a href="@mastodon">Mastodon</a>
+        }
+        @if let Some(twitter) = &app_config.twitter {
+          <a href="https://x.com/@twitter">X</a>
+        }
+        <a href="/rss">
+          <a href="/rss">RSS</a>
+        </a>
+      </footer>
+      @:syntax_highlight_html(app_config)
+      @:google_analytics_html(app_config)
+  </body>
+</html>

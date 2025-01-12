@@ -7,4 +7,4 @@ EXPOSE 8080
 COPY ./rblog /usr/bin/rblog
 ADD ./data /data
 
-CMD ["/usr/bin/rblog", "/data/blog.conf"]
+CMD ["/usr/bin/rblog", "/data/blog.yaml"]
