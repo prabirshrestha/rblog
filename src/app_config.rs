@@ -2,6 +2,7 @@ use schematic::{Config, ConfigLoader};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Config, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub struct AppConfig {
     #[setting(default = "127.0.0.1", env = "HOST")]
     pub host: String,
@@ -36,6 +37,7 @@ pub struct AppConfig {
 }
 
 #[derive(Debug, Clone, PartialEq, Config, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub struct Giscus {
     #[setting]
     pub script_src: String,
@@ -62,6 +64,7 @@ pub struct Giscus {
 }
 
 #[derive(Debug, Clone, PartialEq, Config, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub struct GoogleAnalytics {
     #[setting]
     pub ga_measurement_id: String,

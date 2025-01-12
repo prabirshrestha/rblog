@@ -10,7 +10,7 @@ pub struct BlogService {
 
 impl BlogService {
     pub fn new(app_config: Arc<AppConfig>) -> Result<Self> {
-        let posts = Post::read_all_from_dir(Path::new(&app_config.posts_dir))?;
+        let posts = Post::read_all_from_dir(&Path::new(&app_config.posts_dir).canonicalize()?)?;
         let mut values: Vec<&Post> = posts
             .values()
             .filter(|p| p.metadata.date.is_some())
