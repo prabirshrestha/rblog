@@ -1887,7 +1887,7 @@ dependencies = [
 
 [[package]]
 name = "rblog"
-version = "0.271.0"
+version = "0.272.0"
 dependencies = [
  "anyhow",
  "argh",
