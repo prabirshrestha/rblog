@@ -27,7 +27,7 @@ async fn get_post(req: &mut Request, res: &mut Response, depot: &mut Depot) -> R
     } = depot.app();
 
     if let Some(post) = blog_service.get_post(&normalized_slug) {
-        res.render_html(|o| templates::posts::post_html(o, app_config, &post))?;
+        res.render_html(|o| templates::posts::post_html(o, app_config, post))?;
     } else {
         res.status_code(StatusCode::NOT_FOUND);
     }
