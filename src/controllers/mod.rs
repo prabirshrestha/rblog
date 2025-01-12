@@ -3,6 +3,7 @@ pub use salvo::prelude::*;
 pub mod errors;
 
 mod assets;
+pub mod healthcheck;
 mod home;
 mod posts;
 mod robots;
@@ -15,4 +16,5 @@ pub fn router() -> Router {
         .push(posts::routes())
         .push(rss::routes())
         .push(robots::routes())
+        .push(healthcheck::routes())
 }
