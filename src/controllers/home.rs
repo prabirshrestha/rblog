@@ -7,11 +7,11 @@ use anyhow::Result;
 use salvo::prelude::*;
 
 pub fn routes() -> Router {
-    Router::new().push(Router::with_path("/").get(home))
+    Router::new().get(get_home)
 }
 
 #[handler]
-async fn home(res: &mut Response, depot: &mut Depot) -> Result<()> {
+async fn get_home(res: &mut Response, depot: &mut Depot) -> Result<()> {
     let App {
         blog_service,
         app_config,

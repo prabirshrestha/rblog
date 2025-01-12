@@ -22,7 +22,9 @@ async fn get_rss(res: &mut Response, depot: &mut Depot) -> Result<()> {
         .map(|key| blog_service.get_post(key).unwrap())
         .collect();
 
-    res.render_html(|o| templates::rss::rss_html(o, app_config, &posts))?;
+    res.headers_mut()
+        .insert("content-type", "application/rss+xml".parse().unwrap());
+    res.render_template(|o| templates::rss::rss_html(o, app_config, &posts))?;
 
     Ok(())
 }

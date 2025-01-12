@@ -2,7 +2,7 @@ use anyhow::Result;
 use salvo::prelude::*;
 
 pub trait RenderExt {
-    fn render<F>(&mut self, do_render: F) -> Result<&mut Response>
+    fn render_template<F>(&mut self, do_render: F) -> Result<&mut Response>
     where
         F: FnOnce(&mut Vec<u8>) -> std::io::Result<()>;
 
@@ -12,7 +12,7 @@ pub trait RenderExt {
 }
 
 impl RenderExt for Response {
-    fn render<F>(&mut self, do_render: F) -> Result<&mut Response>
+    fn render_template<F>(&mut self, do_render: F) -> Result<&mut Response>
     where
         F: FnOnce(&mut Vec<u8>) -> std::io::Result<()>,
     {
