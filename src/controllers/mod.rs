@@ -5,6 +5,7 @@ pub mod errors;
 mod assets;
 mod home;
 mod posts;
+mod robots;
 mod rss;
 
 pub fn router() -> Router {
@@ -13,4 +14,5 @@ pub fn router() -> Router {
         .push(home::routes())
         .push(posts::routes())
         .push(rss::routes())
+        .push(robots::routes())
 }
