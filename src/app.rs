@@ -59,6 +59,7 @@ impl App {
 
         let router = Router::new()
             .hoop(salvo::affix_state::inject(self.clone()))
+            .hoop(Logger::new())
             .push(controllers::router());
 
         let service =
