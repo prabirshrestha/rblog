@@ -19,15 +19,15 @@
       <header class="main-header" role="banner">
         <a class="home-link" href="/" aria-label="Go to the home page">☗ @app_config.title</a>
         <nav>
-            @if let Some(github) = &app_config.github {
-                <a href="https://github.com/@github">Github</a>
-            }
-            @if let Some(mastodon) = &app_config.mastodon {
-                <a href="@mastodon">Mastodon</a>
-            }
-            @if let Some(twitter) = &app_config.twitter {
-                <a href="https://x.com/@twitter">X</a>
-            }
+          @if let Some(github) = &app_config.github {
+            <a href="https://github.com/@github">Github</a>
+          }
+          @if let Some(mastodon) = &app_config.mastodon {
+            <a href="@mastodon">Mastodon</a>
+          }
+          @if let Some(twitter) = &app_config.twitter {
+            <a href="https://x.com/@twitter">X</a>
+          }
         </nav>
       </header>
       <main>
@@ -35,16 +35,16 @@
       </main>
       <footer>
         @if let Some(github) = &app_config.github {
-            <a href="https://github.com/@github">Github</a>
+          <a href="https://github.com/@github">Github</a>
         }
         @if let Some(mastodon) = &app_config.mastodon {
-            <a href="@mastodon">Mastodon</a>
+          <a href="@mastodon">Mastodon</a>
         }
         @if let Some(twitter) = &app_config.twitter {
-            <a href="https://x.com/@twitter">X</a>
+          <a href="https://x.com/@twitter">X</a>
         }
         <a href="/rss">
-            <a href="/rss">RSS</a>
+          <a href="/rss">RSS</a>
         </a>
       </footer>
       @:syntax_highlight_html(app_config)

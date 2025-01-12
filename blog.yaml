@@ -15,7 +15,7 @@ syntaxHighlight: true
 #     repo: owner/repo
 #     repoId: changeme
 #     category: Announcements
-#     categoryid: changeme
+#     categoryId: changeme
 #     mapping: pathname
 #     reactionsEnabled: 1
 #     emitMetadata: 0
