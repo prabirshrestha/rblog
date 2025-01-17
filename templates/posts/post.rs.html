@@ -4,7 +4,7 @@
 @use crate::models::{posts::Post};
 @(app_config: &AppConfig, post: &Post)
 
-@:layout_html(app_config, &app_config.title, {
+@:layout_html(app_config, &post.metadata.title, {
   <article>
     <header>
       <h1>@post.metadata.title</h1>
