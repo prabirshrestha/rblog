@@ -1,4 +1,5 @@
 use salvo::prelude::*;
+use tracing::warn;
 
 use crate::{templates, utils::render::RenderExt};
 
@@ -10,7 +11,10 @@ pub async fn not_found(
     ctrl: &mut FlowCtrl,
 ) {
     if let Some(StatusCode::NOT_FOUND) = res.status_code {
-        match res.render_html(|o| templates::errors::not_found_html(o)) {
+        match res.render_html(|o| {
+            warn!("Not Found {} {}", req.method(), req.uri());
+            templates::errors::not_found_html(o)
+        }) {
             Ok(_) => {}
             Err(_) => {
                 ctrl.call_next(req, depot, res).await;

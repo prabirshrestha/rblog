@@ -8,8 +8,8 @@ use salvo::{fs::NamedFile, prelude::*};
 
 pub fn routes() -> Router {
     Router::new()
-        .push(Router::with_path("/posts/<slug>").get(get_post))
-        .push(Router::with_path("/posts/<slug>/<attachment>").get(get_attachment))
+        .push(Router::with_path("/posts/{slug}").get(get_post))
+        .push(Router::with_path("/posts/{slug}/{attachment}").get(get_attachment))
 }
 
 #[handler]
