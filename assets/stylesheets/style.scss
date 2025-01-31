@@ -275,3 +275,21 @@ footer {
   }
 
 }
+
+/**
+ * Social share button styling
+ */
+.social-share {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.social-share a {
+  margin: 0 0.5rem;
+  text-decoration: none;
+}
+
+.social-share a:hover {
+  text-decoration: underline;
+}
