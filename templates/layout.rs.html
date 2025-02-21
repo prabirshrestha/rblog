@@ -14,6 +14,20 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="alternate" type="application/rss+xml" href="/rss" title="@title" />
     <link rel="stylesheet" type="text/css" href="/assets/@style_css.name"/>
+    <style>
+      .social-share {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+      }
+      .social-share a {
+        margin: 0 0.5rem;
+        text-decoration: none;
+      }
+      .social-share a:hover {
+        text-decoration: underline;
+      }
+    </style>
   </head>
     <body class="main">
       <header class="main-header" role="banner">
@@ -46,6 +60,9 @@
         <a href="/rss">
           <a href="/rss">RSS</a>
         </a>
+        <div class="social-share">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=@app_config.root" target="_blank" rel="noopener noreferrer">Share on Facebook</a>
+        </div>
       </footer>
       @:syntax_highlight_html(app_config)
       @:google_analytics_html(app_config)
