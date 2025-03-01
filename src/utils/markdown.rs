@@ -1,4 +1,4 @@
-use pulldown_cmark::{html, Options, Parser};
+use pulldown_cmark::{Options, Parser, html};
 
 pub fn markdown_to_html(markdown_input: &str) -> String {
     let mut options = Options::empty();
