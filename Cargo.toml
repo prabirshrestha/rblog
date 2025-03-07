@@ -2,7 +2,7 @@
 name = "rblog"
 version = "0.276.0"
 authors = ["Prabir Shrestha <mail@prabir.me>"]
-edition = "2021"
+edition = "2024"
 license = "MIT"
 description = "Blog app"
 repository = "https://github.com/prabirshrestha/rblog"
