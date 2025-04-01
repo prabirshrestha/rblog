@@ -59,7 +59,7 @@ jobs:
       - name: Install musl tools
         if: matrix.target == 'x86_64-unknown-linux-musl'
         run: sudo apt-get install -y musl-tools
-      - uses: swatinem/rust-cache@v2.7.7
+      - uses: swatinem/rust-cache@v2.7.8
 
       - name: rust fmt
         uses: actions-rs/cargo@v1
@@ -219,7 +219,7 @@ jobs:
           cp ./blog.yaml ./pkg/docker/data/
           cp -r ./posts ./pkg/docker/data/
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3.3.0
+        uses: docker/login-action@v3.4.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
