@@ -25,7 +25,7 @@ mime = "0.3.17"
 mime_guess = "2.0.4"
 pulldown-cmark = "0.13"
 ructe = "0.18.0"
-salvo = { version = "0.77.0", features = ["affix-state", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
+salvo = { version = "0.78.0", features = ["affix-state", "anyhow", "caching-headers", "compression", "logging", "trailing-slash"] }
 schematic = { version = "0.18.0", features = ["yaml"] }
 serde = { version = "1.0.200", features = ["derive"] }
 serde_yaml = "0.9.32"
