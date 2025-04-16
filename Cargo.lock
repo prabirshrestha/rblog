@@ -640,7 +640,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "976dd42dc7e85965fe702eb8164f21f450704bdde31faefd6471dba214cb594e"
 dependencies = [
  "libc",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1786,7 +1786,7 @@ dependencies = [
  "once_cell",
  "socket2",
  "tracing",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2073,7 +2073,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2317,9 +2317,9 @@ dependencies = [
 
 [[package]]
 name = "schematic"
-version = "0.18.3"
+version = "0.18.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c97a6ec250f1faa0d151684001b1998810599809b3a1b4b295d74fc555a650d8"
+checksum = "c5ef6e8280c23aaea2fd335c7c6add3be31618f80e8a9883d2e77927a9aa3f40"
 dependencies = [
  "garde",
  "miette",
@@ -2335,9 +2335,9 @@ dependencies = [
 
 [[package]]
 name = "schematic_macros"
-version = "0.18.2"
+version = "0.18.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4fb2bfd11a97d3ac2f333552298c77612d3ac2899c3511f5fbe0e07c834b343"
+checksum = "37774001c08aa18ec7bb0d2c216f6897d29c5b4773f5dcae9b464a8d1285d1ae"
 dependencies = [
  "convert_case",
  "darling",
@@ -2348,9 +2348,9 @@ dependencies = [
 
 [[package]]
 name = "schematic_types"
-version = "0.10.1"
+version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb7015e8ac80472bdf12ddde4f0cf059acdbe92eff225bd6812c6036fec704fd"
+checksum = "b57d406829eeb15dcdb5e8b450310458cfe337f298f804e2e5c0d2c59eb764e4"
 dependencies = [
  "indexmap",
  "serde_yaml",
@@ -2571,9 +2571,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "starbase_styles"
-version = "0.5.1"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d3285706e93b8c15eb432f18ede4043a1698ddbd2ac2536fdfd9765a5fe8f0af"
+checksum = "dd1333c654161a61bb2a89aa474aad3d1f393e9ac442d5c48f6924b4062e8c50"
 dependencies = [
  "dirs",
  "owo-colors",
@@ -2675,7 +2675,7 @@ dependencies = [
  "getrandom 0.3.2",
  "once_cell",
  "rustix",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
