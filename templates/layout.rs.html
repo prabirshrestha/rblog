@@ -1,6 +1,8 @@
 @use super::statics::*;
 @use super::syntax_highlight_html;
 @use super::google_analytics_html;
+@use super::facebook_html;
+@use super::twitter_html;
 @use crate::app_config::AppConfig;
 @(app_config: &AppConfig, title: &str, content: Content)
 <!DOCTYPE html>
@@ -49,5 +51,7 @@
       </footer>
       @:syntax_highlight_html(app_config)
       @:google_analytics_html(app_config)
+      @:facebook_html(app_config)
+      @:twitter_html(app_config)
   </body>
 </html>

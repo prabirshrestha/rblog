@@ -275,3 +275,58 @@ footer {
   }
 
 }
+
+/**
+ * Social plugins styling
+ */
+.social-plugins {
+  margin: 1rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.social-sharing {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.social-sharing a {
+  display: inline-block;
+  padding: 8px 12px;
+  background-color: #f0f0f0;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.social-sharing a:hover {
+  background-color: #e0e0e0;
+}
+
+.twitter-share-button {
+  background-color: #1da1f2 !important;
+  color: white !important;
+}
+
+.twitter-share-button:hover {
+  background-color: #0d8bd9 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .social-plugins {
+    border-top-color: #777;
+    border-bottom-color: #777;
+  }
+
+  .social-sharing a {
+    background-color: #444;
+    color: #ccc;
+  }
+
+  .social-sharing a:hover {
+    background-color: #555;
+  }
+}

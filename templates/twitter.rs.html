@@ -1,0 +1,6 @@
+@use crate::app_config::AppConfig;
+@(app_config: &AppConfig)
+
+@if let Some(_twitter) = &app_config.twitter {
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+}
