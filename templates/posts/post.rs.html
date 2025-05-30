@@ -1,5 +1,5 @@
 @use super::super::layout_html;
-@use super::{disqus_html, giscus_html};
+@use super::{disqus_html, giscus_html, facebook_sharing_html, twitter_sharing_html};
 @use crate::app_config::AppConfig;
 @use crate::models::{posts::Post};
 @(app_config: &AppConfig, post: &Post)
@@ -16,6 +16,10 @@
     </header>
     <section id="post-content">
       @Html(&post.html_content)
+    </section>
+    <section class="social-plugins">
+      @:facebook_sharing_html(app_config, post)
+      @:twitter_sharing_html(app_config, post)
     </section>
     <section>
       @:giscus_html(app_config)

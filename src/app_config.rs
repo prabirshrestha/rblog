@@ -27,6 +27,8 @@ pub struct AppConfig {
     #[setting]
     pub twitter: Option<String>,
     #[setting]
+    pub facebook: Option<Facebook>,
+    #[setting]
     pub disqus: Option<String>,
     #[setting]
     pub giscus: Option<Giscus>,
@@ -68,6 +70,13 @@ pub struct Giscus {
 pub struct GoogleAnalytics {
     #[setting]
     pub ga_measurement_id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Config, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct Facebook {
+    #[setting]
+    pub app_id: String,
 }
 
 impl AppConfig {

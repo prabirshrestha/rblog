@@ -1,0 +1,16 @@
+@use crate::app_config::AppConfig;
+@use crate::models::{posts::Post};
+@(app_config: &AppConfig, post: &Post)
+
+@if let Some(_facebook) = &app_config.facebook {
+<div class="social-sharing">
+  <div class="fb-share-button" 
+       data-href="@(app_config.root)/posts/@(post.metadata.slug.as_ref().unwrap())/" 
+       data-layout="button_count" 
+       data-size="small">
+    <a target="_blank" 
+       href="https://www.facebook.com/sharer/sharer.php?u=@(app_config.root)/posts/@(post.metadata.slug.as_ref().unwrap())/&amp;src=sdkpreparse" 
+       class="fb-xfbml-parse-ignore">Share</a>
+  </div>
+</div>
+}

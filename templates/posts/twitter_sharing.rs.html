@@ -1,0 +1,12 @@
+@use crate::app_config::AppConfig;
+@use crate::models::{posts::Post};
+@(app_config: &AppConfig, post: &Post)
+
+@if let Some(_twitter) = &app_config.twitter {
+<div class="social-sharing">
+  <a href="https://twitter.com/intent/tweet?text=@(post.metadata.title)&url=@(app_config.root)/posts/@(post.metadata.slug.as_ref().unwrap())/" 
+     class="twitter-share-button" 
+     data-show-count="false"
+     target="_blank">Tweet</a>
+</div>
+}

@@ -7,6 +7,8 @@ github: prabirshrestha
 twitter: prabirshrestha
 mastodon: https://mastodon.social/@prabirshrestha
 syntax_highlight: true
+# facebook:
+#     app_id: your_facebook_app_id
 # google_analytics:
 #     ga_measurement_id: changeme
 # disqus: changeme
