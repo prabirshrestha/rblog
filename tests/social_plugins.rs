@@ -49,3 +49,12 @@ fn test_twitter_config_exists() {
     assert!(config.twitter.is_some());
     assert_eq!(config.twitter.unwrap(), "testuser");
 }
+
+#[test]
+fn test_facebook_yaml_parsing() {
+    let config = AppConfig::from_config_file("/tmp/test_config.yaml");
+    assert!(config.is_ok());
+    let config = config.unwrap();
+    assert!(config.facebook.is_some());
+    assert_eq!(config.facebook.unwrap().app_id, "test_app_id_123");
+}
