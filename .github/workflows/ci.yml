@@ -224,7 +224,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push nightly docker image
-        uses: docker/build-push-action@v6.16.0
+        uses: docker/build-push-action@v6.18.0
         with:
           context: ./pkg/docker
           file: ./pkg/docker/Dockerfile
@@ -233,7 +233,7 @@ jobs:
           no-cache: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rblog:nightly
       - name: Build and push latest docker image
-        uses: docker/build-push-action@v6.16.0
+        uses: docker/build-push-action@v6.18.0
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           context: ./pkg/docker
