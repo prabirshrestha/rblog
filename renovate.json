@@ -1,17 +1,24 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "packageRules": [
     {
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "groupName": "Github Actions dependencies",
-      "extends": ["schedule:monthly"]
+      "extends": [
+        "schedule:monthly"
+      ]
     },
     {
-      "matchPackagePatterns": ["vergen", "vergen-gitcl"],
-      "groupName": "vergen"
+      "groupName": "vergen",
+      "matchPackageNames": [
+        "/vergen/",
+        "/vergen-gitcl/"
+      ]
     }
   ]
 }
