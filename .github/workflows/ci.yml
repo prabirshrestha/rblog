@@ -41,7 +41,7 @@ jobs:
       # emit backtraces on panics.
       RUST_BACKTRACE: 1
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Get the build metadata
@@ -122,7 +122,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Install Rust
@@ -147,7 +147,7 @@ jobs:
       - publish_crate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Get the build metadata
         shell: bash
         run: |
@@ -201,7 +201,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Get the build metadata
         shell: bash
         run: |
@@ -258,7 +258,7 @@ jobs:
       - release
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Get the build metadata
