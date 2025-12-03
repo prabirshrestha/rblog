@@ -1,4 +1,4 @@
-FROM alpine:3.22
+FROM alpine:3.23
 
 ENV HOST 0.0.0.0
 ENV PORT 8080
