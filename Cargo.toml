@@ -12,7 +12,7 @@ build = "src/build.rs"
 anyhow = "1.0.82"
 ructe = { version = "0.18.0", features = ["sass", "mime03"] }
 vergen = "9.0.3"
-vergen-gitcl = { version = "1.0.3", features = ["build"] }
+vergen-gitcl = { version = "9.0.0", features = ["build"] }
 
 [dependencies]
 anyhow = "1.0.82"
