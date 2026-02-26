@@ -41,7 +41,7 @@ jobs:
       # emit backtraces on panics.
       RUST_BACKTRACE: 1
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Get the build metadata
@@ -101,7 +101,7 @@ jobs:
           7z a ../../../rblog-v${{ env.version }}-${{ matrix.target }}.zip rblog.exe
 
       - name: Upload unix artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         if: matrix.os != 'windows-latest'
         with:
           name: rblog-v${{ env.version }}-${{ matrix.target }}.tar.gz
@@ -109,7 +109,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload windows artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         if: matrix.os == 'windows-latest'
         with:
           name: rblog-v${{ env.version }}-${{ matrix.target }}.zip
@@ -122,7 +122,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Install Rust
@@ -147,33 +147,33 @@ jobs:
       - publish_crate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Get the build metadata
         shell: bash
         run: |
           echo "version=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
       - name: Download x86_64-unknown-linux-gnu.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-unknown-linux-gnu.tar.gz
           path: .
       - name: Download x86_64-unknown-linux-musl.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-unknown-linux-musl.tar.gz
           path: .
       - name: Download rblog-x86_64-apple-darwin.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-apple-darwin.tar.gz
           path: .
       - name: Download rblog-aarch64-apple-darwin.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-aarch64-apple-darwin.tar.gz
           path: .
       - name: rblog-x86_64-pc-windows-msvc.zip
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-pc-windows-msvc.zip
           path: .
@@ -201,13 +201,13 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Get the build metadata
         shell: bash
         run: |
           echo "version=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
       - name: Download x86_64-unknown-linux-musl.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-unknown-linux-musl.tar.gz
           path: .
@@ -258,7 +258,7 @@ jobs:
       - release
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Get the build metadata
