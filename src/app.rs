@@ -1,10 +1,11 @@
 use std::{
     path::{Path, PathBuf},
     sync::Arc,
-    time::{Duration, SystemTime},
+    time::Duration,
 };
 
 use arc_swap::ArcSwap;
+use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 
 use crate::{app_config::AppConfig, controllers, services::blog::BlogService};
 use anyhow::Result;
@@ -113,98 +114,186 @@ async fn shutdown_signal(handle: ServerHandle) {
     handle.stop_graceful(std::time::Duration::from_secs(60));
 }
 
-fn max_mtime_in_dir(path: &Path) -> std::io::Result<SystemTime> {
-    let mut max = std::fs::metadata(path)?.modified()?;
-    for entry in std::fs::read_dir(path)? {
-        let entry = entry?;
-        let file_type = entry.file_type()?;
-        if file_type.is_symlink() {
-            continue;
-        }
-        let mtime = entry.metadata()?.modified()?;
-        if mtime > max {
-            max = mtime;
-        }
-        if file_type.is_dir() {
-            if let Ok(sub_max) = max_mtime_in_dir(&entry.path()) {
-                if sub_max > max {
-                    max = sub_max;
+/// Walk up every component of `path` and collect the parent directory of each
+/// symlink found. These parents are watched non-recursively so that any
+/// atomic symlink swap (e.g. git-sync renaming `current`) fires an event.
+///
+/// Returns `(watchable_parents, needs_fallback)` where `needs_fallback` is true
+/// if any symlink's parent is the filesystem root (unwatchable on any platform).
+fn symlink_parents(path: &Path) -> (Vec<PathBuf>, bool) {
+    let mut parents = Vec::new();
+    let mut needs_fallback = false;
+    let mut current = path.to_path_buf();
+    loop {
+        if std::fs::symlink_metadata(&current)
+            .map(|m| m.is_symlink())
+            .unwrap_or(false)
+        {
+            if let Some(parent) = current.parent() {
+                let parent = parent.to_path_buf();
+                // parent.parent().is_none() is true for filesystem roots on all
+                // platforms: `/` on Unix, `C:\` / `\\server\share` on Windows.
+                if parent.parent().is_none() {
+                    needs_fallback = true;
+                } else if !parents.contains(&parent) {
+                    parents.push(parent);
                 }
             }
         }
+        if !current.pop() {
+            break;
+        }
     }
-    Ok(max)
+    (parents, needs_fallback)
 }
 
-fn dir_fingerprint(path: &Path) -> Option<(PathBuf, SystemTime)> {
-    let canonical = path.canonicalize().ok()?;
-    let mtime = max_mtime_in_dir(&canonical).ok()?;
-    Some((canonical, mtime))
+/// Resolves to `interval.tick()` if Some, or pends forever if None.
+/// Used to conditionally include a fallback timer in `tokio::select!`.
+async fn fallback_tick(interval: &mut Option<tokio::time::Interval>) {
+    match interval.as_mut() {
+        Some(i) => {
+            i.tick().await;
+        }
+        None => std::future::pending().await,
+    }
 }
 
-fn file_mtime(path: &Path) -> Option<SystemTime> {
-    std::fs::metadata(path).ok()?.modified().ok()
+async fn do_reload(config_file: &str, state: &Arc<ArcSwap<AppState>>) {
+    let new_config = match AppConfig::from_config_file(config_file) {
+        Ok(c) => Arc::new(c),
+        Err(e) => {
+            warn!("Failed to reload config: {}", e);
+            return;
+        }
+    };
+    match BlogService::new(new_config.clone()) {
+        Ok(new_service) => {
+            state.store(Arc::new(AppState {
+                app_config: new_config,
+                blog_service: Arc::new(new_service),
+            }));
+            info!("Blog reloaded successfully");
+        }
+        Err(e) => warn!("Failed to reload blog service: {}", e),
+    }
 }
 
 async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, interval_secs: u64) {
-    let mut interval = tokio::time::interval(Duration::from_secs(interval_secs));
-    interval.tick().await; // skip the immediate first tick
-
+    let debounce = Duration::from_secs(interval_secs);
     let config_path = PathBuf::from(&config_file);
 
-    let posts_dir = {
-        let s = state.load();
-        PathBuf::from(&s.app_config.posts_dir)
-    };
-    let mut last_posts_fp = dir_fingerprint(&posts_dir);
-    let mut last_config_mtime = file_mtime(&config_path);
-
-    loop {
-        interval.tick().await;
-
-        let (watch_enabled, posts_dir) = {
+    'outer: loop {
+        {
             let s = state.load();
-            (
-                s.app_config.watch.enabled,
-                PathBuf::from(&s.app_config.posts_dir),
-            )
+            if !s.app_config.watch.enabled {
+                info!("Watching disabled, stopping watcher");
+                return;
+            }
+        }
+
+        let posts_dir = {
+            let s = state.load();
+            PathBuf::from(&s.app_config.posts_dir)
         };
 
-        if !watch_enabled {
-            info!("Watching disabled, stopping watcher");
-            return;
-        }
+        let (tx, mut rx) = tokio::sync::mpsc::channel::<notify::Result<notify::Event>>(100);
 
-        let current_config_mtime = file_mtime(&config_path);
-        let current_posts_fp = dir_fingerprint(&posts_dir);
-
-        if current_posts_fp == last_posts_fp && current_config_mtime == last_config_mtime {
-            continue;
-        }
-
-        info!("Change detected, reloading blog...");
-
-        let new_config = match AppConfig::from_config_file(&config_file) {
-            Ok(c) => Arc::new(c),
+        let mut watcher: RecommendedWatcher = match notify::recommended_watcher(move |res| {
+            // try_send: drop events if channel is full rather than blocking notify's
+            // internal thread. Safe because we debounce and reload once after the burst.
+            let _ = tx.try_send(res);
+        }) {
+            Ok(w) => w,
             Err(e) => {
-                warn!("Failed to reload config: {}", e);
-                continue;
+                warn!("Failed to create file watcher: {}", e);
+                tokio::time::sleep(debounce).await;
+                continue 'outer;
             }
         };
 
-        let new_posts_dir = PathBuf::from(&new_config.posts_dir);
+        if let Err(e) = watcher.watch(&posts_dir, RecursiveMode::Recursive) {
+            warn!("Failed to watch {:?}: {}", posts_dir, e);
+            tokio::time::sleep(debounce).await;
+            continue 'outer;
+        }
 
-        match BlogService::new(new_config.clone()) {
-            Ok(new_service) => {
-                state.store(Arc::new(AppState {
-                    app_config: new_config,
-                    blog_service: Arc::new(new_service),
-                }));
-                last_posts_fp = dir_fingerprint(&new_posts_dir);
-                last_config_mtime = file_mtime(&config_path);
-                info!("Blog reloaded successfully");
+        if let Err(e) = watcher.watch(&config_path, RecursiveMode::NonRecursive) {
+            warn!("Failed to watch {:?}: {}", config_path, e);
+        }
+
+        // Watch parents of any symlink components so atomic swaps (e.g. git-sync)
+        // fire an event even before the old inode is deleted.
+        // Only create the fallback timer if a symlink's parent is the filesystem
+        // root (unwatchable), which is needed for paths like `/foo`.
+        let (symlink_parent_dirs, needs_fallback) = symlink_parents(&posts_dir);
+        for parent in symlink_parent_dirs {
+            if let Err(e) = watcher.watch(&parent, RecursiveMode::NonRecursive) {
+                warn!("Failed to watch symlink parent {:?}: {}", parent, e);
             }
-            Err(e) => warn!("Failed to reload blog service: {}", e),
+        }
+
+        info!("Watching {:?} and {:?} for changes", posts_dir, config_path);
+
+        let canonical_at_setup = posts_dir.canonicalize().ok();
+        let mut fallback: Option<tokio::time::Interval> = if needs_fallback {
+            let mut i = tokio::time::interval(Duration::from_secs(30));
+            i.tick().await; // consume the immediate first tick
+            Some(i)
+        } else {
+            None
+        };
+
+        loop {
+            tokio::select! {
+                event = rx.recv() => {
+                    match event {
+                        Some(Ok(_)) => {}
+                        Some(Err(e)) => {
+                            warn!("Watch error: {}", e);
+                            continue 'outer;
+                        }
+                        None => continue 'outer,
+                    }
+                }
+                _ = fallback_tick(&mut fallback) => {
+                    // Fallback for root-level symlinks: if the canonical path changed,
+                    // reload and re-establish the watcher.
+                    if posts_dir.canonicalize().ok() != canonical_at_setup {
+                        info!("Canonical path changed, reloading blog...");
+                        do_reload(&config_file, &state).await;
+                        continue 'outer;
+                    }
+                    continue;
+                }
+            }
+
+            // Check enabled after each event
+            {
+                let s = state.load();
+                if !s.app_config.watch.enabled {
+                    info!("Watching disabled, stopping watcher");
+                    return;
+                }
+            }
+
+            // Debounce: drain all events that arrive within the debounce window
+            loop {
+                match tokio::time::timeout(debounce, rx.recv()).await {
+                    Ok(Some(Ok(_))) => {} // more events — keep draining
+                    Ok(Some(Err(e))) => {
+                        warn!("Watch error during debounce: {}", e);
+                        break;
+                    }
+                    Ok(None) | Err(_) => break, // channel closed or quiet period reached
+                }
+            }
+
+            info!("Change detected, reloading blog...");
+            do_reload(&config_file, &state).await;
+
+            // Re-establish watcher — posts_dir canonical path may have changed after a
+            // git-sync symlink swap, so we always restart fresh after each reload
+            continue 'outer;
         }
     }
 }

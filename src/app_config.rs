@@ -77,7 +77,7 @@ pub struct GoogleAnalytics {
 pub struct WatchConfig {
     #[setting(default = true, env = "WATCH_ENABLED")]
     pub enabled: bool,
-    #[setting(default = 5, env = "WATCH_INTERVAL")]
+    #[setting(default = 1, env = "WATCH_INTERVAL")]
     pub interval: u64,
 }
 
