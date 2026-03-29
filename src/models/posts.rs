@@ -1,8 +1,4 @@
-use std::{
-    collections::HashMap,
-    ffi::OsStr,
-    fs,
-    path::Path,};
+use std::{collections::HashMap, ffi::OsStr, fs, path::Path};
 
 use anyhow::{Context, Result, bail};
 use serde::{Deserialize, Serialize};
@@ -83,11 +79,15 @@ impl Post {
                 {
                     Some(n) => n,
                     None => {
-                        warn!("Skipping attachment with non-UTF8 filename: {:?}", entry_path);
+                        warn!(
+                            "Skipping attachment with non-UTF8 filename: {:?}",
+                            entry_path
+                        );
                         continue;
                     }
                 };
-                post.attachments.insert(name, Attachment { path: entry_path });
+                post.attachments
+                    .insert(name, Attachment { path: entry_path });
             }
         }
 

@@ -48,7 +48,10 @@ impl Cli {
                     println!("{}", App::version());
                 }
                 CliSubcommand::Run(args) => {
-                    App::from_config_file(&args.config_file).await?.run().await?;
+                    App::from_config_file(&args.config_file)
+                        .await?
+                        .run()
+                        .await?;
                 }
             },
             None => {

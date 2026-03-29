@@ -61,9 +61,7 @@ impl App {
             )
         };
 
-        let acceptor = TcpListener::new(format!("{}:{}", host, port))
-            .bind()
-            .await;
+        let acceptor = TcpListener::new(format!("{}:{}", host, port)).bind().await;
 
         let server = Server::new(acceptor);
         let handle = server.handle();
@@ -148,11 +146,7 @@ fn file_mtime(path: &Path) -> Option<SystemTime> {
     std::fs::metadata(path).ok()?.modified().ok()
 }
 
-async fn watch_for_changes(
-    config_file: String,
-    state: Arc<ArcSwap<AppState>>,
-    interval_secs: u64,
-) {
+async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, interval_secs: u64) {
     let mut interval = tokio::time::interval(Duration::from_secs(interval_secs));
     interval.tick().await; // skip the immediate first tick
 
@@ -170,7 +164,10 @@ async fn watch_for_changes(
 
         let (watch_enabled, posts_dir) = {
             let s = state.load();
-            (s.app_config.watch.enabled, PathBuf::from(&s.app_config.posts_dir))
+            (
+                s.app_config.watch.enabled,
+                PathBuf::from(&s.app_config.posts_dir),
+            )
         };
 
         if !watch_enabled {

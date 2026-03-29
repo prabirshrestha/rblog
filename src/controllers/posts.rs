@@ -1,8 +1,4 @@
-use crate::{
-    app::AppDepot,
-    templates,
-    utils::render::RenderExt,
-};
+use crate::{app::AppDepot, templates, utils::render::RenderExt};
 use anyhow::Result;
 use salvo::{fs::NamedFile, prelude::*};
 
