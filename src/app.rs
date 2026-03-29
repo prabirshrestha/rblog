@@ -1,8 +1,4 @@
-use std::{
-    path::{Path, PathBuf},
-    sync::Arc,
-    time::Duration,
-};
+use std::{path::PathBuf, sync::Arc, time::Duration};
 
 use arc_swap::ArcSwap;
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
@@ -114,23 +110,6 @@ async fn shutdown_signal(handle: ServerHandle) {
     handle.stop_graceful(std::time::Duration::from_secs(60));
 }
 
-/// Walk up from `path` and return the parent of the first symlink component found.
-/// Used to watch for git-sync style atomic symlink swaps.
-fn symlink_parent(path: &Path) -> Option<PathBuf> {
-    let mut current = path.to_path_buf();
-    loop {
-        if std::fs::symlink_metadata(&current)
-            .map(|m| m.is_symlink())
-            .unwrap_or(false)
-        {
-            return current.parent().map(|p| p.to_path_buf());
-        }
-        if !current.pop() {
-            return None;
-        }
-    }
-}
-
 async fn do_reload(config_file: &str, state: &Arc<ArcSwap<AppState>>) {
     let new_config = match AppConfig::from_config_file(config_file) {
         Ok(c) => Arc::new(c),
@@ -190,13 +169,6 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
 
         if let Err(e) = watcher.watch(&config_path, RecursiveMode::NonRecursive) {
             warn!("Failed to watch {:?}: {}", config_path, e);
-        }
-
-        // Also watch the symlink's parent dir to catch git-sync atomic swaps
-        if let Some(parent) = symlink_parent(&posts_dir) {
-            if let Err(e) = watcher.watch(&parent, RecursiveMode::NonRecursive) {
-                warn!("Failed to watch symlink parent {:?}: {}", parent, e);
-            }
         }
 
         info!("Watching {:?} for changes", posts_dir);
