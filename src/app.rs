@@ -117,9 +117,12 @@ async fn shutdown_signal(handle: ServerHandle) {
 /// Walk up every component of `path` and collect the parent directory of each
 /// symlink found. These parents are watched non-recursively so that any
 /// atomic symlink swap (e.g. git-sync renaming `current`) fires an event.
-/// Skips the filesystem root to avoid watching `/`.
-fn symlink_parents(path: &Path) -> Vec<PathBuf> {
+///
+/// Returns `(watchable_parents, needs_fallback)` where `needs_fallback` is true
+/// if any symlink's parent is the filesystem root (unwatchable on any platform).
+fn symlink_parents(path: &Path) -> (Vec<PathBuf>, bool) {
     let mut parents = Vec::new();
+    let mut needs_fallback = false;
     let mut current = path.to_path_buf();
     loop {
         if std::fs::symlink_metadata(&current)
@@ -128,7 +131,11 @@ fn symlink_parents(path: &Path) -> Vec<PathBuf> {
         {
             if let Some(parent) = current.parent() {
                 let parent = parent.to_path_buf();
-                if parent != Path::new("/") && !parents.contains(&parent) {
+                // parent.parent().is_none() is true for filesystem roots on all
+                // platforms: `/` on Unix, `C:\` / `\\server\share` on Windows.
+                if parent.parent().is_none() {
+                    needs_fallback = true;
+                } else if !parents.contains(&parent) {
                     parents.push(parent);
                 }
             }
@@ -137,7 +144,18 @@ fn symlink_parents(path: &Path) -> Vec<PathBuf> {
             break;
         }
     }
-    parents
+    (parents, needs_fallback)
+}
+
+/// Resolves to `interval.tick()` if Some, or pends forever if None.
+/// Used to conditionally include a fallback timer in `tokio::select!`.
+async fn fallback_tick(interval: &mut Option<tokio::time::Interval>) {
+    match interval.as_mut() {
+        Some(i) => {
+            i.tick().await;
+        }
+        None => std::future::pending().await,
+    }
 }
 
 async fn do_reload(config_file: &str, state: &Arc<ArcSwap<AppState>>) {
@@ -202,8 +220,11 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
         }
 
         // Watch parents of any symlink components so atomic swaps (e.g. git-sync)
-        // fire an event even before the old inode is deleted
-        for parent in symlink_parents(&posts_dir) {
+        // fire an event even before the old inode is deleted.
+        // Only create the fallback timer if a symlink's parent is the filesystem
+        // root (unwatchable), which is needed for paths like `/foo`.
+        let (symlink_parent_dirs, needs_fallback) = symlink_parents(&posts_dir);
+        for parent in symlink_parent_dirs {
             if let Err(e) = watcher.watch(&parent, RecursiveMode::NonRecursive) {
                 warn!("Failed to watch symlink parent {:?}: {}", parent, e);
             }
@@ -212,8 +233,13 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
         info!("Watching {:?} for changes", posts_dir);
 
         let canonical_at_setup = posts_dir.canonicalize().ok();
-        let mut fallback = tokio::time::interval(Duration::from_secs(30));
-        fallback.tick().await; // skip the immediate first tick
+        let mut fallback: Option<tokio::time::Interval> = if needs_fallback {
+            let mut i = tokio::time::interval(Duration::from_secs(30));
+            i.tick().await; // consume the immediate first tick
+            Some(i)
+        } else {
+            None
+        };
 
         loop {
             tokio::select! {
@@ -227,9 +253,9 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
                         None => continue 'outer,
                     }
                 }
-                _ = fallback.tick() => {
-                    // Fallback for root-level symlinks or any case notify misses:
-                    // if the canonical path changed, reload and re-establish the watcher
+                _ = fallback_tick(&mut fallback) => {
+                    // Fallback for root-level symlinks: if the canonical path changed,
+                    // reload and re-establish the watcher.
                     if posts_dir.canonicalize().ok() != canonical_at_setup {
                         info!("Canonical path changed, reloading blog...");
                         do_reload(&config_file, &state).await;
