@@ -230,7 +230,7 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
             }
         }
 
-        info!("Watching {:?} for changes", posts_dir);
+        info!("Watching {:?} and {:?} for changes", posts_dir, config_path);
 
         let canonical_at_setup = posts_dir.canonicalize().ok();
         let mut fallback: Option<tokio::time::Interval> = if needs_fallback {
