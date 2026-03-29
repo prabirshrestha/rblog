@@ -214,10 +214,15 @@ async fn watch_for_changes(
 
 pub trait AppDepot {
     fn app(&self) -> &App;
+    fn app_state(&self) -> Arc<AppState>;
 }
 
 impl AppDepot for Depot {
     fn app(&self) -> &App {
         self.obtain::<App>().unwrap()
+    }
+
+    fn app_state(&self) -> Arc<AppState> {
+        self.app().state.load_full()
     }
 }

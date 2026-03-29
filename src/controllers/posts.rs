@@ -1,5 +1,5 @@
 use crate::{
-    app::{AppDepot, AppState},
+    app::AppDepot,
     templates,
     utils::render::RenderExt,
 };
@@ -21,7 +21,7 @@ async fn get_post(req: &mut Request, res: &mut Response, depot: &mut Depot) -> R
         return Ok(());
     }
 
-    let state = depot.app().state.load();
+    let state = depot.app_state();
 
     if let Some(post) = state.blog_service.get_post(&normalized_slug) {
         res.render_html(|o| templates::posts::post_html(o, &state.app_config, post))?;
@@ -49,7 +49,7 @@ pub async fn get_attachment(
         return Ok(());
     }
 
-    let state = depot.app().state.load();
+    let state = depot.app_state();
 
     if let Some(post) = state.blog_service.get_post(slug) {
         if let Some(attachment) = post.attachments.get(attachment_name) {
