@@ -5,9 +5,11 @@ fn main() -> anyhow::Result<()> {
         .add_instructions(&gitcl)?
         .emit()
     {
+        println!(
             "cargo:warning=Could not generate git version information: {:?}",
             error
         );
+        println!("cargo:rustc-env=VERGEN_GIT_SHA=nogit");
     }
 
     let mut ructe = ructe::Ructe::from_env()?;
