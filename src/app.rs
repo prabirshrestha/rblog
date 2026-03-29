@@ -1,4 +1,8 @@
-use std::{path::PathBuf, sync::Arc, time::Duration};
+use std::{
+    path::{Path, PathBuf},
+    sync::Arc,
+    time::Duration,
+};
 
 use arc_swap::ArcSwap;
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
@@ -110,6 +114,32 @@ async fn shutdown_signal(handle: ServerHandle) {
     handle.stop_graceful(std::time::Duration::from_secs(60));
 }
 
+/// Walk up every component of `path` and collect the parent directory of each
+/// symlink found. These parents are watched non-recursively so that any
+/// atomic symlink swap (e.g. git-sync renaming `current`) fires an event.
+/// Skips the filesystem root to avoid watching `/`.
+fn symlink_parents(path: &Path) -> Vec<PathBuf> {
+    let mut parents = Vec::new();
+    let mut current = path.to_path_buf();
+    loop {
+        if std::fs::symlink_metadata(&current)
+            .map(|m| m.is_symlink())
+            .unwrap_or(false)
+        {
+            if let Some(parent) = current.parent() {
+                let parent = parent.to_path_buf();
+                if parent != Path::new("/") && !parents.contains(&parent) {
+                    parents.push(parent);
+                }
+            }
+        }
+        if !current.pop() {
+            break;
+        }
+    }
+    parents
+}
+
 async fn do_reload(config_file: &str, state: &Arc<ArcSwap<AppState>>) {
     let new_config = match AppConfig::from_config_file(config_file) {
         Ok(c) => Arc::new(c),
@@ -169,6 +199,14 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
 
         if let Err(e) = watcher.watch(&config_path, RecursiveMode::NonRecursive) {
             warn!("Failed to watch {:?}: {}", config_path, e);
+        }
+
+        // Watch parents of any symlink components so atomic swaps (e.g. git-sync)
+        // fire an event even before the old inode is deleted
+        for parent in symlink_parents(&posts_dir) {
+            if let Err(e) = watcher.watch(&parent, RecursiveMode::NonRecursive) {
+                warn!("Failed to watch symlink parent {:?}: {}", parent, e);
+            }
         }
 
         info!("Watching {:?} for changes", posts_dir);
