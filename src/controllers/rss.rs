@@ -1,5 +1,5 @@
 use crate::{
-    app::AppDepot,
+    app::{AppDepot, AppState},
     templates,
     utils::render::RenderExt,
 };
@@ -12,18 +12,16 @@ pub fn routes() -> Router {
 
 #[handler]
 async fn get_rss(res: &mut Response, depot: &mut Depot) -> Result<()> {
-    let app = depot.app();
-    let blog_service = app.blog_service.load();
-    let app_config = app.app_config.load();
+    let state = depot.app().state.load();
 
-    let posts = blog_service
+    let posts = state.blog_service
         .get_all_posts()
-        .map(|key| blog_service.get_post(key).unwrap())
+        .map(|key| state.blog_service.get_post(key).unwrap())
         .collect();
 
     res.headers_mut()
         .insert("content-type", "application/rss+xml".parse().unwrap());
-    res.render_template(|o| templates::rss::rss_html(o, &app_config, &posts))?;
+    res.render_template(|o| templates::rss::rss_html(o, &state.app_config, &posts))?;
 
     Ok(())
 }

@@ -12,11 +12,15 @@ use salvo::{catcher::Catcher, prelude::*, server::ServerHandle};
 use tokio::signal;
 use tracing::{info, warn};
 
+pub struct AppState {
+    pub app_config: Arc<AppConfig>,
+    pub blog_service: Arc<BlogService>,
+}
+
 #[derive(Clone)]
 pub struct App {
     pub config_file: String,
-    pub app_config: Arc<ArcSwap<AppConfig>>,
-    pub blog_service: Arc<ArcSwap<BlogService>>,
+    pub state: Arc<ArcSwap<AppState>>,
 }
 
 impl App {
@@ -35,11 +39,13 @@ impl App {
 
     pub async fn from_config_file(config_file: &str) -> Result<Self> {
         let app_config = Arc::new(AppConfig::from_config_file(config_file)?);
-        let blog_service = BlogService::new(app_config.clone())?;
+        let blog_service = Arc::new(BlogService::new(app_config.clone())?);
         Ok(Self {
             config_file: config_file.to_string(),
-            app_config: Arc::new(ArcSwap::new(app_config)),
-            blog_service: Arc::new(ArcSwap::new(Arc::new(blog_service))),
+            state: Arc::new(ArcSwap::new(Arc::new(AppState {
+                app_config,
+                blog_service,
+            }))),
         })
     }
 
@@ -47,8 +53,12 @@ impl App {
         info!("Starting server");
 
         let (host, port, watch_interval) = {
-            let cfg = self.app_config.load();
-            (cfg.host.clone(), cfg.port.clone(), cfg.watch.interval)
+            let s = self.state.load();
+            (
+                s.app_config.host.clone(),
+                s.app_config.port.clone(),
+                s.app_config.watch.interval,
+            )
         };
 
         let acceptor = TcpListener::new(format!("{}:{}", host, port))
@@ -61,8 +71,7 @@ impl App {
         tokio::spawn(shutdown_signal(handle));
         tokio::spawn(watch_for_changes(
             self.config_file.clone(),
-            self.app_config.clone(),
-            self.blog_service.clone(),
+            self.state.clone(),
             watch_interval,
         ));
 
@@ -141,8 +150,7 @@ fn file_mtime(path: &Path) -> Option<SystemTime> {
 
 async fn watch_for_changes(
     config_file: String,
-    app_config: Arc<ArcSwap<AppConfig>>,
-    blog_service: Arc<ArcSwap<BlogService>>,
+    state: Arc<ArcSwap<AppState>>,
     interval_secs: u64,
 ) {
     let mut interval = tokio::time::interval(Duration::from_secs(interval_secs));
@@ -151,8 +159,8 @@ async fn watch_for_changes(
     let config_path = PathBuf::from(&config_file);
 
     let posts_dir = {
-        let guard = app_config.load();
-        PathBuf::from(&guard.posts_dir)
+        let s = state.load();
+        PathBuf::from(&s.app_config.posts_dir)
     };
     let mut last_posts_fp = dir_fingerprint(&posts_dir);
     let mut last_config_mtime = file_mtime(&config_path);
@@ -161,8 +169,8 @@ async fn watch_for_changes(
         interval.tick().await;
 
         let (watch_enabled, posts_dir) = {
-            let guard = app_config.load();
-            (guard.watch.enabled, PathBuf::from(&guard.posts_dir))
+            let s = state.load();
+            (s.app_config.watch.enabled, PathBuf::from(&s.app_config.posts_dir))
         };
 
         if !watch_enabled {
@@ -191,8 +199,10 @@ async fn watch_for_changes(
 
         match BlogService::new(new_config.clone()) {
             Ok(new_service) => {
-                app_config.store(new_config);
-                blog_service.store(Arc::new(new_service));
+                state.store(Arc::new(AppState {
+                    app_config: new_config,
+                    blog_service: Arc::new(new_service),
+                }));
                 last_posts_fp = dir_fingerprint(&new_posts_dir);
                 last_config_mtime = file_mtime(&config_path);
                 info!("Blog reloaded successfully");
