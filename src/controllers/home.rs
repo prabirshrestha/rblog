@@ -1,5 +1,5 @@
 use crate::{
-    app::{App, AppDepot},
+    app::AppDepot,
     templates,
     utils::render::RenderExt,
 };
@@ -12,17 +12,16 @@ pub fn routes() -> Router {
 
 #[handler]
 async fn get_home(res: &mut Response, depot: &mut Depot) -> Result<()> {
-    let App {
-        blog_service,
-        app_config,
-    } = depot.app();
+    let app = depot.app();
+    let blog_service = app.blog_service.load();
+    let app_config = app.app_config.load();
 
     let posts = blog_service
         .get_all_posts()
         .map(|key| blog_service.get_post(key).unwrap())
         .collect();
 
-    res.render_html(|o| templates::home::home_html(o, app_config, &posts))?;
+    res.render_html(|o| templates::home::home_html(o, &app_config, &posts))?;
 
     Ok(())
 }

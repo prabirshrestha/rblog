@@ -1,5 +1,5 @@
 use crate::{
-    app::{App, AppDepot},
+    app::AppDepot,
     templates,
     utils::render::RenderExt,
 };
@@ -21,13 +21,12 @@ async fn get_post(req: &mut Request, res: &mut Response, depot: &mut Depot) -> R
         return Ok(());
     }
 
-    let App {
-        blog_service,
-        app_config,
-    } = depot.app();
+    let app = depot.app();
+    let blog_service = app.blog_service.load();
+    let app_config = app.app_config.load();
 
     if let Some(post) = blog_service.get_post(&normalized_slug) {
-        res.render_html(|o| templates::posts::post_html(o, app_config, post))?;
+        res.render_html(|o| templates::posts::post_html(o, &app_config, post))?;
     } else {
         res.status_code(StatusCode::NOT_FOUND);
     }
@@ -52,7 +51,8 @@ pub async fn get_attachment(
         return Ok(());
     }
 
-    let App { blog_service, .. } = depot.app();
+    let app = depot.app();
+    let blog_service = app.blog_service.load();
 
     if let Some(post) = blog_service.get_post(slug) {
         if let Some(attachment) = post.attachments.get(attachment_name) {

@@ -16,6 +16,7 @@ vergen-gitcl = { version = "1.0.3", features = ["build"] }
 
 [dependencies]
 anyhow = "1.0.82"
+arc-swap = "1"
 argh = "0.1.13"
 async-fs = "2.1.2"
 chrono = { version = "0.4.37", features = ["serde"] }

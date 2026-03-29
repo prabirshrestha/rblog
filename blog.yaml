@@ -3,6 +3,9 @@ root: https://blog.com
 page_size: 3
 enable_drafts: false
 posts_dir: ./posts
+watch:
+  enabled: true
+  interval: 5
 github: prabirshrestha
 twitter: prabirshrestha
 mastodon: https://mastodon.social/@prabirshrestha
