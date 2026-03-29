@@ -199,7 +199,9 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
         let (tx, mut rx) = tokio::sync::mpsc::channel::<notify::Result<notify::Event>>(100);
 
         let mut watcher: RecommendedWatcher = match notify::recommended_watcher(move |res| {
-            let _ = tx.blocking_send(res);
+            // try_send: drop events if channel is full rather than blocking notify's
+            // internal thread. Safe because we debounce and reload once after the burst.
+            let _ = tx.try_send(res);
         }) {
             Ok(w) => w,
             Err(e) => {
