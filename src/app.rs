@@ -211,15 +211,32 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
 
         info!("Watching {:?} for changes", posts_dir);
 
+        let canonical_at_setup = posts_dir.canonicalize().ok();
+        let mut fallback = tokio::time::interval(Duration::from_secs(30));
+        fallback.tick().await; // skip the immediate first tick
+
         loop {
-            // Wait for the first event
-            match rx.recv().await {
-                Some(Ok(_)) => {}
-                Some(Err(e)) => {
-                    warn!("Watch error: {}", e);
-                    continue 'outer;
+            tokio::select! {
+                event = rx.recv() => {
+                    match event {
+                        Some(Ok(_)) => {}
+                        Some(Err(e)) => {
+                            warn!("Watch error: {}", e);
+                            continue 'outer;
+                        }
+                        None => continue 'outer,
+                    }
                 }
-                None => continue 'outer,
+                _ = fallback.tick() => {
+                    // Fallback for root-level symlinks or any case notify misses:
+                    // if the canonical path changed, reload and re-establish the watcher
+                    if posts_dir.canonicalize().ok() != canonical_at_setup {
+                        info!("Canonical path changed, reloading blog...");
+                        do_reload(&config_file, &state).await;
+                        continue 'outer;
+                    }
+                    continue;
+                }
             }
 
             // Check enabled after each event
