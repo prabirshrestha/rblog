@@ -1,10 +1,11 @@
 use std::{
     path::{Path, PathBuf},
     sync::Arc,
-    time::{Duration, SystemTime},
+    time::Duration,
 };
 
 use arc_swap::ArcSwap;
+use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 
 use crate::{app_config::AppConfig, controllers, services::blog::BlogService};
 use anyhow::Result;
@@ -113,98 +114,131 @@ async fn shutdown_signal(handle: ServerHandle) {
     handle.stop_graceful(std::time::Duration::from_secs(60));
 }
 
-fn max_mtime_in_dir(path: &Path) -> std::io::Result<SystemTime> {
-    let mut max = std::fs::metadata(path)?.modified()?;
-    for entry in std::fs::read_dir(path)? {
-        let entry = entry?;
-        let file_type = entry.file_type()?;
-        if file_type.is_symlink() {
-            continue;
+/// Walk up from `path` and return the parent of the first symlink component found.
+/// Used to watch for git-sync style atomic symlink swaps.
+fn symlink_parent(path: &Path) -> Option<PathBuf> {
+    let mut current = path.to_path_buf();
+    loop {
+        if std::fs::symlink_metadata(&current)
+            .map(|m| m.is_symlink())
+            .unwrap_or(false)
+        {
+            return current.parent().map(|p| p.to_path_buf());
         }
-        let mtime = entry.metadata()?.modified()?;
-        if mtime > max {
-            max = mtime;
-        }
-        if file_type.is_dir() {
-            if let Ok(sub_max) = max_mtime_in_dir(&entry.path()) {
-                if sub_max > max {
-                    max = sub_max;
-                }
-            }
+        if !current.pop() {
+            return None;
         }
     }
-    Ok(max)
 }
 
-fn dir_fingerprint(path: &Path) -> Option<(PathBuf, SystemTime)> {
-    let canonical = path.canonicalize().ok()?;
-    let mtime = max_mtime_in_dir(&canonical).ok()?;
-    Some((canonical, mtime))
-}
-
-fn file_mtime(path: &Path) -> Option<SystemTime> {
-    std::fs::metadata(path).ok()?.modified().ok()
+async fn do_reload(config_file: &str, state: &Arc<ArcSwap<AppState>>) {
+    let new_config = match AppConfig::from_config_file(config_file) {
+        Ok(c) => Arc::new(c),
+        Err(e) => {
+            warn!("Failed to reload config: {}", e);
+            return;
+        }
+    };
+    match BlogService::new(new_config.clone()) {
+        Ok(new_service) => {
+            state.store(Arc::new(AppState {
+                app_config: new_config,
+                blog_service: Arc::new(new_service),
+            }));
+            info!("Blog reloaded successfully");
+        }
+        Err(e) => warn!("Failed to reload blog service: {}", e),
+    }
 }
 
 async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, interval_secs: u64) {
-    let mut interval = tokio::time::interval(Duration::from_secs(interval_secs));
-    interval.tick().await; // skip the immediate first tick
-
+    let debounce = Duration::from_secs(interval_secs);
     let config_path = PathBuf::from(&config_file);
 
-    let posts_dir = {
-        let s = state.load();
-        PathBuf::from(&s.app_config.posts_dir)
-    };
-    let mut last_posts_fp = dir_fingerprint(&posts_dir);
-    let mut last_config_mtime = file_mtime(&config_path);
-
-    loop {
-        interval.tick().await;
-
-        let (watch_enabled, posts_dir) = {
+    'outer: loop {
+        {
             let s = state.load();
-            (
-                s.app_config.watch.enabled,
-                PathBuf::from(&s.app_config.posts_dir),
-            )
+            if !s.app_config.watch.enabled {
+                info!("Watching disabled, stopping watcher");
+                return;
+            }
+        }
+
+        let posts_dir = {
+            let s = state.load();
+            PathBuf::from(&s.app_config.posts_dir)
         };
 
-        if !watch_enabled {
-            info!("Watching disabled, stopping watcher");
-            return;
-        }
+        let (tx, mut rx) = tokio::sync::mpsc::channel::<notify::Result<notify::Event>>(100);
 
-        let current_config_mtime = file_mtime(&config_path);
-        let current_posts_fp = dir_fingerprint(&posts_dir);
-
-        if current_posts_fp == last_posts_fp && current_config_mtime == last_config_mtime {
-            continue;
-        }
-
-        info!("Change detected, reloading blog...");
-
-        let new_config = match AppConfig::from_config_file(&config_file) {
-            Ok(c) => Arc::new(c),
+        let mut watcher: RecommendedWatcher = match notify::recommended_watcher(move |res| {
+            let _ = tx.blocking_send(res);
+        }) {
+            Ok(w) => w,
             Err(e) => {
-                warn!("Failed to reload config: {}", e);
-                continue;
+                warn!("Failed to create file watcher: {}", e);
+                tokio::time::sleep(debounce).await;
+                continue 'outer;
             }
         };
 
-        let new_posts_dir = PathBuf::from(&new_config.posts_dir);
+        if let Err(e) = watcher.watch(&posts_dir, RecursiveMode::Recursive) {
+            warn!("Failed to watch {:?}: {}", posts_dir, e);
+            tokio::time::sleep(debounce).await;
+            continue 'outer;
+        }
 
-        match BlogService::new(new_config.clone()) {
-            Ok(new_service) => {
-                state.store(Arc::new(AppState {
-                    app_config: new_config,
-                    blog_service: Arc::new(new_service),
-                }));
-                last_posts_fp = dir_fingerprint(&new_posts_dir);
-                last_config_mtime = file_mtime(&config_path);
-                info!("Blog reloaded successfully");
+        if let Err(e) = watcher.watch(&config_path, RecursiveMode::NonRecursive) {
+            warn!("Failed to watch {:?}: {}", config_path, e);
+        }
+
+        // Also watch the symlink's parent dir to catch git-sync atomic swaps
+        if let Some(parent) = symlink_parent(&posts_dir) {
+            if let Err(e) = watcher.watch(&parent, RecursiveMode::NonRecursive) {
+                warn!("Failed to watch symlink parent {:?}: {}", parent, e);
             }
-            Err(e) => warn!("Failed to reload blog service: {}", e),
+        }
+
+        info!("Watching {:?} for changes", posts_dir);
+
+        loop {
+            // Wait for the first event
+            match rx.recv().await {
+                Some(Ok(_)) => {}
+                Some(Err(e)) => {
+                    warn!("Watch error: {}", e);
+                    continue 'outer;
+                }
+                None => continue 'outer,
+            }
+
+            // Check enabled after each event
+            {
+                let s = state.load();
+                if !s.app_config.watch.enabled {
+                    info!("Watching disabled, stopping watcher");
+                    return;
+                }
+            }
+
+            // Debounce: drain all events that arrive within the debounce window
+            loop {
+                match tokio::time::timeout(debounce, rx.recv()).await {
+                    Ok(Some(Ok(_))) => {} // more events — keep draining
+                    Ok(Some(Err(e))) => {
+                        warn!("Watch error during debounce: {}", e);
+                        break;
+                    }
+                    Ok(None) | Err(_) => break, // channel closed or quiet period reached
+                }
+            }
+
+            info!("Change detected, reloading blog...");
+            do_reload(&config_file, &state).await;
+
+            // Re-establish watcher — posts_dir canonical path may have changed after a
+            // git-sync symlink swap, so we always restart fresh after each reload
+            continue 'outer;
         }
     }
 }

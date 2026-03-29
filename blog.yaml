@@ -5,7 +5,7 @@ enable_drafts: false
 posts_dir: ./posts
 watch:
   enabled: true
-  interval: 5
+  interval: 5  # debounce seconds after last file event before reloading
 github: prabirshrestha
 twitter: prabirshrestha
 mastodon: https://mastodon.social/@prabirshrestha
