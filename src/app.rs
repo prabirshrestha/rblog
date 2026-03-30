@@ -128,16 +128,15 @@ fn symlink_parents(path: &Path) -> (Vec<PathBuf>, bool) {
         if std::fs::symlink_metadata(&current)
             .map(|m| m.is_symlink())
             .unwrap_or(false)
+            && let Some(parent) = current.parent()
         {
-            if let Some(parent) = current.parent() {
-                let parent = parent.to_path_buf();
-                // parent.parent().is_none() is true for filesystem roots on all
-                // platforms: `/` on Unix, `C:\` / `\\server\share` on Windows.
-                if parent.parent().is_none() {
-                    needs_fallback = true;
-                } else if !parents.contains(&parent) {
-                    parents.push(parent);
-                }
+            let parent = parent.to_path_buf();
+            // parent.parent().is_none() is true for filesystem roots on all
+            // platforms: `/` on Unix, `C:\` / `\\server\share` on Windows.
+            if parent.parent().is_none() {
+                needs_fallback = true;
+            } else if !parents.contains(&parent) {
+                parents.push(parent);
             }
         }
         if !current.pop() {
