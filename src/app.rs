@@ -128,16 +128,15 @@ fn symlink_parents(path: &Path) -> (Vec<PathBuf>, bool) {
         if std::fs::symlink_metadata(&current)
             .map(|m| m.is_symlink())
             .unwrap_or(false)
+            && let Some(parent) = current.parent()
         {
-            if let Some(parent) = current.parent() {
-                let parent = parent.to_path_buf();
-                // parent.parent().is_none() is true for filesystem roots on all
-                // platforms: `/` on Unix, `C:\` / `\\server\share` on Windows.
-                if parent.parent().is_none() {
-                    needs_fallback = true;
-                } else if !parents.contains(&parent) {
-                    parents.push(parent);
-                }
+            let parent = parent.to_path_buf();
+            // parent.parent().is_none() is true for filesystem roots on all
+            // platforms: `/` on Unix, `C:\` / `\\server\share` on Windows.
+            if parent.parent().is_none() {
+                needs_fallback = true;
+            } else if !parents.contains(&parent) {
+                parents.push(parent);
             }
         }
         if !current.pop() {
@@ -247,7 +246,14 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
             tokio::select! {
                 event = rx.recv() => {
                     match event {
-                        Some(Ok(_)) => {}
+                        Some(Ok(e)) => {
+                            // Skip pure Access events — inotify generates these when the
+                            // recursive watcher setup traverses directories via readdir,
+                            // which would cause a reload loop if not filtered.
+                            if matches!(e.kind, notify::EventKind::Access(_)) {
+                                continue;
+                            }
+                        }
                         Some(Err(e)) => {
                             warn!("Watch error: {}", e);
                             continue 'outer;
@@ -291,9 +297,14 @@ async fn watch_for_changes(config_file: String, state: Arc<ArcSwap<AppState>>, i
             info!("Change detected, reloading blog...");
             do_reload(&config_file, &state).await;
 
-            // Re-establish watcher — posts_dir canonical path may have changed after a
-            // git-sync symlink swap, so we always restart fresh after each reload
-            continue 'outer;
+            // Re-establish the watcher only if the canonical path changed (git-sync
+            // symlink swap). Always restarting caused an infinite reload loop:
+            // creating a recursive inotify watcher traverses directories via readdir,
+            // which generates Access events that were caught as "changes".
+            if posts_dir.canonicalize().ok() != canonical_at_setup {
+                continue 'outer;
+            }
+            // Canonical path unchanged — keep the existing watcher running.
         }
     }
 }
