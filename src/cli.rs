@@ -1,8 +1,6 @@
-use std::sync::Arc;
-
 use argh::FromArgs;
 
-use crate::{app::App, app_config::AppConfig};
+use crate::app::App;
 
 #[derive(FromArgs, PartialEq, Debug)]
 #[argh(description = "rblog")]
@@ -50,8 +48,10 @@ impl Cli {
                     println!("{}", App::version());
                 }
                 CliSubcommand::Run(args) => {
-                    let config = AppConfig::from_config_file(&args.config_file)?;
-                    App::from_config(Arc::new(config)).await?.run().await?;
+                    App::from_config_file(&args.config_file)
+                        .await?
+                        .run()
+                        .await?;
                 }
             },
             None => {

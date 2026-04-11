@@ -1,8 +1,4 @@
-use crate::{
-    app::{App, AppDepot},
-    templates,
-    utils::render::RenderExt,
-};
+use crate::{app::AppDepot, templates, utils::render::RenderExt};
 use anyhow::Result;
 use salvo::prelude::*;
 
@@ -12,19 +8,17 @@ pub fn routes() -> Router {
 
 #[handler]
 async fn get_rss(res: &mut Response, depot: &mut Depot) -> Result<()> {
-    let App {
-        blog_service,
-        app_config,
-    } = depot.app();
+    let state = depot.app_state();
 
-    let posts = blog_service
+    let posts = state
+        .blog_service
         .get_all_posts()
-        .map(|key| blog_service.get_post(key).unwrap())
+        .map(|key| state.blog_service.get_post(key).unwrap())
         .collect();
 
     res.headers_mut()
         .insert("content-type", "application/rss+xml".parse().unwrap());
-    res.render_template(|o| templates::rss::rss_html(o, app_config, &posts))?;
+    res.render_template(|o| templates::rss::rss_html(o, &state.app_config, &posts))?;
 
     Ok(())
 }

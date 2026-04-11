@@ -3,6 +3,9 @@ root: https://blog.com
 page_size: 3
 enable_drafts: false
 posts_dir: ./posts
+watch:
+  enabled: true
+  interval: 1  # debounce seconds after last file event before reloading
 github: prabirshrestha
 twitter: prabirshrestha
 mastodon: https://mastodon.social/@prabirshrestha

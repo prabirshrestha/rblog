@@ -1,8 +1,4 @@
-use crate::{
-    app::{App, AppDepot},
-    templates,
-    utils::render::RenderExt,
-};
+use crate::{app::AppDepot, templates, utils::render::RenderExt};
 use anyhow::Result;
 use salvo::{fs::NamedFile, prelude::*};
 
@@ -21,13 +17,10 @@ async fn get_post(req: &mut Request, res: &mut Response, depot: &mut Depot) -> R
         return Ok(());
     }
 
-    let App {
-        blog_service,
-        app_config,
-    } = depot.app();
+    let state = depot.app_state();
 
-    if let Some(post) = blog_service.get_post(&normalized_slug) {
-        res.render_html(|o| templates::posts::post_html(o, app_config, post))?;
+    if let Some(post) = state.blog_service.get_post(&normalized_slug) {
+        res.render_html(|o| templates::posts::post_html(o, &state.app_config, post))?;
     } else {
         res.status_code(StatusCode::NOT_FOUND);
     }
@@ -52,9 +45,9 @@ pub async fn get_attachment(
         return Ok(());
     }
 
-    let App { blog_service, .. } = depot.app();
+    let state = depot.app_state();
 
-    if let Some(post) = blog_service.get_post(slug) {
+    if let Some(post) = state.blog_service.get_post(slug) {
         if let Some(attachment) = post.attachments.get(attachment_name) {
             let file = NamedFile::open(&attachment.path).await?;
             file.send(req.headers(), res).await;

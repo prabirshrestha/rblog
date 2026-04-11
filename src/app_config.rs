@@ -20,6 +20,8 @@ pub struct AppConfig {
     pub enable_drafts: Option<bool>,
     #[setting(default = "posts", env = "POSTS_DIR")]
     pub posts_dir: String,
+    #[setting(nested)]
+    pub watch: WatchConfig,
     #[setting]
     pub github: Option<String>,
     #[setting]
@@ -68,6 +70,15 @@ pub struct Giscus {
 pub struct GoogleAnalytics {
     #[setting]
     pub ga_measurement_id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Config, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct WatchConfig {
+    #[setting(default = true, env = "WATCH_ENABLED")]
+    pub enabled: bool,
+    #[setting(default = 1, env = "WATCH_INTERVAL")]
+    pub interval: u64,
 }
 
 impl AppConfig {
