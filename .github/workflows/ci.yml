@@ -41,17 +41,18 @@ jobs:
       # emit backtraces on panics.
       RUST_BACKTRACE: 1
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Get the build metadata
         shell: bash
         run: |
           echo "version=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
+          echo "rust_version=$(grep 'channel' rust-toolchain.toml | sed 's/.*= *\"\(.*\)\"/\1/')" >> $GITHUB_ENV
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: "${{ env.rust_version }}"
           target: ${{ matrix.target }}
           override: true
           profile: minimal
@@ -59,7 +60,7 @@ jobs:
       - name: Install musl tools
         if: matrix.target == 'x86_64-unknown-linux-musl'
         run: sudo apt-get install -y musl-tools
-      - uses: swatinem/rust-cache@v2.8.2
+      - uses: swatinem/rust-cache@v2.9.1
 
       - name: rust fmt
         uses: actions-rs/cargo@v1
@@ -101,7 +102,7 @@ jobs:
           7z a ../../../rblog-v${{ env.version }}-${{ matrix.target }}.zip rblog.exe
 
       - name: Upload unix artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         if: matrix.os != 'windows-latest'
         with:
           name: rblog-v${{ env.version }}-${{ matrix.target }}.tar.gz
@@ -109,7 +110,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload windows artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         if: matrix.os == 'windows-latest'
         with:
           name: rblog-v${{ env.version }}-${{ matrix.target }}.zip
@@ -122,13 +123,17 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 1
+      - name: Get Rust version
+        shell: bash
+        run: |
+          echo "rust_version=$(grep 'channel' rust-toolchain.toml | sed 's/.*= *\"\(.*\)\"/\1/')" >> $GITHUB_ENV
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: "${{ env.rust_version }}"
           profile: minimal
           override: true
       - name: Login to crates.io
@@ -147,33 +152,33 @@ jobs:
       - publish_crate
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Get the build metadata
         shell: bash
         run: |
           echo "version=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
       - name: Download x86_64-unknown-linux-gnu.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-unknown-linux-gnu.tar.gz
           path: .
       - name: Download x86_64-unknown-linux-musl.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-unknown-linux-musl.tar.gz
           path: .
       - name: Download rblog-x86_64-apple-darwin.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-apple-darwin.tar.gz
           path: .
       - name: Download rblog-aarch64-apple-darwin.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-aarch64-apple-darwin.tar.gz
           path: .
       - name: rblog-x86_64-pc-windows-msvc.zip
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-pc-windows-msvc.zip
           path: .
@@ -201,13 +206,13 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Get the build metadata
         shell: bash
         run: |
           echo "version=$(grep -m 1 '^version = ' Cargo.toml | cut -f 3 -d ' ' | tr -d \")" >> $GITHUB_ENV
       - name: Download x86_64-unknown-linux-musl.tar.gz
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: rblog-v${{ env.version }}-x86_64-unknown-linux-musl.tar.gz
           path: .
@@ -219,12 +224,12 @@ jobs:
           cp ./blog.yaml ./pkg/docker/data/
           cp -r ./posts ./pkg/docker/data/
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3.6.0
+        uses: docker/login-action@v4.1.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push nightly docker image
-        uses: docker/build-push-action@v6.18.0
+        uses: docker/build-push-action@v7.1.0
         with:
           context: ./pkg/docker
           file: ./pkg/docker/Dockerfile
@@ -233,7 +238,7 @@ jobs:
           no-cache: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rblog:nightly
       - name: Build and push latest docker image
-        uses: docker/build-push-action@v6.18.0
+        uses: docker/build-push-action@v7.1.0
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           context: ./pkg/docker
@@ -258,7 +263,7 @@ jobs:
       - release
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
       - name: Get the build metadata
@@ -271,7 +276,7 @@ jobs:
           cd ${GITHUB_WORKSPACE}/packages/aur
           ./genpkgbuild.sh
       - name: Publish Release to AUR
-        uses: KSXGitHub/github-actions-deploy-aur@v4.1.1
+        uses: KSXGitHub/github-actions-deploy-aur@v4.1.2
         with:
           pkgname: ${{ env.PKG_NAME }}-bin
           pkgbuild: packages/aur/PKGBUILD
