@@ -1,9 +1,8 @@
 fn main() -> anyhow::Result<()> {
     let gitcl = vergen_gitcl::GitclBuilder::all_git()?;
 
-    if let Err(error) = vergen::Emitter::default()
+    if let Err(error) = vergen_gitcl::Emitter::default()
         .add_instructions(&gitcl)?
-        .fail_on_error()
         .emit()
     {
         println!(
