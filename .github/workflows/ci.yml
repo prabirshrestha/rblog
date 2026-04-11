@@ -51,7 +51,7 @@ jobs:
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: "1.91.0"
+          toolchain: "1.92.0"
           target: ${{ matrix.target }}
           override: true
           profile: minimal
@@ -128,7 +128,7 @@ jobs:
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: "1.91.0"
+          toolchain: "1.92.0"
           profile: minimal
           override: true
       - name: Login to crates.io
