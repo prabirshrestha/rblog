@@ -36,7 +36,7 @@ impl Post {
 
             let key = post.metadata.slug.as_ref().unwrap();
             if map.contains_key(key) {
-                bail!("Post {:?} already exists", &path);
+                bail!("Post {:?} already exists", path);
             } else {
                 map.insert(String::from(key), post);
             }
@@ -130,6 +130,6 @@ impl Post {
     }
 
     pub fn get_url(&self) -> String {
-        format!("/posts/{}/", &self.metadata.slug.as_ref().unwrap())
+        format!("/posts/{}/", self.metadata.slug.as_ref().unwrap())
     }
 }
