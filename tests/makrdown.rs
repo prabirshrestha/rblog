@@ -1,4 +1,4 @@
-use rblog::markdown::markdown_to_html;
+use rblog::utils::markdown::markdown_to_html;
 
 #[test]
 fn should_render_header_with_id() {

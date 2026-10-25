@@ -47,12 +47,12 @@ pub async fn get_attachment(
 
     let state = depot.app_state();
 
-    if let Some(post) = state.blog_service.get_post(slug) {
-        if let Some(attachment) = post.attachments.get(attachment_name) {
-            let file = NamedFile::open(&attachment.path).await?;
-            file.send(req.headers(), res).await;
-            return Ok(());
-        }
+    if let Some(post) = state.blog_service.get_post(slug)
+        && let Some(attachment) = post.attachments.get(attachment_name)
+    {
+        let file = NamedFile::open(&attachment.path).await?;
+        file.send(req.headers(), res).await;
+        return Ok(());
     }
 
     res.status_code(StatusCode::NOT_FOUND);

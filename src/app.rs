@@ -316,7 +316,7 @@ pub trait AppDepot {
 
 impl AppDepot for Depot {
     fn app(&self) -> &App {
-        self.obtain::<App>().unwrap()
+        self.get_typed::<App>().unwrap()
     }
 
     fn app_state(&self) -> Arc<AppState> {
