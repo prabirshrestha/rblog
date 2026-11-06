@@ -1525,9 +1525,9 @@ checksum = "47d9d19d1d6efa0109d2f65ff4c85cddd50bd572e5a00127ab10987290bcefae"
 
 [[package]]
 name = "lock_api"
-version = "0.4.14"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "224399e74b87b5f3557511d98dff8b14089b3dadafcab6bb93eab67d3aace965"
+checksum = "65d91b22da179613dcf4d6ec8349563f52a363f6849e03b00dd0a185ec4a59af"
 dependencies = [
  "scopeguard",
 ]
@@ -1832,9 +1832,9 @@ checksum = "f38d5652c16fde515bb1ecef450ab0f6a219d619a7274976324d5e377f7dceba"
 
 [[package]]
 name = "parking_lot"
-version = "0.12.5"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "93857453250e3077bd71ff98b6a65ea6621a19bb0f559a85248955ac12c45a1a"
+checksum = "a9cf937ca4e1d0b7578784559063422fc39ae7c5a00f02471f2614d5486fd226"
 dependencies = [
  "lock_api",
  "parking_lot_core",
@@ -1842,11 +1842,10 @@ dependencies = [
 
 [[package]]
 name = "parking_lot_core"
-version = "0.9.12"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2621685985a2ebf1c516881c026032ac7deafcda1a2c9b7850dc81e3dfcb64c1"
+checksum = "9cfff060068cc18aa7815010fcaf80c68c7fb9e85fc7f5c0f9bf142c21d19826"
 dependencies = [
- "cfg-if",
  "libc",
  "redox_syscall",
  "smallvec",
@@ -2177,9 +2176,9 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
-version = "0.5.18"
+version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ed2bf2547551a7053d6fdfafda3f938979645c44812fbfcda098faae3f1a362d"
+checksum = "580c875845b41ecb1564ad1ae4703044cef774145e3d7a94dc2b3fa7c97868fd"
 dependencies = [
  "bitflags",
 ]
@@ -2477,9 +2476,9 @@ checksum = "9774ba4a74de5f7b1c1451ed6cd5285a32eddb5cccb8cc655a4e50009e06477f"
 
 [[package]]
 name = "salvo"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5195b16bb9086c424f32fea95fc4e57617f68b494cd419c4839f36c4e52a6432"
+checksum = "e24b532797b87d72cf189b94fcaaba76a24b4de828881affe8edf5705ff1d0c5"
 dependencies = [
  "salvo-compression",
  "salvo-oapi",
@@ -2491,9 +2490,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-compression"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67e9642e832b7d42fb6c6984def0dfa8d0f272ad3f802167aa251555d8d80d09"
+checksum = "1e5f4a672035eac6250f740b75a0e1c8bde6364ffb40a9acc967d7565bfcd9f4"
 dependencies = [
  "brotli",
  "bytes",
@@ -2510,9 +2509,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-oapi"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ebcc93544364bd6565b4af675649b87c0dd80b16f7a6bb48c4da2426648358fd"
+checksum = "447dd7c1b41a294f23058fea7da03b8d363064b853322114e57563989e157412"
 dependencies = [
  "anyhow",
  "base64 0.23.1",
@@ -2545,9 +2544,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-oapi-macros"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0912f9eb1cb4d677d369030c59254720737250206af4b3d6094e0febc8883a1c"
+checksum = "aa825b656ec131cb29b79b7569491c7b78cbd627df1f10f4b1c16926f60da797"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -2559,9 +2558,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-otel"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6d7239cbdad4c542d0a4ff4142b6af8c4637f44b7f405a31b132a456a6e5afc7"
+checksum = "14cc2550ce6a990c40422d9900c456fd95904050b0f6be00e0fbf310d549f80f"
 dependencies = [
  "opentelemetry",
  "opentelemetry-http",
@@ -2573,9 +2572,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-proxy"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "878d6a044129b8f5749e6c1fb0e53ce462d7011422287bf1766b396210cb1940"
+checksum = "750e5af75dd5db7fc5f92e3ed1a545386b1442fb6d036c1e787cdad483387698"
 dependencies = [
  "fastrand",
  "futures-util",
@@ -2592,9 +2591,9 @@ dependencies = [
 
 [[package]]
 name = "salvo-serde-util"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98e7a3a7921b22fb7916b7b2a2dad21f2a9119b1935276c355e8b22341413d8c"
+checksum = "a846ee4444f88bccd9797140393e7f54397f2bd6f1c0ae18db530bbad6fcec64"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2603,9 +2602,9 @@ dependencies = [
 
 [[package]]
 name = "salvo_core"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e750d044c19994e42efd60f66ff502892dccf9e54eec50d63f4be4ca618e8a5a"
+checksum = "3f51e7e42327520b73101dbd9115c8700ffc2e69b21baacbac602491f07b23be"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2637,6 +2636,7 @@ dependencies = [
  "quinn",
  "rand 0.10.3",
  "regex",
+ "rustls",
  "salvo_macros",
  "serde",
  "serde-xml-rs",
@@ -2655,31 +2655,21 @@ dependencies = [
 
 [[package]]
 name = "salvo_extra"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "47b24484004640d521b656205eb5e7729698ca157a28b8738c2ebc493effa92b"
+checksum = "cba39d427ab78311f3affa87425cd49620341ef9cd5ab218d11a78991fba135e"
 dependencies = [
- "base64 0.23.1",
  "etag",
- "futures-util",
- "http-body-util",
- "hyper",
- "pin-project",
  "salvo_core",
- "serde",
- "serde_json",
- "tokio",
- "tokio-tungstenite",
- "tower",
  "tracing",
- "ulid",
+ "xxhash-rust",
 ]
 
 [[package]]
 name = "salvo_macros"
-version = "1.0.1"
+version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b7644c99267dd8a97d97a00ad1358c6d597db764354fe6c7679105af62d1f7c"
+checksum = "4094d875cdd254483714df664dfd0e8e84fb58880c8456e3421444188f8e9d43"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -3241,18 +3231,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tokio-tungstenite"
-version = "0.30.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "17a073bfed563fa236697a068031408a93cd9522e08abf9933ead3e73411bd71"
-dependencies = [
- "futures-util",
- "log",
- "tokio",
- "tungstenite",
-]
-
-[[package]]
 name = "tokio-util"
 version = "0.7.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3307,10 +3285,8 @@ dependencies = [
  "pin-project-lite",
  "sync_wrapper",
  "tokio",
- "tokio-util",
  "tower-layer",
  "tower-service",
- "tracing",
 ]
 
 [[package]]
@@ -3411,18 +3387,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
-name = "tungstenite"
-version = "0.30.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e48ac77174b19c110a50ab2128b24215ac9cb40e0e12e093fb602d175c569d22"
-dependencies = [
- "bytes",
- "log",
- "rand 0.10.3",
- "thiserror",
-]
-
-[[package]]
 name = "typenum"
 version = "1.20.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3434,7 +3398,6 @@ version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "947dde63b6d514cc5e044edad4e0ca7261afd1099d16c83d942cb2b2f348689c"
 dependencies = [
- "rand 0.10.3",
  "web-time",
 ]
 
