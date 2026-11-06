@@ -65,7 +65,7 @@ async fn redirects_mixed_case_post_and_attachment() {
     for (path, status, location) in [
         (
             "/posts/Welcome/",
-            StatusCode::MOVED_PERMANENTLY,
+            StatusCode::PERMANENT_REDIRECT,
             "/posts/welcome/",
         ),
         (
@@ -145,11 +145,11 @@ async fn returns_not_found_for_missing_resources() {
 }
 
 #[tokio::test]
-async fn head_has_no_body() {
+async fn rejects_unsupported_method_without_body() {
     let service = app().await.service();
     let mut response = TestClient::head("http://localhost/posts/welcome/")
         .send(&service)
         .await;
-    assert_eq!(response.status_code, Some(StatusCode::OK));
+    assert_eq!(response.status_code, Some(StatusCode::METHOD_NOT_ALLOWED));
     assert!(response.take_bytes(None).await.unwrap().is_empty());
 }

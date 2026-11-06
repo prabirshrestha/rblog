@@ -81,7 +81,11 @@ jobs:
           args: --verbose --locked --all --target ${{ matrix.target }}
 
       - name: Test
-        run: cargo test --locked --all-targets
+        run: cargo test --locked --all-targets --all-features
+
+      - name: Test live server
+        if: matrix.target == 'x86_64-unknown-linux-gnu'
+        run: python3 tests/server_smoke.py target/${{ matrix.target }}/debug/rblog
 
       - name: Build release
         uses: actions-rs/cargo@v1
