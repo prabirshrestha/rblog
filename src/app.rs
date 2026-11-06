@@ -74,17 +74,18 @@ impl App {
             watch_interval,
         ));
 
+        server.serve(self.service()).await;
+
+        Ok(())
+    }
+
+    pub fn service(&self) -> Service {
         let router = Router::new()
             .hoop(salvo::affix_state::inject(self.clone()))
             .hoop(Logger::new())
             .push(controllers::router());
 
-        let service =
-            Service::new(router).catcher(Catcher::default().hoop(controllers::errors::not_found));
-
-        server.serve(service).await;
-
-        Ok(())
+        Service::new(router).catcher(Catcher::default().hoop(controllers::errors::not_found))
     }
 }
 

@@ -80,6 +80,9 @@ jobs:
           command: build
           args: --verbose --locked --all --target ${{ matrix.target }}
 
+      - name: Test
+        run: cargo test --locked --all-targets
+
       - name: Build release
         uses: actions-rs/cargo@v1
         with:
