@@ -68,10 +68,7 @@ jobs:
           command: fmt
           args: --all -- --check
       - name: clippy
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features
+        run: cargo clippy --locked --all-targets --all-features -- -D warnings
 
       - name: Build debug
         uses: actions-rs/cargo@v1
@@ -79,6 +76,15 @@ jobs:
           use-cross: ${{ matrix.usecross }}
           command: build
           args: --verbose --locked --all --target ${{ matrix.target }}
+
+      - name: Test
+        run: |
+          cargo test --locked --all-targets --all-features
+          cargo test --locked --doc --all-features
+
+      - name: Test live server
+        if: matrix.target == 'x86_64-unknown-linux-gnu'
+        run: python3 tests/server_smoke.py target/${{ matrix.target }}/debug/rblog
 
       - name: Build release
         uses: actions-rs/cargo@v1
@@ -250,6 +256,19 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/rblog:${{ github.ref_name }}
             ${{ secrets.DOCKERHUB_USERNAME }}/rblog:latest
+      - name: Test Docker image
+        if: github.event_name == 'pull_request'
+        run: |
+          docker run --rm rblog:ci /usr/bin/rblog version
+          docker run -d --name rblog-smoke -p 127.0.0.1:18080:8080 rblog:ci
+          trap 'docker logs rblog-smoke; docker rm -f rblog-smoke' EXIT
+          curl --fail --retry 20 --retry-all-errors --retry-delay 1 http://127.0.0.1:18080/healthcheck | grep -x OK
+          curl --fail http://127.0.0.1:18080/ | grep Welcome
+          curl --fail http://127.0.0.1:18080/posts/welcome/ | grep Welcome
+          curl --fail http://127.0.0.1:18080/rss | grep '<rss'
+          curl --fail http://127.0.0.1:18080/posts/welcome/attachment.txt
+          docker stop --time 10 rblog-smoke
+          test "$(docker inspect -f '{{.State.ExitCode}}' rblog-smoke)" = 0
       - name: Docker Hub Description
         if: github.ref == 'refs/heads/main'
         uses: peter-evans/dockerhub-description@v5

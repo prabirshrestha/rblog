@@ -10,6 +10,8 @@ RUN addgroup -g 1001 rblog && \
 COPY ./rblog /usr/bin/rblog
 ADD --chown=rblog:rblog ./data /data
 
+WORKDIR /data
+
 USER rblog
 
 CMD ["/usr/bin/rblog", "run", "-c", "/data/blog.yaml"]
