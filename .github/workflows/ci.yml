@@ -262,7 +262,7 @@ jobs:
           docker run --rm rblog:ci /usr/bin/rblog version
           docker run -d --name rblog-smoke -p 127.0.0.1:18080:8080 rblog:ci
           trap 'docker logs rblog-smoke; docker rm -f rblog-smoke' EXIT
-          curl --fail --retry 20 --retry-connrefused --retry-delay 1 http://127.0.0.1:18080/healthcheck | grep -x OK
+          curl --fail --retry 20 --retry-all-errors --retry-delay 1 http://127.0.0.1:18080/healthcheck | grep -x OK
           curl --fail http://127.0.0.1:18080/ | grep Welcome
           curl --fail http://127.0.0.1:18080/posts/welcome/ | grep Welcome
           curl --fail http://127.0.0.1:18080/rss | grep '<rss'
